@@ -23,7 +23,10 @@ function MapClickHandler() {
   const { origin, destination, mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
   
   useMapEvents({
-    click(e) {
+    contextmenu(e) {
+      if (e.originalEvent) {
+        e.originalEvent.preventDefault()
+      }
       const { lat, lng } = e.latlng
       const coordLabel = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
       
