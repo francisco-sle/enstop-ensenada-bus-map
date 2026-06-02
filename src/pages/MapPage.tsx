@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Locate } from 'lucide-react'
 import { BusMap } from '../components/Map/BusMap'
@@ -14,6 +14,15 @@ interface MapPageProps {
   allStops: DBStop[]
 }
 
+const areCoordsEqual = (
+  c1: { lat: number; lng: number } | null,
+  c2: { lat: number; lng: number } | null
+) => {
+  if (!c1 && !c2) return true
+  if (!c1 || !c2) return false
+  return Math.abs(c1.lat - c2.lat) < 0.0001 && Math.abs(c1.lng - c2.lng) < 0.0001
+}
+
 export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   const { selectedStopId, setSelectedStopId, setUserLocation, setCenter, setZoom } = useMapStore()
   const { origin, destination, routingResults, setOrigin, setDestination } = useRoutingStore()
@@ -21,46 +30,99 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
   const selectedStop = allStops.find(s => s.id === selectedStopId)
 
-  // 1. Sync from URL to Store on Mount / URL change
+  // Track coordinates last synchronized to avoid loops/race conditions
+  const lastSyncedRef = useRef<{
+    origin: { lat: number; lng: number } | null
+    destination: { lat: number; lng: number } | null
+  }>({ origin: null, destination: null })
+
+  // 1. Sync from URL to Store on Mount / URL change (browser navigation)
   useEffect(() => {
     const fromParam = searchParams.get('from')
     const toParam = searchParams.get('to')
 
+    let urlOrigin: { lat: number; lng: number } | null = null
     if (fromParam) {
       const [lat, lng] = fromParam.split(',').map(Number)
       if (!isNaN(lat) && !isNaN(lng)) {
-        if (!origin || Math.abs(origin.lat - lat) > 0.0001 || Math.abs(origin.lng - lng) > 0.0001) {
-          setOrigin({ lat, lng, label: `Punto en Mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})` })
-        }
+        urlOrigin = { lat, lng }
       }
     }
 
+    let urlDest: { lat: number; lng: number } | null = null
     if (toParam) {
       const [lat, lng] = toParam.split(',').map(Number)
       if (!isNaN(lat) && !isNaN(lng)) {
-        if (!destination || Math.abs(destination.lat - lat) > 0.0001 || Math.abs(destination.lng - lng) > 0.0001) {
-          setDestination({ lat, lng, label: `Punto en Mapa (${lat.toFixed(4)}, ${lng.toFixed(4)})` })
-        }
+        urlDest = { lat, lng }
       }
     }
-  }, [searchParams, setOrigin, setDestination, origin, destination])
+
+    // Check if the URL coordinates match our last synced state.
+    // If they do, skip store updates to prevent loops.
+    const originMatches = areCoordsEqual(urlOrigin, lastSyncedRef.current.origin)
+    const destMatches = areCoordsEqual(urlDest, lastSyncedRef.current.destination)
+    if (originMatches && destMatches) {
+      return
+    }
+
+    // Update reference
+    lastSyncedRef.current = { origin: urlOrigin, destination: urlDest }
+
+    // Sync store with URL using getState to avoid useEffect dependency on origin/destination
+    const currentStoreOrigin = useRoutingStore.getState().origin
+    const currentStoreDest = useRoutingStore.getState().destination
+
+    if (urlOrigin) {
+      if (!currentStoreOrigin || !areCoordsEqual(currentStoreOrigin, urlOrigin)) {
+        setOrigin({
+          lat: urlOrigin.lat,
+          lng: urlOrigin.lng,
+          label: `Punto en Mapa (${urlOrigin.lat.toFixed(4)}, ${urlOrigin.lng.toFixed(4)})`
+        })
+      }
+    } else {
+      if (currentStoreOrigin) setOrigin(null)
+    }
+
+    if (urlDest) {
+      if (!currentStoreDest || !areCoordsEqual(currentStoreDest, urlDest)) {
+        setDestination({
+          lat: urlDest.lat,
+          lng: urlDest.lng,
+          label: `Punto en Mapa (${urlDest.lat.toFixed(4)}, ${urlDest.lng.toFixed(4)})`
+        })
+      }
+    } else {
+      if (currentStoreDest) setDestination(null)
+    }
+  }, [searchParams, setOrigin, setDestination])
 
   // 2. Sync from Store to URL on store state changes
   useEffect(() => {
-    const params: Record<string, string> = {}
+    // If the store coordinates match our last synced state, do nothing
+    const originMatches = areCoordsEqual(origin, lastSyncedRef.current.origin)
+    const destMatches = areCoordsEqual(destination, lastSyncedRef.current.destination)
+    if (originMatches && destMatches) {
+      return
+    }
+
+    // Update reference
+    lastSyncedRef.current = {
+      origin: origin ? { lat: origin.lat, lng: origin.lng } : null,
+      destination: destination ? { lat: destination.lat, lng: destination.lng } : null
+    }
+
+    // Update URL query parameters
+    const nextParams: Record<string, string> = {}
     if (origin) {
-      params.from = `${origin.lat.toFixed(6)},${origin.lng.toFixed(6)}`
+      nextParams.from = `${origin.lat.toFixed(6)},${origin.lng.toFixed(6)}`
     }
     if (destination) {
-      params.to = `${destination.lat.toFixed(6)},${destination.lng.toFixed(6)}`
+      nextParams.to = `${destination.lat.toFixed(6)},${destination.lng.toFixed(6)}`
     }
-    // Only update if parameters actually changed to prevent loop
-    const currentFrom = searchParams.get('from')
-    const currentTo = searchParams.get('to')
-    if (params.from !== currentFrom || params.to !== currentTo) {
-      setSearchParams(params, { replace: true })
-    }
-  }, [origin, destination, setSearchParams, searchParams])
+
+    setSearchParams(nextParams, { replace: true })
+  }, [origin, destination, setSearchParams])
 
   const handleLocateUser = () => {
     if (navigator.geolocation) {
