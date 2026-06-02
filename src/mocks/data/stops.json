@@ -1,0 +1,254 @@
+[
+  {
+    "id": 1,
+    "name": "Terminal Centro",
+    "common_name": "Terminal Centro",
+    "geom": { "type": "Point", "coordinates": [-116.625, 31.868] },
+    "is_terminal": true,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Calle Segunda y Gastélum",
+    "common_name": "Parque Revolución",
+    "geom": { "type": "Point", "coordinates": [-116.621, 31.865] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Calle Tercera y Gastélum",
+    "common_name": "Calle 3ra & Gastélum",
+    "geom": { "type": "Point", "coordinates": [-116.618, 31.862] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 4,
+    "name": "Avenida Juárez y Miramar",
+    "common_name": "Av. Juárez & Miramar",
+    "geom": { "type": "Point", "coordinates": [-116.615, 31.859] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 5,
+    "name": "Plaza Cívica de la Patria",
+    "common_name": "Plaza Cívica (Tres Cabezas)",
+    "geom": { "type": "Point", "coordinates": [-116.610, 31.856] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 6,
+    "name": "Boulevard Costero y Sanginés",
+    "common_name": "Blvd. Costero & Sanginés",
+    "geom": { "type": "Point", "coordinates": [-116.605, 31.853] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 7,
+    "name": "Avenida Reforma y Calle Diamante",
+    "common_name": "Reforma & Diamante",
+    "geom": { "type": "Point", "coordinates": [-116.602, 31.849] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 8,
+    "name": "Avenida Reforma y Calle Plita",
+    "common_name": "Reforma & Plita",
+    "geom": { "type": "Point", "coordinates": [-116.600, 31.845] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 9,
+    "name": "Avenida Reforma y Calle Delante",
+    "common_name": "Reforma & Delante",
+    "geom": { "type": "Point", "coordinates": [-116.599, 31.842] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 10,
+    "name": "Avenida Reforma UABC Valle Dorado",
+    "common_name": "UABC Valle Dorado",
+    "geom": { "type": "Point", "coordinates": [-116.598, 31.839] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 11,
+    "name": "Avenida Reforma Plaza Sendero",
+    "common_name": "Plaza Sendero / Macroplaza",
+    "geom": { "type": "Point", "coordinates": [-116.597, 31.835] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 12,
+    "name": "Avenida Reforma y Calle Esmeralda",
+    "common_name": "Reforma & Esmeralda",
+    "geom": { "type": "Point", "coordinates": [-116.596, 31.832] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 13,
+    "name": "Avenida Reforma Cearte",
+    "common_name": "Reforma (Cearte Branch)",
+    "geom": { "type": "Point", "coordinates": [-116.595, 31.829] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 14,
+    "name": "Avenida Reforma y Calle Alisos",
+    "common_name": "Reforma & Alisos",
+    "geom": { "type": "Point", "coordinates": [-116.594, 31.826] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 15,
+    "name": "Avenida Reforma Clinica 8 IMSS",
+    "common_name": "IMSS Clinica 8",
+    "geom": { "type": "Point", "coordinates": [-116.593, 31.823] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 16,
+    "name": "Avenida Reforma y Hector A. Peñaloza",
+    "common_name": "Reforma & Peñaloza",
+    "geom": { "type": "Point", "coordinates": [-116.592, 31.820] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 17,
+    "name": "Avenida Reforma y Lázaro Cárdenas",
+    "common_name": "Reforma & Lázaro Cárdenas",
+    "geom": { "type": "Point", "coordinates": [-116.591, 31.817] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 18,
+    "name": "Avenida Reforma y San Marcos",
+    "common_name": "Reforma & San Marcos",
+    "geom": { "type": "Point", "coordinates": [-116.590, 31.814] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 19,
+    "name": "Avenida Reforma Soriana Super",
+    "common_name": "Soriana Super",
+    "geom": { "type": "Point", "coordinates": [-116.589, 31.811] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 20,
+    "name": "Avenida Reforma y Calle Estancia",
+    "common_name": "Reforma & Estancia",
+    "geom": { "type": "Point", "coordinates": [-116.588, 31.808] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 21,
+    "name": "Avenida Reforma y Calle Hierro",
+    "common_name": "Reforma & Hierro",
+    "geom": { "type": "Point", "coordinates": [-116.587, 31.805] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 22,
+    "name": "Avenida Reforma Valle Dorado Sur",
+    "common_name": "Reforma (Valle Dorado Sur)",
+    "geom": { "type": "Point", "coordinates": [-116.586, 31.802] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 23,
+    "name": "Avenida Reforma y Calle Lago Powell",
+    "common_name": "Reforma & Lago Powell",
+    "geom": { "type": "Point", "coordinates": [-116.585, 31.799] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 24,
+    "name": "Avenida Reforma y Calle Certeneja",
+    "common_name": "Reforma & Certeneja",
+    "geom": { "type": "Point", "coordinates": [-116.584, 31.796] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 25,
+    "name": "Avenida Reforma Pórticos del Mar",
+    "common_name": "Pórticos del Mar",
+    "geom": { "type": "Point", "coordinates": [-116.583, 31.793] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 26,
+    "name": "Avenida Reforma Villa Bonita",
+    "common_name": "Villa Bonita",
+    "geom": { "type": "Point", "coordinates": [-116.582, 31.790] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 27,
+    "name": "Avenida Reforma Entrada Chapultepec",
+    "common_name": "Entrada Chapultepec",
+    "geom": { "type": "Point", "coordinates": [-116.581, 31.787] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 28,
+    "name": "Terminal Chapultepec",
+    "common_name": "Terminal Chapultepec",
+    "geom": { "type": "Point", "coordinates": [-116.580, 31.784] },
+    "is_terminal": true,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  }
+]
