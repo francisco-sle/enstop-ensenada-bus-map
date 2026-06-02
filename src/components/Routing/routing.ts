@@ -1,9 +1,29 @@
-import { lineSlice, length, distance, point, lineString } from '@turf/turf'
+import { length, distance, point, lineString } from '@turf/turf'
 import type { DBStop, RouteDetail, RoutingResult } from '../../types'
 
 // Constants
 const BUS_SPEED_KMH = 20
 const WALK_SPEED_KMH = 5
+
+/**
+ * Find the index of the route coordinate closest to the given [lng, lat] stop position.
+ * This is more reliable than turf's lineSlice projection, which can snap to the wrong
+ * leg of a circular route when both legs run through the same area.
+ */
+function nearestCoordIndex(routeCoords: [number, number][], stopLng: number, stopLat: number): number {
+  let minDistSq = Infinity
+  let minIdx = 0
+  for (let i = 0; i < routeCoords.length; i++) {
+    const dx = routeCoords[i][0] - stopLng
+    const dy = routeCoords[i][1] - stopLat
+    const distSq = dx * dx + dy * dy
+    if (distSq < minDistSq) {
+      minDistSq = distSq
+      minIdx = i
+    }
+  }
+  return minIdx
+}
 
 export function computeABRoute(
   originLat: number,
@@ -53,33 +73,33 @@ export function computeABRoute(
         }
 
         try {
-          // Get the coordinates of the route LineString
           const routeCoords = route.geom.coordinates as [number, number][]
-          const routeLine = lineString(routeCoords)
+
+          // Find the route coordinate index closest to each stop.
+          // Index-based slicing avoids lineSlice's nearest-on-line projection, which can
+          // incorrectly snap to the wrong leg on circular/bidirectional routes.
+          const originIdx = nearestCoordIndex(routeCoords, originStopLng, originStopLat)
+          const destIdx = nearestCoordIndex(routeCoords, destStopLng, destStopLat)
 
           let busDistanceKm = 0
           let subCoords: [number, number][] = []
 
           if (goesForward) {
-            // Slice route line from origin stop to dest stop
-            const sliced = lineSlice(originStopPt, destStopPt, routeLine)
-            busDistanceKm = length(sliced, { units: 'kilometers' })
-            // GeoJSON coordinates are [lng, lat], convert to [lat, lng] for Leaflet
-            subCoords = sliced.geometry.coordinates.map(c => [c[1], c[0]] as [number, number])
+            // Forward slice: originIdx → destIdx (in order)
+            const lo = Math.min(originIdx, destIdx)
+            const hi = Math.max(originIdx, destIdx)
+            const sliced = routeCoords.slice(lo, hi + 1)
+            // If the stop order is reversed relative to coord order, flip the slice
+            const ordered = originIdx <= destIdx ? sliced : [...sliced].reverse()
+            busDistanceKm = length(lineString(ordered.length >= 2 ? ordered : [ordered[0], ordered[0]]), { units: 'kilometers' })
+            subCoords = ordered.map(c => [c[1], c[0]] as [number, number])
           } else {
-            // Circular route going backward (e.g. sequence 25 -> 3)
-            // Slice from origin stop to end of route line, and start of route line to dest stop
-            const endPt = point(routeCoords[routeCoords.length - 1])
-            const startPt = point(routeCoords[0])
-            
-            const slice1 = lineSlice(originStopPt, endPt, routeLine)
-            const slice2 = lineSlice(startPt, destStopPt, routeLine)
-            
-            busDistanceKm = length(slice1, { units: 'kilometers' }) + length(slice2, { units: 'kilometers' })
-            
-            const coords1 = slice1.geometry.coordinates.map(c => [c[1], c[0]] as [number, number])
-            const coords2 = slice2.geometry.coordinates.map(c => [c[1], c[0]] as [number, number])
-            subCoords = [...coords1, ...coords2]
+            // Circular backward: originIdx → end of line, then start → destIdx
+            const coords1 = routeCoords.slice(originIdx)
+            const coords2 = routeCoords.slice(0, destIdx + 1)
+            const allCoords = [...coords1, ...coords2]
+            busDistanceKm = length(lineString(allCoords.length >= 2 ? allCoords : [allCoords[0], allCoords[0]]), { units: 'kilometers' })
+            subCoords = allCoords.map(c => [c[1], c[0]] as [number, number])
           }
 
           // Calculate walking segments
@@ -105,7 +125,7 @@ export function computeABRoute(
             subPolylineCoords: subCoords
           })
         } catch (err) {
-          // If slicing fails due to turf limits, log and continue
+          // If slicing fails, log and continue
           console.warn('Failed to compute route slice:', err)
         }
       }
@@ -136,4 +156,5 @@ export function getNearbyStops(
     .sort((a, b) => a.dist - b.dist)
     .map(item => item.stop)
 }
+
 

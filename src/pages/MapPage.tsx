@@ -157,13 +157,13 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
       </button>
 
       {/* Floating Search Panel (Left/Top) */}
-      <div className="absolute top-5 left-5 z-[1000] w-[calc(100%-40px)] max-w-[360px] max-h-[calc(100%-120px)] overflow-y-auto flex flex-col gap-3">
-        {/* Route Planner Form */}
+      <div className="absolute top-5 left-5 z-[1000] w-[calc(100%-40px)] max-w-[360px] flex flex-col gap-3">
+        {/* Route Planner Form — overflow-visible so the autocomplete dropdown is not clipped */}
         <RoutePlanner stops={allStops} />
 
-        {/* Route Computation Results */}
+        {/* Route Computation Results — independently scrollable */}
         {routingResults.length > 0 && (
-          <div className="bg-surface rounded-xl border border-white/8 p-3 shadow-card animate-fade-up">
+          <div className="bg-surface rounded-xl border border-white/8 p-3 shadow-card animate-fade-up max-h-[calc(100vh-240px)] overflow-y-auto">
             <RouteResult />
           </div>
         )}
