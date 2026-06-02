@@ -1,6 +1,7 @@
-import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
-import { useEffect } from 'react'
+import { MapContainer, TileLayer, Marker, Polyline, Popup, useMap, useMapEvents } from 'react-leaflet'
+import { useEffect, useState } from 'react'
 import L from 'leaflet'
+import { MapPin, Navigation } from 'lucide-react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
 import type { DBStop, RouteDetail } from '../../types'
@@ -19,37 +20,37 @@ function MapController({ center, zoom }: MapControllerProps) {
   return null
 }
 
-function MapClickHandler() {
-  const { origin, destination, mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
-  
+interface MapEventsHandlerProps {
+  onRightClick: (latlng: L.LatLng | null) => void
+}
+
+function MapEventsHandler({ onRightClick }: MapEventsHandlerProps) {
+  const { mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
+
   useMapEvents({
     contextmenu(e) {
       if (e.originalEvent) {
         e.originalEvent.preventDefault()
       }
-      const { lat, lng } = e.latlng
-      const coordLabel = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
       
-      if (mapClickMode === 'origin') {
-        setOrigin({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
-        setMapClickMode(null)
-      } else if (mapClickMode === 'destination') {
-        setDestination({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
-        setMapClickMode(null)
-      } else {
-        // Sequential click logic
-        if (!origin) {
-          setOrigin({ lat, lng, label: `Origen (${coordLabel})` })
-        } else if (!destination) {
-          setDestination({ lat, lng, label: `Destino (${coordLabel})` })
+      if (mapClickMode) {
+        const { lat, lng } = e.latlng
+        const coordLabel = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+        if (mapClickMode === 'origin') {
+          setOrigin({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
         } else {
-          setOrigin({ lat, lng, label: `Origen (${coordLabel})` })
-          setDestination(null)
+          setDestination({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
         }
+        setMapClickMode(null)
+        onRightClick(null)
+      } else {
+        onRightClick(e.latlng)
       }
+    },
+    click() {
+      onRightClick(null)
     }
   })
-  
   return null
 }
 
@@ -60,7 +61,8 @@ interface BusMapProps {
 
 export function BusMap({ activeRoutes, allStops }: BusMapProps) {
   const { center, zoom, selectedStopId, selectedRouteId, userLocation, setSelectedStopId } = useMapStore()
-  const { origin, destination, routingResults, selectedResultIndex } = useRoutingStore()
+  const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } = useRoutingStore()
+  const [contextMenuPos, setContextMenuPos] = useState<{ lat: number; lng: number } | null>(null)
 
   // Custom Stop Icon generator based on route color or default
   const createStopIcon = (colorHex: string, isSelected: boolean) => {
@@ -128,7 +130,41 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
         style={{ width: '100%', height: '100%' }}
       >
         <MapController center={center} zoom={zoom} />
-        <MapClickHandler />
+        <MapEventsHandler onRightClick={setContextMenuPos} />
+
+        {contextMenuPos && (
+          <Popup
+            position={[contextMenuPos.lat, contextMenuPos.lng]}
+            closeButton={false}
+            autoPan={false}
+            className="custom-context-menu-popup"
+          >
+            <div className="flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none">
+              <button
+                onClick={() => {
+                  const coordLabel = `${contextMenuPos.lat.toFixed(4)}, ${contextMenuPos.lng.toFixed(4)}`
+                  setOrigin({ lat: contextMenuPos.lat, lng: contextMenuPos.lng, label: `Origen (${coordLabel})` })
+                  setContextMenuPos(null)
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-teal-400 hover:bg-white/5 border-b border-white/6 text-left"
+              >
+                <MapPin size={12} />
+                <span>Origen</span>
+              </button>
+              <button
+                onClick={() => {
+                  const coordLabel = `${contextMenuPos.lat.toFixed(4)}, ${contextMenuPos.lng.toFixed(4)}`
+                  setDestination({ lat: contextMenuPos.lat, lng: contextMenuPos.lng, label: `Destino (${coordLabel})` })
+                  setContextMenuPos(null)
+                }}
+                className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-amber-400 hover:bg-white/5 text-left"
+              >
+                <Navigation size={12} />
+                <span>Destino</span>
+              </button>
+            </div>
+          </Popup>
+        )}
         
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
