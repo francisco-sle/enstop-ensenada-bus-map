@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Polyline, Popup, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
 import { useEffect, useState } from 'react'
 import L from 'leaflet'
 import { MapPin, Navigation } from 'lucide-react'
@@ -20,11 +20,19 @@ function MapController({ center, zoom }: MapControllerProps) {
   return null
 }
 
+interface ContextMenuData {
+  lat: number
+  lng: number
+  x: number
+  y: number
+}
+
 interface MapEventsHandlerProps {
-  onRightClick: (latlng: L.LatLng | null) => void
+  onRightClick: (data: ContextMenuData | null) => void
 }
 
 function MapEventsHandler({ onRightClick }: MapEventsHandlerProps) {
+  const map = useMap()
   const { mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
 
   useMapEvents({
@@ -33,8 +41,10 @@ function MapEventsHandler({ onRightClick }: MapEventsHandlerProps) {
         e.originalEvent.preventDefault()
       }
       
+      const { lat, lng } = e.latlng
+      const containerPoint = map.latLngToContainerPoint(e.latlng)
+      
       if (mapClickMode) {
-        const { lat, lng } = e.latlng
         const coordLabel = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
         if (mapClickMode === 'origin') {
           setOrigin({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
@@ -44,10 +54,21 @@ function MapEventsHandler({ onRightClick }: MapEventsHandlerProps) {
         setMapClickMode(null)
         onRightClick(null)
       } else {
-        onRightClick(e.latlng)
+        onRightClick({
+          lat,
+          lng,
+          x: containerPoint.x,
+          y: containerPoint.y
+        })
       }
     },
     click() {
+      onRightClick(null)
+    },
+    zoomstart() {
+      onRightClick(null)
+    },
+    movestart() {
       onRightClick(null)
     }
   })
@@ -62,7 +83,7 @@ interface BusMapProps {
 export function BusMap({ activeRoutes, allStops }: BusMapProps) {
   const { center, zoom, selectedStopId, selectedRouteId, userLocation, setSelectedStopId } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } = useRoutingStore()
-  const [contextMenuPos, setContextMenuPos] = useState<{ lat: number; lng: number } | null>(null)
+  const [contextMenu, setContextMenu] = useState<ContextMenuData | null>(null)
 
   // Custom Stop Icon generator based on route color or default
   const createStopIcon = (colorHex: string, isSelected: boolean) => {
@@ -130,41 +151,7 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
         style={{ width: '100%', height: '100%' }}
       >
         <MapController center={center} zoom={zoom} />
-        <MapEventsHandler onRightClick={setContextMenuPos} />
-
-        {contextMenuPos && (
-          <Popup
-            position={[contextMenuPos.lat, contextMenuPos.lng]}
-            closeButton={false}
-            autoPan={false}
-            className="custom-context-menu-popup"
-          >
-            <div className="flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none">
-              <button
-                onClick={() => {
-                  const coordLabel = `${contextMenuPos.lat.toFixed(4)}, ${contextMenuPos.lng.toFixed(4)}`
-                  setOrigin({ lat: contextMenuPos.lat, lng: contextMenuPos.lng, label: `Origen (${coordLabel})` })
-                  setContextMenuPos(null)
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-teal-400 hover:bg-white/5 border-b border-white/6 text-left"
-              >
-                <MapPin size={12} />
-                <span>Origen</span>
-              </button>
-              <button
-                onClick={() => {
-                  const coordLabel = `${contextMenuPos.lat.toFixed(4)}, ${contextMenuPos.lng.toFixed(4)}`
-                  setDestination({ lat: contextMenuPos.lat, lng: contextMenuPos.lng, label: `Destino (${coordLabel})` })
-                  setContextMenuPos(null)
-                }}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-amber-400 hover:bg-white/5 text-left"
-              >
-                <Navigation size={12} />
-                <span>Destino</span>
-              </button>
-            </div>
-          </Popup>
-        )}
+        <MapEventsHandler onRightClick={setContextMenu} />
         
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -272,6 +259,37 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
           )
         })}
       </MapContainer>
+
+      {/* Custom Context Menu overlay */}
+      {contextMenu && (
+        <div
+          style={{ left: contextMenu.x, top: contextMenu.y }}
+          className="absolute z-[1001] flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up"
+        >
+          <button
+            onClick={() => {
+              const coordLabel = `${contextMenu.lat.toFixed(4)}, ${contextMenu.lng.toFixed(4)}`
+              setOrigin({ lat: contextMenu.lat, lng: contextMenu.lng, label: `Origen (${coordLabel})` })
+              setContextMenu(null)
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-teal-400 hover:bg-white/5 border-b border-white/6 text-left w-full cursor-pointer transition-colors"
+          >
+            <MapPin size={12} />
+            <span>Origen</span>
+          </button>
+          <button
+            onClick={() => {
+              const coordLabel = `${contextMenu.lat.toFixed(4)}, ${contextMenu.lng.toFixed(4)}`
+              setDestination({ lat: contextMenu.lat, lng: contextMenu.lng, label: `Destino (${coordLabel})` })
+              setContextMenu(null)
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-amber-400 hover:bg-white/5 text-left w-full cursor-pointer transition-colors"
+          >
+            <Navigation size={12} />
+            <span>Destino</span>
+          </button>
+        </div>
+      )}
     </div>
   )
 }
