@@ -146,7 +146,7 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
         )}
 
         {/* Routing Bus Path segments (Active Suggestion) */}
-        {activeResult && (
+        {activeResult && origin && destination && (
           <>
             {/* Bus segment */}
             <Polyline
