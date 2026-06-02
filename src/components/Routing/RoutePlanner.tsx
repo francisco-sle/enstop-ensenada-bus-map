@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { Navigation, MapPin, ArrowLeftRight, Map, X } from 'lucide-react'
+import { Navigation, MapPin, ArrowLeftRight, Map, X, Loader2 } from 'lucide-react'
 import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
 import { computeABRoute, getNearbyStops } from './routing'
 import { useRoute } from '../../api/useRoute'
+import { usePhotonGeocoder } from '../../api/usePhotonGeocoder'
 import type { DBStop, RouteDetail } from '../../types'
 
 interface RoutePlannerProps {
@@ -35,6 +36,14 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
 
   const originRef = useRef<HTMLDivElement>(null)
   const destRef = useRef<HTMLDivElement>(null)
+
+  // Photon geocoder — only query when the respective field is active
+  const { results: originPhoton, isLoading: originPhotonLoading } = usePhotonGeocoder(
+    isOriginFocused ? originInput : ''
+  )
+  const { results: destPhoton, isLoading: destPhotonLoading } = usePhotonGeocoder(
+    isDestFocused ? destInput : ''
+  )
 
   // Derive active display values
   const displayOrigin = isOriginFocused ? originInput : (origin?.label || '')
@@ -188,28 +197,81 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
             </button>
           </div>
 
-          {/* Autocomplete Dropdown */}
-          {showOriginDropdown && originInput && filteredOriginStops.length > 0 && (
-            <div className="absolute top-[58px] left-0 right-12 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
-              {filteredOriginStops.map(stop => (
-                <button
-                  key={stop.id}
-                  type="button"
-                  onClick={() => {
-                    const [lng, lat] = stop.geom.coordinates
-                    setOrigin({ lat, lng, label: stop.name })
-                    setCenter([lat, lng])
-                    setZoom(15)
-                    setShowOriginDropdown(false)
-                    setIsOriginFocused(false)
-                  }}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex flex-col gap-0.5"
-                >
-                  <span className="font-semibold">{stop.name}</span>
-                  {stop.common_name && <span className="text-[10px] text-white/40">{stop.common_name}</span>}
-                </button>
-              ))}
-            </div>
+          {/* Autocomplete Dropdown — Stops + Photon addresses */}
+          {showOriginDropdown && originInput && (
+            (() => {
+              const hasStops = filteredOriginStops.length > 0
+              const hasAddresses = originPhoton.length > 0
+              const showEmpty = !originPhotonLoading && !hasStops && !hasAddresses
+              if (!hasStops && !hasAddresses && !originPhotonLoading) return null
+              return (
+                <div className="absolute top-[58px] left-0 right-12 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
+                  {/* Bus stop results */}
+                  {hasStops && (
+                    <>
+                      <div className="px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white/25">
+                        Paradas de Bus
+                      </div>
+                      {filteredOriginStops.map(stop => (
+                        <button
+                          key={stop.id}
+                          type="button"
+                          onClick={() => {
+                            const [lng, lat] = stop.geom.coordinates
+                            setOrigin({ lat, lng, label: stop.name })
+                            setCenter([lat, lng])
+                            setZoom(15)
+                            setShowOriginDropdown(false)
+                            setIsOriginFocused(false)
+                          }}
+                          className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
+                        >
+                          <MapPin size={10} className="text-teal-400 shrink-0" />
+                          <span className="flex flex-col gap-0.5">
+                            <span className="font-semibold">{stop.name}</span>
+                            {stop.common_name && <span className="text-[10px] text-white/40">{stop.common_name}</span>}
+                          </span>
+                        </button>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Addresses from Photon */}
+                  {(hasAddresses || originPhotonLoading) && (
+                    <>
+                      <div className="px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white/25 flex items-center gap-1.5 border-t border-white/5">
+                        Direcciones
+                        {originPhotonLoading && <Loader2 size={9} className="animate-spin text-white/30" />}
+                      </div>
+                      {originPhoton.map((result, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            setOrigin({ lat: result.lat, lng: result.lng, label: result.label })
+                            setCenter([result.lat, result.lng])
+                            setZoom(15)
+                            setShowOriginDropdown(false)
+                            setIsOriginFocused(false)
+                          }}
+                          className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
+                        >
+                          <Navigation size={10} className="text-white/40 shrink-0" />
+                          <span className="truncate">{result.label}</span>
+                        </button>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Empty state */}
+                  {showEmpty && (
+                    <div className="px-3 py-3 text-xs text-white/30 text-center">
+                      No se encontraron resultados
+                    </div>
+                  )}
+                </div>
+              )
+            })()
           )}
         </div>
 
@@ -281,28 +343,81 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
             </button>
           </div>
 
-          {/* Autocomplete Dropdown */}
-          {showDestDropdown && destInput && filteredDestStops.length > 0 && (
-            <div className="absolute top-[58px] left-0 right-12 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
-              {filteredDestStops.map(stop => (
-                <button
-                  key={stop.id}
-                  type="button"
-                  onClick={() => {
-                    const [lng, lat] = stop.geom.coordinates
-                    setDestination({ lat, lng, label: stop.name })
-                    setCenter([lat, lng])
-                    setZoom(15)
-                    setShowDestDropdown(false)
-                    setIsDestFocused(false)
-                  }}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex flex-col gap-0.5"
-                >
-                  <span className="font-semibold">{stop.name}</span>
-                  {stop.common_name && <span className="text-[10px] text-white/40">{stop.common_name}</span>}
-                </button>
-              ))}
-            </div>
+          {/* Autocomplete Dropdown — Stops + Photon addresses */}
+          {showDestDropdown && destInput && (
+            (() => {
+              const hasStops = filteredDestStops.length > 0
+              const hasAddresses = destPhoton.length > 0
+              const showEmpty = !destPhotonLoading && !hasStops && !hasAddresses
+              if (!hasStops && !hasAddresses && !destPhotonLoading) return null
+              return (
+                <div className="absolute top-[58px] left-0 right-12 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
+                  {/* Bus stop results */}
+                  {hasStops && (
+                    <>
+                      <div className="px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white/25">
+                        Paradas de Bus
+                      </div>
+                      {filteredDestStops.map(stop => (
+                        <button
+                          key={stop.id}
+                          type="button"
+                          onClick={() => {
+                            const [lng, lat] = stop.geom.coordinates
+                            setDestination({ lat, lng, label: stop.name })
+                            setCenter([lat, lng])
+                            setZoom(15)
+                            setShowDestDropdown(false)
+                            setIsDestFocused(false)
+                          }}
+                          className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
+                        >
+                          <MapPin size={10} className="text-amber-400 shrink-0" />
+                          <span className="flex flex-col gap-0.5">
+                            <span className="font-semibold">{stop.name}</span>
+                            {stop.common_name && <span className="text-[10px] text-white/40">{stop.common_name}</span>}
+                          </span>
+                        </button>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Addresses from Photon */}
+                  {(hasAddresses || destPhotonLoading) && (
+                    <>
+                      <div className="px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-white/25 flex items-center gap-1.5 border-t border-white/5">
+                        Direcciones
+                        {destPhotonLoading && <Loader2 size={9} className="animate-spin text-white/30" />}
+                      </div>
+                      {destPhoton.map((result, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            setDestination({ lat: result.lat, lng: result.lng, label: result.label })
+                            setCenter([result.lat, result.lng])
+                            setZoom(15)
+                            setShowDestDropdown(false)
+                            setIsDestFocused(false)
+                          }}
+                          className="w-full text-left px-3 py-2 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
+                        >
+                          <Navigation size={10} className="text-white/40 shrink-0" />
+                          <span className="truncate">{result.label}</span>
+                        </button>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Empty state */}
+                  {showEmpty && (
+                    <div className="px-3 py-3 text-xs text-white/30 text-center">
+                      No se encontraron resultados
+                    </div>
+                  )}
+                </div>
+              )
+            })()
           )}
         </div>
 
