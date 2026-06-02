@@ -311,7 +311,7 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
           <div className="bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs rounded-lg p-2.5 flex items-center gap-2 animate-fade-up">
             <span className="animate-pulse">📍</span>
             <span>
-              Toca cualquier punto del mapa para definir el{' '}
+              Haz clic derecho (o mantén presionado en móvil) en el mapa para definir el{' '}
               <strong className="text-white">{mapClickMode === 'origin' ? 'Origen' : 'Destino'}</strong>.
             </span>
           </div>
