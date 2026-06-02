@@ -29,9 +29,10 @@ interface ContextMenuData {
 
 interface MapEventsHandlerProps {
   onRightClick: (data: ContextMenuData | null) => void
+  onZoomEnd: (zoom: number) => void
 }
 
-function MapEventsHandler({ onRightClick }: MapEventsHandlerProps) {
+function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerProps) {
   const map = useMap()
   const { mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
 
@@ -70,6 +71,9 @@ function MapEventsHandler({ onRightClick }: MapEventsHandlerProps) {
     },
     movestart() {
       onRightClick(null)
+    },
+    zoomend() {
+      onZoomEnd(map.getZoom())
     }
   })
   return null
@@ -84,6 +88,14 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
   const { center, zoom, selectedStopId, selectedRouteId, userLocation, setSelectedStopId } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } = useRoutingStore()
   const [contextMenu, setContextMenu] = useState<ContextMenuData | null>(null)
+  const [currentZoom, setCurrentZoom] = useState(zoom)
+  const [prevZoom, setPrevZoom] = useState(zoom)
+
+  // Sync local currentZoom with store's programmatic zoom during render
+  if (zoom !== prevZoom) {
+    setPrevZoom(zoom)
+    setCurrentZoom(zoom)
+  }
 
   // Custom Stop Icon generator based on route color or default
   const createStopIcon = (colorHex: string, isSelected: boolean) => {
@@ -151,7 +163,7 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
         style={{ width: '100%', height: '100%' }}
       >
         <MapController center={center} zoom={zoom} />
-        <MapEventsHandler onRightClick={setContextMenu} />
+        <MapEventsHandler onRightClick={setContextMenu} onZoomEnd={setCurrentZoom} />
         
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -223,41 +235,65 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
         })}
 
         {/* Stops Markers */}
-        {allStops.map(stop => {
-          const isSelected = selectedStopId === stop.id
-          const [lng, lat] = stop.geom.coordinates
-          
-          // Color coding of stop: matches selected route, active result, or default
-          let color = '#8BA5BE' // default muted blue
-          if (isSelected) {
-            color = 'var(--color-accent-warm)'
-          } else if (activeResult) {
-            if (stop.id === activeResult.originStop.id) {
-              color = 'var(--color-accent-teal)'
-            } else if (stop.id === activeResult.destStop.id) {
-              color = 'var(--color-accent-warm)'
-            }
-          } else if (selectedRouteId) {
-            const currentRoute = activeRoutes.find(r => r.id === selectedRouteId)
-            const servesStop = currentRoute?.route_stops.some(rs => rs.stop_id === stop.id)
-            if (servesStop) {
-              color = currentRoute?.category?.color_hex || 'var(--color-accent-teal)'
-            }
-          }
+        {allStops
+          .filter(stop => {
+            // Always show the selected stop
+            if (stop.id === selectedStopId) return true
 
-          return (
-            <Marker
-              key={stop.id}
-              position={[lat, lng]}
-              icon={createStopIcon(color, isSelected)}
-              eventHandlers={{
-                click: () => {
-                  setSelectedStopId(stop.id)
-                }
-              }}
-            />
-          )
-        })}
+            // Always show origin and destination stops for an active routing query
+            if (activeResult) {
+              if (stop.id === activeResult.originStop.id || stop.id === activeResult.destStop.id) {
+                return true
+              }
+            }
+
+            // Apply Level of Detail (LoD) based on zoom level
+            if (currentZoom <= 12) {
+              // Zoom 11-12: Show only terminals
+              return stop.is_terminal
+            } else if (currentZoom <= 14) {
+              // Zoom 13-14: Show terminals + accessible (major) stops
+              return stop.is_terminal || stop.accessible
+            } else {
+              // Zoom 15+: Show all stops
+              return true
+            }
+          })
+          .map(stop => {
+            const isSelected = selectedStopId === stop.id
+            const [lng, lat] = stop.geom.coordinates
+            
+            // Color coding of stop: matches selected route, active result, or default
+            let color = '#8BA5BE' // default muted blue
+            if (isSelected) {
+              color = 'var(--color-accent-warm)'
+            } else if (activeResult) {
+              if (stop.id === activeResult.originStop.id) {
+                color = 'var(--color-accent-teal)'
+              } else if (stop.id === activeResult.destStop.id) {
+                color = 'var(--color-accent-warm)'
+              }
+            } else if (selectedRouteId) {
+              const currentRoute = activeRoutes.find(r => r.id === selectedRouteId)
+              const servesStop = currentRoute?.route_stops.some(rs => rs.stop_id === stop.id)
+              if (servesStop) {
+                color = currentRoute?.category?.color_hex || 'var(--color-accent-teal)'
+              }
+            }
+
+            return (
+              <Marker
+                key={stop.id}
+                position={[lat, lng]}
+                icon={createStopIcon(color, isSelected)}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedStopId(stop.id)
+                  }
+                }}
+              />
+            )
+          })}
       </MapContainer>
 
       {/* Custom Context Menu overlay */}

@@ -8,39 +8,39 @@ INSERT INTO categories (id, name, color_hex) VALUES
 -- Insert routes
 INSERT INTO routes (id, name, short_name, category_id, description, geom, direction, is_active) VALUES
 (1, 'R1 — Centro–Chapultepec', 'R1', 1, 'Ruta troncal de Centro a Chapultepec por Av. Reforma', 
-  ST_GeomFromText('LINESTRING(-116.625 31.868, -116.621 31.865, -116.618 31.862, -116.615 31.859, -116.610 31.856, -116.605 31.853, -116.602 31.849, -116.600 31.845, -116.599 31.842, -116.598 31.839, -116.597 31.835, -116.596 31.832, -116.595 31.829, -116.594 31.826, -116.593 31.823, -116.592 31.820, -116.591 31.817, -116.590 31.814, -116.589 31.811, -116.588 31.808, -116.587 31.805, -116.586 31.802, -116.585 31.799, -116.584 31.796, -116.583 31.793, -116.582 31.790, -116.581 31.787, -116.580 31.784)', 4326),
+  ST_GeomFromText('LINESTRING(-116.625 31.868, -116.621 31.865, -116.618 31.861, -116.615 31.857, -116.610 31.854, -116.605 31.851, -116.602 31.848, -116.600 31.845, -116.599 31.842, -116.598 31.839, -116.597 31.835, -116.596 31.831, -116.595 31.826, -116.594 31.820, -116.592 31.814, -116.590 31.808, -116.586 31.800, -116.583 31.790, -116.580 31.780, -116.590 31.785, -116.594 31.795, -116.598 31.805, -116.602 31.815, -116.606 31.825, -116.610 31.835, -116.614 31.845, -116.618 31.855, -116.623 31.862, -116.625 31.868)', 4326),
   'circular', true);
 
 -- Insert stops
 INSERT INTO stops (id, name, common_name, geom, is_terminal, accessible) VALUES
 (1, 'Terminal Centro', 'Terminal Centro', ST_SetSRID(ST_MakePoint(-116.625, 31.868), 4326), true, true),
 (2, 'Calle Segunda y Gastélum', 'Parque Revolución', ST_SetSRID(ST_MakePoint(-116.621, 31.865), 4326), false, true),
-(3, 'Calle Tercera y Gastélum', 'Calle 3ra & Gastélum', ST_SetSRID(ST_MakePoint(-116.618, 31.862), 4326), false, false),
-(4, 'Avenida Juárez y Miramar', 'Av. Juárez & Miramar', ST_SetSRID(ST_MakePoint(-116.615, 31.859), 4326), false, false),
-(5, 'Plaza Cívica de la Patria', 'Plaza Cívica (Tres Cabezas)', ST_SetSRID(ST_MakePoint(-116.610, 31.856), 4326), false, true),
-(6, 'Boulevard Costero y Sanginés', 'Blvd. Costero & Sanginés', ST_SetSRID(ST_MakePoint(-116.605, 31.853), 4326), false, false),
-(7, 'Avenida Reforma y Calle Diamante', 'Reforma & Diamante', ST_SetSRID(ST_MakePoint(-116.602, 31.849), 4326), false, true),
+(3, 'Calle Segunda y Floresta', 'Calle 2da & Floresta', ST_SetSRID(ST_MakePoint(-116.618, 31.861), 4326), false, false),
+(4, 'Calle Segunda y Espinoza', 'Calle 2da & Espinoza', ST_SetSRID(ST_MakePoint(-116.615, 31.857), 4326), false, false),
+(5, 'Calle Segunda y Rayón', 'Calle 2da & Rayón', ST_SetSRID(ST_MakePoint(-116.610, 31.854), 4326), false, true),
+(6, 'Calle Segunda y Kiliwas', 'Calle 2da & Kiliwas', ST_SetSRID(ST_MakePoint(-116.605, 31.851), 4326), false, false),
+(7, 'Avenida Reforma y Calle Diamante', 'Reforma & Diamante', ST_SetSRID(ST_MakePoint(-116.602, 31.848), 4326), false, true),
 (8, 'Avenida Reforma y Calle Plita', 'Reforma & Plita', ST_SetSRID(ST_MakePoint(-116.600, 31.845), 4326), false, false),
 (9, 'Avenida Reforma y Calle Delante', 'Reforma & Delante', ST_SetSRID(ST_MakePoint(-116.599, 31.842), 4326), false, false),
 (10, 'Avenida Reforma UABC Valle Dorado', 'UABC Valle Dorado', ST_SetSRID(ST_MakePoint(-116.598, 31.839), 4326), false, true),
 (11, 'Avenida Reforma Plaza Sendero', 'Plaza Sendero / Macroplaza', ST_SetSRID(ST_MakePoint(-116.597, 31.835), 4326), false, true),
-(12, 'Avenida Reforma y Calle Esmeralda', 'Reforma & Esmeralda', ST_SetSRID(ST_MakePoint(-116.596, 31.832), 4326), false, false),
-(13, 'Avenida Reforma Cearte', 'Reforma (Cearte Branch)', ST_SetSRID(ST_MakePoint(-116.595, 31.829), 4326), false, false),
-(14, 'Avenida Reforma y Calle Alisos', 'Reforma & Alisos', ST_SetSRID(ST_MakePoint(-116.594, 31.826), 4326), false, false),
-(15, 'Avenida Reforma Clinica 8 IMSS', 'IMSS Clinica 8', ST_SetSRID(ST_MakePoint(-116.593, 31.823), 4326), false, true),
-(16, 'Avenida Reforma y Hector A. Peñaloza', 'Reforma & Peñaloza', ST_SetSRID(ST_MakePoint(-116.592, 31.820), 4326), false, false),
-(17, 'Avenida Reforma y Lázaro Cárdenas', 'Reforma & Lázaro Cárdenas', ST_SetSRID(ST_MakePoint(-116.591, 31.817), 4326), false, true),
-(18, 'Avenida Reforma y San Marcos', 'Reforma & San Marcos', ST_SetSRID(ST_MakePoint(-116.590, 31.814), 4326), false, false),
-(19, 'Avenida Reforma Soriana Super', 'Soriana Super', ST_SetSRID(ST_MakePoint(-116.589, 31.811), 4326), false, false),
-(20, 'Avenida Reforma y Calle Estancia', 'Reforma & Estancia', ST_SetSRID(ST_MakePoint(-116.588, 31.808), 4326), false, true),
-(21, 'Avenida Reforma y Calle Hierro', 'Reforma & Hierro', ST_SetSRID(ST_MakePoint(-116.587, 31.805), 4326), false, false),
-(22, 'Avenida Reforma Valle Dorado Sur', 'Reforma (Valle Dorado Sur)', ST_SetSRID(ST_MakePoint(-116.586, 31.802), 4326), false, false),
-(23, 'Avenida Reforma y Calle Lago Powell', 'Reforma & Lago Powell', ST_SetSRID(ST_MakePoint(-116.585, 31.799), 4326), false, false),
-(24, 'Avenida Reforma y Calle Certeneja', 'Reforma & Certeneja', ST_SetSRID(ST_MakePoint(-116.584, 31.796), 4326), false, false),
-(25, 'Avenida Reforma Pórticos del Mar', 'Pórticos del Mar', ST_SetSRID(ST_MakePoint(-116.583, 31.793), 4326), false, true),
-(26, 'Avenida Reforma Villa Bonita', 'Villa Bonita', ST_SetSRID(ST_MakePoint(-116.582, 31.790), 4326), false, false),
-(27, 'Avenida Reforma Entrada Chapultepec', 'Entrada Chapultepec', ST_SetSRID(ST_MakePoint(-116.581, 31.787), 4326), false, false),
-(28, 'Terminal Chapultepec', 'Terminal Chapultepec', ST_SetSRID(ST_MakePoint(-116.580, 31.784), 4326), true, true);
+(12, 'Avenida Reforma y Calle Esmeralda', 'Reforma & Esmeralda', ST_SetSRID(ST_MakePoint(-116.596, 31.831), 4326), false, false),
+(13, 'Avenida Reforma y Calle Alisos', 'Reforma & Alisos', ST_SetSRID(ST_MakePoint(-116.595, 31.826), 4326), false, false),
+(14, 'Avenida Reforma y Calle Coral', 'Reforma & Calle Coral', ST_SetSRID(ST_MakePoint(-116.594, 31.820), 4326), false, false),
+(15, 'Avenida Reforma Clinica 8 IMSS', 'IMSS Clinica 8', ST_SetSRID(ST_MakePoint(-116.592, 31.814), 4326), false, true),
+(16, 'Avenida Reforma y Lázaro Cárdenas', 'Reforma & Lázaro Cárdenas', ST_SetSRID(ST_MakePoint(-116.590, 31.808), 4326), false, true),
+(17, 'Avenida Reforma y Calle Estancia', 'Reforma & Estancia', ST_SetSRID(ST_MakePoint(-116.586, 31.800), 4326), false, true),
+(18, 'Avenida Reforma Pórticos del Mar', 'Pórticos del Mar', ST_SetSRID(ST_MakePoint(-116.583, 31.790), 4326), false, true),
+(19, 'Terminal Chapultepec', 'Terminal Chapultepec', ST_SetSRID(ST_MakePoint(-116.580, 31.780), 4326), true, true),
+(20, 'Pedro Loyola y Entrada Chapultepec', 'Pedro Loyola & Entrada Chapultepec', ST_SetSRID(ST_MakePoint(-116.590, 31.785), 4326), false, false),
+(21, 'Pedro Loyola y Pórticos del Mar', 'Pedro Loyola & Pórticos del Mar', ST_SetSRID(ST_MakePoint(-116.594, 31.795), 4326), false, true),
+(22, 'Pedro Loyola y Calle Lago Powell', 'Pedro Loyola & Lago Powell', ST_SetSRID(ST_MakePoint(-116.598, 31.805), 4326), false, false),
+(23, 'Pedro Loyola y Calle Estancia', 'Pedro Loyola & Estancia', ST_SetSRID(ST_MakePoint(-116.602, 31.815), 4326), false, true),
+(24, 'Pedro Loyola y Lázaro Cárdenas', 'Pedro Loyola & Lázaro Cárdenas', ST_SetSRID(ST_MakePoint(-116.606, 31.825), 4326), false, true),
+(25, 'Pedro Loyola y Clinica 8 IMSS', 'Pedro Loyola & IMSS', ST_SetSRID(ST_MakePoint(-116.610, 31.835), 4326), false, true),
+(26, 'Pedro Loyola y Calle Esmeralda', 'Pedro Loyola & Esmeralda', ST_SetSRID(ST_MakePoint(-116.614, 31.845), 4326), false, false),
+(27, 'Blvd. Costero y Sanginés', 'Blvd. Costero & Sanginés', ST_SetSRID(ST_MakePoint(-116.618, 31.855), 4326), false, false),
+(28, 'Plaza Cívica de la Patria', 'Plaza Cívica', ST_SetSRID(ST_MakePoint(-116.623, 31.862), 4326), false, true);
 
 -- Insert route_stops (Sequence mapping)
 INSERT INTO route_stops (route_id, stop_id, sequence) VALUES
