@@ -82,9 +82,10 @@ function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerProps) {
 interface BusMapProps {
   activeRoutes: RouteDetail[]
   allStops: DBStop[]
+  showFullRoutes?: boolean
 }
 
-export function BusMap({ activeRoutes, allStops }: BusMapProps) {
+export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMapProps) {
   const { center, zoom, selectedStopId, selectedRouteId, userLocation, setSelectedStopId } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } = useRoutingStore()
   const [contextMenu, setContextMenu] = useState<ContextMenuData | null>(null)
@@ -221,6 +222,8 @@ export function BusMap({ activeRoutes, allStops }: BusMapProps) {
         {/* General Route Lines (Only when not viewing A-to-B results) */}
         {!activeResult && activeRoutes.map(route => {
           const isSelected = selectedRouteId === route.id
+          if (!showFullRoutes && !isSelected) return null
+          
           // GeoJSON LineString coordinates are [lng, lat], convert to [lat, lng] for Leaflet
           const positions = (route.geom.coordinates as [number, number][]).map(c => [c[1], c[0]] as [number, number])
           return (
