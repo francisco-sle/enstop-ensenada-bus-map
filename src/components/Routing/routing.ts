@@ -25,6 +25,27 @@ function nearestCoordIndex(routeCoords: [number, number][], stopLng: number, sto
   return minIdx
 }
 
+/**
+ * Computes up to 3 optimal A→B transit routes given nearby candidate stops and
+ * pre-fetched route geometry. Handles both forward and circular (backward-wrap)
+ * route directions.
+ *
+ * @param originLat - Latitude of the trip origin point.
+ * @param originLng - Longitude of the trip origin point.
+ * @param destLat   - Latitude of the trip destination point.
+ * @param destLng   - Longitude of the trip destination point.
+ * @param nearbyOriginStops - Candidate boarding stops near the origin (from `getNearbyStops`).
+ * @param nearbyDestStops   - Candidate alighting stops near the destination (from `getNearbyStops`).
+ * @param routesDetails     - Pre-fetched `RouteDetail[]` that must include `route_stops` and `geom`.
+ * @returns Up to 3 `RoutingResult` objects sorted ascending by `totalMinutes`.
+ *
+ * @example
+ * const oNearby = getNearbyStops(31.86, -116.60, allStops, 2.0)
+ * const dNearby = getNearbyStops(31.83, -116.62, allStops, 2.0)
+ * const results = computeABRoute(31.86, -116.60, 31.83, -116.62, oNearby, dNearby, [route1Detail])
+ * // results[0].totalMinutes — fastest option in minutes
+ * // results[0].subPolylineCoords — [lat, lng][] for the bus segment Polyline
+ */
 export function computeABRoute(
   originLat: number,
   originLng: number,
@@ -137,7 +158,18 @@ export function computeABRoute(
 }
 
 /**
- * Finds all stops within maxDistanceKm of a coordinate, sorted by proximity.
+ * Returns all stops within `maxDistanceKm` of the given coordinate,
+ * sorted nearest-first using Turf `distance`.
+ *
+ * @param lat           - Latitude of the query point.
+ * @param lng           - Longitude of the query point.
+ * @param stops         - Full `DBStop[]` array to filter (typically from `useStops`).
+ * @param maxDistanceKm - Radius in kilometres. Defaults to `2.0`.
+ * @returns Filtered and sorted `DBStop[]`.
+ *
+ * @example
+ * const nearby = getNearbyStops(31.86, -116.60, allStops, 1.5)
+ * // nearby[0] is the closest stop within 1.5 km
  */
 export function getNearbyStops(
   lat: number,
