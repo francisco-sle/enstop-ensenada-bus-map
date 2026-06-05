@@ -13,6 +13,17 @@ const PHOTON_URL = 'https://photon.komoot.io/api/'
 const DEBOUNCE_MS = 300
 const MIN_QUERY_LENGTH = 3
 
+/**
+ * Constructs a human-readable address label from raw Photon feature properties.
+ * Prioritizes: name → street+housenumber → city.
+ *
+ * @example
+ * buildLabel({ name: 'Parque Riviera', street: 'Av. Lázaro Cárdenas', city: 'Ensenada' })
+ * // => 'Parque Riviera, Av. Lázaro Cárdenas, Ensenada'
+ *
+ * buildLabel({ street: 'Calle Primera', housenumber: '42', city: 'Ensenada' })
+ * // => 'Calle Primera 42, Ensenada'
+ */
 function buildLabel(props: Record<string, string | undefined>): string {
   const parts: string[] = []
   if (props.name) parts.push(props.name)
@@ -26,6 +37,25 @@ function buildLabel(props: Record<string, string | undefined>): string {
   return parts.join(', ') || 'Dirección desconocida'
 }
 
+/**
+ * Debounced geocoding hook. Queries the Photon API (Komoot) for address
+ * suggestions within the Ensenada municipality bounding box.
+ *
+ * - Requests are debounced by 300ms.
+ * - Queries shorter than 3 characters are short-circuited (no API call).
+ * - In-flight requests are automatically aborted when the query changes.
+ *
+ * @param query - Raw text input from the user.
+ * @returns `{ results, isLoading }` — `results` is empty while loading or when input is too short.
+ *
+ * @example
+ * function SearchInput() {
+ *   const [q, setQ] = useState('')
+ *   const { results, isLoading } = usePhotonGeocoder(q)
+ *   //  results: PhotonResult[] — label, lat, lng, type
+ *   return <input onChange={e => setQ(e.target.value)} />
+ * }
+ */
 export function usePhotonGeocoder(query: string): {
   results: PhotonResult[]
   isLoading: boolean
