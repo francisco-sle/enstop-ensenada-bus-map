@@ -1,7 +1,8 @@
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
 import { useEffect, useState } from 'react'
 import L from 'leaflet'
-import { MapPin, Navigation } from 'lucide-react'
+import { MapPin, Navigation, Bus } from 'lucide-react'
+import { renderToString } from 'react-dom/server'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
 import type { DBStop, RouteDetail } from '../../types'
@@ -79,6 +80,13 @@ function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerProps) {
   return null
 }
 
+// Helper to sanitize CSS color values to prevent XSS / injection
+function sanitizeColor(color: string): string {
+  if (/^#[0-9A-Fa-f]{3,8}$/.test(color)) return color
+  if (/^var\(--[a-zA-Z0-9-]+\)$/.test(color)) return color
+  return '#2563EB' // default typical blue map pin
+}
+
 interface BusMapProps {
   activeRoutes: RouteDetail[]
   allStops: DBStop[]
@@ -100,20 +108,46 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
 
   // Custom Stop Icon generator based on route color or default
   const createStopIcon = (colorHex: string, isSelected: boolean) => {
-    const size = isSelected ? 16 : 12
+    const safeColor = sanitizeColor(colorHex)
+    const size = isSelected ? 32 : 24
+    
+    const pinHtml = renderToString(
+      <div style={{
+        position: 'relative',
+        width: `${size}px`,
+        height: `${size}px`,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.35))',
+        transition: 'all 0.2s ease-in-out'
+      }}>
+        <MapPin 
+          size={size} 
+          color="#ffffff" 
+          fill={safeColor} 
+          strokeWidth={1.5} 
+        />
+        <div style={{
+          position: 'absolute',
+          top: '38%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          color: '#ffffff',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <Bus size={isSelected ? 14 : 10} />
+        </div>
+      </div>
+    )
+
     return L.divIcon({
       className: 'custom-stop-marker',
-      html: `<div style="
-        background-color: ${colorHex}; 
-        width: ${size}px; 
-        height: ${size}px; 
-        border-radius: 50%; 
-        border: 2px solid white; 
-        box-shadow: 0 0 6px rgba(0,0,0,0.6);
-        transition: all 0.2s ease-in-out;
-      "></div>`,
+      html: pinHtml,
       iconSize: [size, size],
-      iconAnchor: [size / 2, size / 2]
+      iconAnchor: [size / 2, size * 22 / 24]
     })
   }
 
@@ -200,7 +234,7 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
                 [origin!.lat, origin!.lng],
                 [activeResult.originStop.geom.coordinates[1], activeResult.originStop.geom.coordinates[0]]
               ]}
-              color="var(--color-text-secondary)"
+              color="#64748b"
               weight={3}
               dashArray="6, 6"
               opacity={0.8}
@@ -211,7 +245,7 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
                 [activeResult.destStop.geom.coordinates[1], activeResult.destStop.geom.coordinates[0]],
                 [destination!.lat, destination!.lng]
               ]}
-              color="var(--color-text-secondary)"
+              color="#64748b"
               weight={3}
               dashArray="6, 6"
               opacity={0.8}
@@ -267,7 +301,7 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
             const [lng, lat] = stop.geom.coordinates
             
             // Color coding of stop: matches selected route, active result, or default
-            let color = '#8BA5BE' // default muted blue
+            let color = '#2563EB' // default typical blue map pin
             if (isSelected) {
               color = 'var(--color-accent-warm)'
             } else if (activeResult) {
