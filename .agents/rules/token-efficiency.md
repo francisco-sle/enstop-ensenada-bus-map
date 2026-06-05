@@ -1,4 +1,8 @@
-# Configuration: Semantic Density & Briefing
+---
+trigger: always_on
+---
+
+# Semantic Density & Briefing
 
 ## Response Style Guide
 
