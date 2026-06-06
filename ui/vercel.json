@@ -8,7 +8,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; worker-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://cartodb-basemaps-*.global.ssl.fastly.net; connect-src 'self' https://*.supabase.co; frame-ancestors 'none';"
+          "value": "default-src 'self'; worker-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://cartodb-basemaps-*.global.ssl.fastly.net; connect-src 'self' https://*.supabase.co https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://cartodb-basemaps-*.global.ssl.fastly.net; frame-ancestors 'none';"
         },
         {
           "key": "X-Frame-Options",
