@@ -8,6 +8,9 @@ export default defineConfig({
   define: {
     'import.meta.env.VITE_USE_MOCKS': JSON.stringify(process.env.VITE_USE_MOCKS ?? 'true')
   },
+  optimizeDeps: {
+    include: ['leaflet', 'leaflet-rotatedmarker', 'leaflet-polylinedecorator']
+  },
   test: {
     exclude: ['node_modules', 'dist', '.git', '.cache', 'e2e']
   }

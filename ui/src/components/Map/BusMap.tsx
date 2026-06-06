@@ -1,124 +1,14 @@
-import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
-import { useEffect, useState } from 'react'
-import L from 'leaflet'
-import { MapPin, Bus } from 'lucide-react'
-import { renderToString } from 'react-dom/server'
+import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet'
+import { useState, useMemo } from 'react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
 import { useBusMapMarkers } from './useBusMapMarkers'
 import { MapContextMenu } from './MapContextMenu'
+import { RouteTracker } from './RouteTracker'
+import { MapController, MapEventsHandler } from './mapControls'
+import { createStopIcon, userLocationIcon, routingPinIcon } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
 import type { DBStop, RouteDetail } from '../../types'
-
-// ─── Internal Sub-components ─────────────────────────────────────────────────
-
-interface MapControllerProps {
-  center: [number, number]
-  zoom: number
-}
-
-function MapController({ center, zoom }: MapControllerProps) {
-  const map = useMap()
-  useEffect(() => {
-    map.setView(center, zoom, { animate: true, duration: 0.5 })
-  }, [center, zoom, map])
-  return null
-}
-
-interface MapEventsHandlerProps {
-  onRightClick: (data: ContextMenuPosition | null) => void
-  onZoomEnd: (zoom: number) => void
-}
-
-function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerProps) {
-  const map = useMap()
-  const { mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
-
-  useMapEvents({
-    contextmenu(e) {
-      if (e.originalEvent) e.originalEvent.preventDefault()
-      const { lat, lng } = e.latlng
-      const containerPoint = map.latLngToContainerPoint(e.latlng)
-
-      if (mapClickMode) {
-        const coordLabel = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
-        if (mapClickMode === 'origin') {
-          setOrigin({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
-        } else {
-          setDestination({ lat, lng, label: `Punto en Mapa (${coordLabel})` })
-        }
-        setMapClickMode(null)
-        onRightClick(null)
-      } else {
-        onRightClick({ lat, lng, x: containerPoint.x, y: containerPoint.y })
-      }
-    },
-    click() { onRightClick(null) },
-    zoomstart() { onRightClick(null) },
-    movestart() { onRightClick(null) },
-    zoomend() { onZoomEnd(map.getZoom()) },
-  })
-  return null
-}
-
-// ─── Icon Helpers ─────────────────────────────────────────────────────────────
-
-/** Sanitizes CSS color values to prevent injection into inline styles. */
-function sanitizeColor(color: string): string {
-  if (/^#[0-9A-Fa-f]{3,8}$/.test(color)) return color
-  if (/^var\(--[a-zA-Z0-9-]+\)$/.test(color)) return color
-  return '#2563EB'
-}
-
-function createStopIcon(colorHex: string, isSelected: boolean) {
-  const safeColor = sanitizeColor(colorHex)
-  const size = isSelected ? 32 : 24
-  const pinHtml = renderToString(
-    <div style={{
-      position: 'relative', width: `${size}px`, height: `${size}px`,
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.35))',
-      transition: 'all 0.2s ease-in-out',
-    }}>
-      <MapPin size={size} color="#ffffff" fill={safeColor} strokeWidth={1.5} />
-      <div style={{
-        position: 'absolute', top: '38%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        color: '#ffffff', display: 'flex', justifyContent: 'center', alignItems: 'center',
-      }}>
-        <Bus size={isSelected ? 14 : 10} />
-      </div>
-    </div>
-  )
-  return L.divIcon({
-    className: 'custom-stop-marker',
-    html: pinHtml,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size * 22 / 24],
-  })
-}
-
-const userLocationIcon = L.divIcon({
-  className: 'user-location-marker',
-  html: '<div class="user-location-pulse"></div>',
-  iconSize: [22, 22],
-  iconAnchor: [11, 11],
-})
-
-function routingPinIcon(label: 'A' | 'B') {
-  const bgColor = label === 'A' ? 'var(--color-accent-teal)' : 'var(--color-accent-warm)'
-  return L.divIcon({
-    className: 'routing-pin-marker',
-    html: `<div style="
-      background-color: ${bgColor}; color: var(--color-text-inverse);
-      font-weight: bold; font-size: 11px; width: 20px; height: 20px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    ">${label}</div>`,
-    iconSize: [20, 20],
-    iconAnchor: [10, 10],
-  })
-}
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -152,6 +42,17 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
     activeResult,
     currentZoom,
   })
+
+  // Pre-build icons once per stopMarkers change — avoids calling renderToString inside JSX.
+  // L.divIcon creation (+ renderToString) is expensive; memoizing collapses ~6 unique combos.
+  const stopMarkerIcons = useMemo(
+    () => stopMarkers.map(({ stop, color, isSelected }) => ({
+      stop,
+      icon: createStopIcon(color, isSelected),
+    })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [stopMarkers, currentZoom]
+  )
 
   return (
     <div className="w-full h-full relative">
@@ -188,11 +89,17 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
         {/* Active Routing Path */}
         {activeResult && origin && destination && (
           <>
+            {/* Solid route path trace */}
             <Polyline
               positions={activeResult.subPolylineCoords}
               color={activeResult.routeColor}
-              weight={6}
-              opacity={0.9}
+              weight={8}
+              opacity={0.85}
+            />
+            {/* Moving arrows following the route direction */}
+            <RouteTracker
+              coords={activeResult.subPolylineCoords}
+              color={activeResult.routeColor}
             />
             <Polyline
               positions={[
@@ -230,13 +137,13 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
         })}
 
         {/* Stop Markers — derived from useBusMapMarkers */}
-        {stopMarkers.map(({ stop, color, isSelected }) => {
+        {stopMarkerIcons.map(({ stop, icon }) => {
           const [lng, lat] = stop.geom.coordinates
           return (
             <Marker
               key={stop.id}
               position={[lat, lng]}
-              icon={createStopIcon(color, isSelected)}
+              icon={icon}
               eventHandlers={{ click: () => setSelectedStopId(stop.id) }}
             />
           )
