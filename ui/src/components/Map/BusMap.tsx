@@ -1,10 +1,11 @@
-import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import { useState, useMemo } from 'react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
 import { useBusMapMarkers } from './useBusMapMarkers'
 import { MapContextMenu } from './MapContextMenu'
-import { RouteTracker } from './RouteTracker'
+import { ActiveRouteDisplay } from './ActiveRouteDisplay'
+import { RouteLine } from './RouteLine'
 import { MapController, MapEventsHandler } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIcon } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
@@ -16,9 +17,10 @@ interface BusMapProps {
   activeRoutes: RouteDetail[]
   allStops: DBStop[]
   showFullRoutes?: boolean
+  showRouting?: boolean
 }
 
-export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMapProps) {
+export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRouting = true }: BusMapProps) {
   const { center, zoom, selectedStopId, selectedRouteId, userLocation, setSelectedStopId } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex } = useRoutingStore()
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
@@ -31,7 +33,7 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
     setCurrentZoom(zoom)
   }
 
-  const activeResult = selectedResultIndex !== null ? routingResults[selectedResultIndex] : null
+  const activeResult = (showRouting && selectedResultIndex !== null) ? routingResults[selectedResultIndex] : null
 
   // Derive stop markers outside JSX — LoD filtering + color coding
   const stopMarkers = useBusMapMarkers({
@@ -74,64 +76,36 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true }: BusMap
         />
 
         {/* User GPS Location */}
-        {userLocation && (
+        {showRouting && userLocation && (
           <Marker position={userLocation} icon={userLocationIcon} zIndexOffset={1000} />
         )}
 
         {/* Origin / Destination Pins */}
-        {origin && (
+        {showRouting && origin && (
           <Marker position={[origin.lat, origin.lng]} icon={routingPinIcon('A')} zIndexOffset={900} />
         )}
-        {destination && (
+        {showRouting && destination && (
           <Marker position={[destination.lat, destination.lng]} icon={routingPinIcon('B')} zIndexOffset={900} />
         )}
 
         {/* Active Routing Path */}
         {activeResult && origin && destination && (
-          <>
-            {/* Solid route path trace */}
-            <Polyline
-              positions={activeResult.subPolylineCoords}
-              color={activeResult.routeColor}
-              weight={8}
-              opacity={0.85}
-            />
-            {/* Moving arrows following the route direction */}
-            <RouteTracker
-              coords={activeResult.subPolylineCoords}
-              color={activeResult.routeColor}
-            />
-            <Polyline
-              positions={[
-                [origin.lat, origin.lng],
-                [activeResult.originStop.geom.coordinates[1], activeResult.originStop.geom.coordinates[0]],
-              ]}
-              color="#64748b" weight={3} dashArray="6, 6" opacity={0.8}
-            />
-            <Polyline
-              positions={[
-                [activeResult.destStop.geom.coordinates[1], activeResult.destStop.geom.coordinates[0]],
-                [destination.lat, destination.lng],
-              ]}
-              color="#64748b" weight={3} dashArray="6, 6" opacity={0.8}
-            />
-          </>
+          <ActiveRouteDisplay
+            origin={origin}
+            destination={destination}
+            activeResult={activeResult}
+          />
         )}
 
         {/* General Route Lines */}
         {!activeResult && activeRoutes.map(route => {
           const isSelected = selectedRouteId === route.id
           if (!showFullRoutes && !isSelected) return null
-          const positions = (route.geom.coordinates as [number, number][]).map(
-            c => [c[1], c[0]] as [number, number]
-          )
           return (
-            <Polyline
+            <RouteLine
               key={route.id}
-              positions={positions}
-              color={route.category?.color_hex || '#3DBFA8'}
-              weight={isSelected ? 6 : 3}
-              opacity={isSelected ? 0.9 : 0.6}
+              route={route}
+              isSelected={isSelected}
             />
           )
         })}
