@@ -1,6 +1,9 @@
 {
   "name": "enstop-root",
   "private": true,
+  "workspaces": [
+    "ui"
+  ],
   "scripts": {
     "dev": "npm --prefix ui run dev",
     "dev:mock": "npm --prefix ui run dev:mock",
