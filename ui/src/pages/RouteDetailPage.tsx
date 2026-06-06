@@ -55,7 +55,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
 
       {/* Map Preview */}
       <div className="relative border-b border-white/8 bg-navy-800">
-        <BusMap activeRoutes={[route]} allStops={stops} />
+        <BusMap activeRoutes={[route]} allStops={stops} showRouting={false} />
       </div>
 
       {/* Details (Stops list & Fare Table) */}
