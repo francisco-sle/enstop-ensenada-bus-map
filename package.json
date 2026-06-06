@@ -6,6 +6,7 @@
     "dev:mock": "npm --prefix ui run dev:mock",
     "dev:local": "supabase start && npm --prefix ui run dev:local",
     "build": "npm --prefix ui run build",
+    "build:mock": "VITE_USE_MOCKS=true npm --prefix ui run build",
     "preview": "npm --prefix ui run preview",
     "test": "npm --prefix ui run test",
     "test:watch": "npm --prefix ui run test:watch",
