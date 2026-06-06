@@ -8,6 +8,7 @@
     "dev:mock": "VITE_USE_MOCKS=true vite",
     "dev:local": "supabase start && vite",
     "build": "tsc -b && vite build",
+    "build:mock": "VITE_USE_MOCKS=true tsc -b && VITE_USE_MOCKS=true vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
