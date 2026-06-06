@@ -36,14 +36,14 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
         <button
           onClick={onBack}
           aria-label="Volver a lista de rutas"
-          className="text-white/70 hover:text-white p-1 hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+          className="text-white/70 hover:text-white min-w-11 min-h-11 flex items-center justify-center hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
         >
           <ArrowLeft size={20} />
         </button>
         <div className="flex items-center gap-2 overflow-hidden">
           <span
             style={{ backgroundColor: route.category?.color_hex || '#3DBFA8' }}
-            className="text-navy-900 font-extrabold text-[10px] px-2 py-0.5 rounded flex-shrink-0"
+            className="text-navy-900 font-extrabold text-[10px] px-2 py-0.5 rounded-sm shrink-0"
           >
             {route.short_name}
           </span>
@@ -89,7 +89,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
                 className="bg-surface border border-white/8 rounded-xl p-3 cursor-pointer hover:bg-surface-elevated hover:border-white/12 transition-all flex items-center justify-between group active:scale-[0.99]"
               >
                 <div className="flex gap-3 items-center overflow-hidden">
-                  <span className="bg-navy-600/50 text-white/50 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 group-hover:bg-teal-400 group-hover:text-navy-900 transition-colors">
+                  <span className="bg-navy-600/50 text-white/50 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 group-hover:bg-teal-400 group-hover:text-navy-900 transition-colors">
                     {rs.sequence}
                   </span>
                   <div className="truncate">
@@ -103,7 +103,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 flex-shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0">
                   {rs.stop.accessible && <Accessibility size={14} className="text-teal-400" />}
                   <MapPin size={16} className="text-white/30 group-hover:text-teal-400 transition-colors" />
                 </div>

@@ -132,7 +132,7 @@ export function LocationAutocomplete({
               setInput(value?.label || '')
               setShowDropdown(true)
             }}
-            className="w-full bg-navy-600/50 border border-white/8 rounded-lg py-2 px-3 pr-8 text-sm text-white placeholder-white/20 focus:outline-none focus:border-teal-400/50"
+            className="w-full bg-navy-600/50 border border-white/8 rounded-lg py-2 px-3 pr-8 text-sm text-white placeholder-white/20 focus:outline-hidden focus:border-teal-400/50"
           />
           {displayValue && (
             <button

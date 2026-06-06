@@ -35,7 +35,7 @@ export function RouteResult() {
                 <div className="flex items-center gap-2 overflow-hidden mr-1">
                   <span
                     style={{ backgroundColor: result.routeColor }}
-                    className="text-navy-900 font-extrabold text-[10px] px-2 py-0.5 rounded flex-shrink-0"
+                    className="text-navy-900 font-extrabold text-[10px] px-2 py-0.5 rounded-sm shrink-0"
                   >
                     {result.routeShortName}
                   </span>
@@ -43,7 +43,7 @@ export function RouteResult() {
                     {result.routeName.split('—')[1] || result.routeName}
                   </span>
                 </div>
-                <div className="flex-shrink-0 flex items-baseline">
+                <div className="shrink-0 flex items-baseline">
                   <span className="text-lg font-extrabold text-teal-400">
                     ~{totalMin}
                   </span>
@@ -119,7 +119,7 @@ export function RouteResult() {
 
       {/* Disclaimer */}
       <div className="flex gap-2 items-center bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
-        <Info size={14} className="flex-shrink-0" />
+        <Info size={14} className="shrink-0" />
         <span>
           Tiempos estimados de recorrido. El tráfico y el servicio real de las unidades de transporte público de Ensenada pueden variar.
         </span>

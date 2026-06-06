@@ -44,7 +44,7 @@ export function AboutPage() {
 
         {/* Disclaimer */}
         <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl flex gap-3 items-start">
-          <AlertCircle size={20} className="text-amber-400 flex-shrink-0 mt-0.5" />
+          <AlertCircle size={20} className="text-amber-400 shrink-0 mt-0.5" />
           <div>
             <h3 className="text-xs font-bold text-amber-300">
               Aviso Importante
