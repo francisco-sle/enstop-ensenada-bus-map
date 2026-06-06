@@ -48,7 +48,7 @@ export function StopDrawer({ stop, onClose }: StopDrawerProps) {
   }
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-card p-4 z-[1001] max-h-[70%] overflow-y-auto border-t border-white/8 flex flex-col gap-3 animate-slide-up select-none">
+    <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-card p-4 z-1001 max-h-[70%] overflow-y-auto border-t border-white/8 flex flex-col gap-3 animate-slide-up select-none">
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="flex gap-2 items-center">
@@ -74,13 +74,13 @@ export function StopDrawer({ stop, onClose }: StopDrawerProps) {
       {/* Attributes */}
       <div className="flex gap-3 flex-wrap">
         {stop.accessible && (
-          <div className="flex items-center gap-1 text-[11px] font-semibold bg-teal-500/10 text-teal-300 px-2 py-1 rounded">
+          <div className="flex items-center gap-1 text-[11px] font-semibold bg-teal-500/10 text-teal-300 px-2 py-1 rounded-sm">
             <Accessibility size={14} />
             <span>Accesible</span>
           </div>
         )}
         {stop.is_terminal && (
-          <div className="text-[11px] font-bold bg-amber-500/10 text-amber-300 px-2 py-1 rounded">
+          <div className="text-[11px] font-bold bg-amber-500/10 text-amber-300 px-2 py-1 rounded-sm">
             Terminal
           </div>
         )}

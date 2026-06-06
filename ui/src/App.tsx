@@ -68,7 +68,7 @@ function MainAppShell() {
   return (
     <div className="flex flex-col h-full w-full overflow-hidden bg-navy-600">
       {/* Top Navbar */}
-      <header className="h-14 flex-shrink-0 flex items-center justify-center px-4 bg-surface border-b border-white/8 shadow-card z-[1002]">
+      <header className="h-14 shrink-0 flex items-center justify-center px-4 bg-surface border-b border-white/8 shadow-card z-1002">
         <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-wide text-teal-400 font-display">
           <span>🚌</span> ENStop
         </h1>
@@ -128,7 +128,7 @@ function MainAppShell() {
       </main>
 
       {/* Bottom Navigation Bar */}
-      <nav className="h-[60px] flex-shrink-0 grid grid-cols-3 bg-surface border-t border-white/8 z-[1002]">
+      <nav className="h-[60px] shrink-0 grid grid-cols-3 bg-surface border-t border-white/8 z-1002">
         <NavLink to="/map" className={navLinkClass} aria-label="Ir al mapa de rutas">
           <Map size={20} />
           <span>Mapa</span>

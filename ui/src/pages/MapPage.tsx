@@ -47,13 +47,13 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
       <button
         onClick={handleLocateUser}
         aria-label="Encontrar mi ubicación actual"
-        className="btn absolute top-5 right-5 z-[1000] bg-surface border border-white/8 w-11 h-11 rounded-full flex items-center justify-center shadow-card hover:bg-surface-elevated transition-colors"
+        className="btn absolute top-5 right-5 z-1000 bg-surface border border-white/8 w-11 h-11 rounded-full flex items-center justify-center shadow-card hover:bg-surface-elevated transition-colors"
       >
         <Locate size={20} className="text-teal-400" />
       </button>
 
       {/* Floating Search Panel (Left/Top) */}
-      <div className="absolute top-5 left-5 z-[1000] w-[calc(100%-40px)] max-w-[360px] flex flex-col gap-3">
+      <div className="absolute top-5 left-5 z-1000 w-[calc(100%-40px)] max-w-[360px] flex flex-col gap-3">
         {/* Route Planner Form — overflow-visible so the autocomplete dropdown is not clipped */}
         <RoutePlanner stops={allStops} />
 

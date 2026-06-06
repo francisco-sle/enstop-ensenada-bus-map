@@ -39,7 +39,7 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
   return (
     <div
       style={{ left: position.x, top: position.y }}
-      className="absolute z-[1001] flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up"
+      className="absolute z-1001 flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up"
     >
       <button
         onClick={handleSetOrigin}

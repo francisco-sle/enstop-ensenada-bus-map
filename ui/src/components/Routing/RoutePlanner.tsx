@@ -53,9 +53,9 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
             type="button"
             onClick={handleSwap}
             aria-label="Intercambiar origen y destino"
-            className="bg-navy-600/50 border border-white/8 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-white/5 active:scale-95 transition-all text-white/60 hover:text-white"
+            className="bg-navy-600/50 border border-white/8 rounded-full w-11 h-11 flex items-center justify-center cursor-pointer hover:bg-white/5 active:scale-95 transition-all text-white/60 hover:text-white"
           >
-            <ArrowLeftRight size={14} className="rotate-90" />
+            <ArrowLeftRight size={16} className="rotate-90" />
           </button>
         </div>
 
