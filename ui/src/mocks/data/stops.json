@@ -3,7 +3,13 @@
     "id": 1,
     "name": "Terminal Centro",
     "common_name": "Terminal Centro",
-    "geom": { "type": "Point", "coordinates": [-116.625, 31.868] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.624975,
+        31.867987
+      ]
+    },
     "is_terminal": true,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -12,7 +18,13 @@
     "id": 2,
     "name": "Calle Segunda y Gastélum",
     "common_name": "Parque Revolución",
-    "geom": { "type": "Point", "coordinates": [-116.621, 31.865] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.62125473102198,
+        31.865128885385822
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -21,7 +33,13 @@
     "id": 3,
     "name": "Calle Segunda y Floresta",
     "common_name": "Calle 2da & Floresta",
-    "geom": { "type": "Point", "coordinates": [-116.618, 31.861] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.61719925423616,
+        31.86318416184945
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -30,7 +48,13 @@
     "id": 4,
     "name": "Calle Segunda y Espinoza",
     "common_name": "Calle 2da & Espinoza",
-    "geom": { "type": "Point", "coordinates": [-116.615, 31.857] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.612068,
+        31.857586
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -39,7 +63,13 @@
     "id": 5,
     "name": "Calle Segunda y Rayón",
     "common_name": "Calle 2da & Rayón",
-    "geom": { "type": "Point", "coordinates": [-116.610, 31.854] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.60991299996736,
+        31.85401786869357
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -48,7 +78,13 @@
     "id": 6,
     "name": "Calle Segunda y Kiliwas",
     "common_name": "Calle 2da & Kiliwas",
-    "geom": { "type": "Point", "coordinates": [-116.605, 31.851] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.603014,
+        31.847932
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -57,7 +93,13 @@
     "id": 7,
     "name": "Avenida Reforma y Calle Diamante",
     "common_name": "Reforma & Diamante",
-    "geom": { "type": "Point", "coordinates": [-116.602, 31.848] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.60193773408174,
+        31.84801262146991
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -66,7 +108,13 @@
     "id": 8,
     "name": "Avenida Reforma y Calle Plita",
     "common_name": "Reforma & Plita",
-    "geom": { "type": "Point", "coordinates": [-116.600, 31.845] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.6023491677326,
+        31.844537386434
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -75,7 +123,13 @@
     "id": 9,
     "name": "Avenida Reforma y Calle Delante",
     "common_name": "Reforma & Delante",
-    "geom": { "type": "Point", "coordinates": [-116.599, 31.842] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.60042974390899,
+        31.841716043892646
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -84,7 +138,13 @@
     "id": 10,
     "name": "Avenida Reforma UABC Valle Dorado",
     "common_name": "UABC Valle Dorado",
-    "geom": { "type": "Point", "coordinates": [-116.598, 31.839] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59981426644238,
+        31.838643929015966
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -93,7 +153,13 @@
     "id": 11,
     "name": "Avenida Reforma Plaza Sendero",
     "common_name": "Plaza Sendero / Macroplaza",
-    "geom": { "type": "Point", "coordinates": [-116.597, 31.835] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59902563087745,
+        31.834602817475012
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -102,7 +168,13 @@
     "id": 12,
     "name": "Avenida Reforma y Calle Esmeralda",
     "common_name": "Reforma & Esmeralda",
-    "geom": { "type": "Point", "coordinates": [-116.596, 31.831] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59824085517053,
+        31.8305660268528
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -111,7 +183,13 @@
     "id": 13,
     "name": "Avenida Reforma y Calle Alisos",
     "common_name": "Reforma & Alisos",
-    "geom": { "type": "Point", "coordinates": [-116.595, 31.826] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59652740461384,
+        31.824858737001986
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -120,7 +198,13 @@
     "id": 14,
     "name": "Avenida Reforma y Calle Coral",
     "common_name": "Reforma & Calle Coral",
-    "geom": { "type": "Point", "coordinates": [-116.594, 31.820] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59609727573505,
+        31.819609318050624
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -129,7 +213,13 @@
     "id": 15,
     "name": "Avenida Reforma Clinica 8 IMSS",
     "common_name": "IMSS Clinica 8",
-    "geom": { "type": "Point", "coordinates": [-116.592, 31.814] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59274460054239,
+        31.812630526915726
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -138,7 +228,13 @@
     "id": 16,
     "name": "Avenida Reforma y Lázaro Cárdenas",
     "common_name": "Reforma & Lázaro Cárdenas",
-    "geom": { "type": "Point", "coordinates": [-116.590, 31.808] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59007870289463,
+        31.807983465778435
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -147,7 +243,13 @@
     "id": 17,
     "name": "Avenida Reforma y Calle Estancia",
     "common_name": "Reforma & Estancia",
-    "geom": { "type": "Point", "coordinates": [-116.586, 31.800] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.58824966486858,
+        31.799541113136243
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -156,7 +258,13 @@
     "id": 18,
     "name": "Avenida Reforma Pórticos del Mar",
     "common_name": "Pórticos del Mar",
-    "geom": { "type": "Point", "coordinates": [-116.583, 31.790] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.58621738438711,
+        31.7893882438137
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -165,7 +273,13 @@
     "id": 19,
     "name": "Terminal Chapultepec",
     "common_name": "Terminal Chapultepec",
-    "geom": { "type": "Point", "coordinates": [-116.580, 31.780] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.58003405919442,
+        31.780244800459904
+      ]
+    },
     "is_terminal": true,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -174,7 +288,13 @@
     "id": 20,
     "name": "Pedro Loyola y Entrada Chapultepec",
     "common_name": "Pedro Loyola & Entrada Chapultepec",
-    "geom": { "type": "Point", "coordinates": [-116.590, 31.785] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59000252859022,
+        31.785016229252236
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -183,7 +303,13 @@
     "id": 21,
     "name": "Pedro Loyola y Pórticos del Mar",
     "common_name": "Pedro Loyola & Pórticos del Mar",
-    "geom": { "type": "Point", "coordinates": [-116.594, 31.795] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59359159751772,
+        31.79508055174588
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -192,7 +318,13 @@
     "id": 22,
     "name": "Pedro Loyola y Calle Lago Powell",
     "common_name": "Pedro Loyola & Lago Powell",
-    "geom": { "type": "Point", "coordinates": [-116.598, 31.805] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59565412650417,
+        31.805466572303832
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -201,7 +333,13 @@
     "id": 23,
     "name": "Pedro Loyola y Calle Estancia",
     "common_name": "Pedro Loyola & Estancia",
-    "geom": { "type": "Point", "coordinates": [-116.602, 31.815] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59771677187103,
+        31.81585500139241
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -210,7 +348,13 @@
     "id": 24,
     "name": "Pedro Loyola y Lázaro Cárdenas",
     "common_name": "Pedro Loyola & Lázaro Cárdenas",
-    "geom": { "type": "Point", "coordinates": [-116.606, 31.825] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.59976511553747,
+        31.826183760370128
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -219,7 +363,13 @@
     "id": 25,
     "name": "Pedro Loyola y Clinica 8 IMSS",
     "common_name": "Pedro Loyola & IMSS",
-    "geom": { "type": "Point", "coordinates": [-116.610, 31.835] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.60980794506398,
+        31.835035719112092
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
@@ -228,7 +378,13 @@
     "id": 26,
     "name": "Pedro Loyola y Calle Esmeralda",
     "common_name": "Pedro Loyola & Esmeralda",
-    "geom": { "type": "Point", "coordinates": [-116.614, 31.845] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.6125940426944,
+        31.845574944740083
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -237,7 +393,13 @@
     "id": 27,
     "name": "Blvd. Costero y Sanginés",
     "common_name": "Blvd. Costero & Sanginés",
-    "geom": { "type": "Point", "coordinates": [-116.618, 31.855] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.61827126454637,
+        31.85481770441462
+      ]
+    },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
@@ -246,7 +408,13 @@
     "id": 28,
     "name": "Plaza Cívica de la Patria",
     "common_name": "Plaza Cívica",
-    "geom": { "type": "Point", "coordinates": [-116.623, 31.862] },
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.6228541225206,
+        31.861930058742743
+      ]
+    },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
