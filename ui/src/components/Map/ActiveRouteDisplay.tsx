@@ -25,11 +25,8 @@ export function ActiveRouteDisplay({ origin, destination, activeResult }: Active
     'foot'
   )
 
-  // Snap bus leg to streets
-  const { snappedCoords: busCoords } = useSnappedPolyline(
-    activeResult.subPolylineCoords,
-    'driving'
-  )
+  // Use pre-snapped route coordinates directly for the bus segment
+  const busCoords = activeResult.subPolylineCoords
 
   // Snap walk destination leg to streets
   const { snappedCoords: walkDestCoords } = useSnappedPolyline(

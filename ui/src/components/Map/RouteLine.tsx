@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { Polyline } from 'react-leaflet'
-import { useSnappedPolyline } from '../../hooks/useSnappedPolyline'
 import type { RouteDetail } from '../../types'
 
 interface RouteLineProps {
@@ -15,15 +14,13 @@ export function RouteLine({ route, isSelected }: RouteLineProps) {
     )
   }, [route.geom.coordinates])
 
-  // Snap the general bus route to streets using the driving profile
-  const { snappedCoords } = useSnappedPolyline(positions, 'driving')
-
   return (
     <Polyline
-      positions={snappedCoords}
+      positions={positions}
       color={route.category?.color_hex || '#3DBFA8'}
       weight={isSelected ? 6 : 3}
       opacity={isSelected ? 0.9 : 0.6}
     />
   )
 }
+
