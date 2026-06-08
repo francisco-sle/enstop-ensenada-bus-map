@@ -49,10 +49,13 @@ export const routesHandlers = [
       return HttpResponse.json([], { status: 404 })
     }
 
-    // Default: list all active routes
+    // Default: list all active routes — include route_stops so consumers get RouteDetail shape
+    const routeStopsByRouteId = new Map([[1, mockRouteStops]])
+
     const routesList = routesData.map(route => ({
       ...route,
-      category: mockCategory
+      category: mockCategory,
+      route_stops: routeStopsByRouteId.get(route.id) ?? []
     }))
     
     return HttpResponse.json(routesList)

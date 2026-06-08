@@ -306,3 +306,138 @@
 }
 
 
+/* -------------------------------------------------------
+   RouteToggleLegend — floating overlay (Technique 4)
+------------------------------------------------------- */
+.route-toggle-legend {
+  position: absolute;
+  bottom: 48px;   /* above attribution */
+  right: 12px;
+  z-index: 1000;  /* above Leaflet controls */
+  width: 196px;
+  max-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 30, 46, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  animation: fade-up 0.2s ease-out;
+}
+
+.route-toggle-legend__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+}
+
+.route-toggle-legend__title {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.route-toggle-legend__all-btn {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-accent-teal);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.route-toggle-legend__all-btn:hover {
+  background: rgba(61, 191, 168, 0.12);
+}
+
+.route-toggle-legend__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.route-toggle-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  transition: background 0.12s;
+}
+.route-toggle-legend__item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.route-toggle-legend__item--selected {
+  background: rgba(61, 191, 168, 0.08);
+}
+.route-toggle-legend__item--hidden .route-toggle-legend__name {
+  opacity: 0.4;
+  text-decoration: line-through;
+}
+
+/* Left — swatch + label button */
+.route-toggle-legend__label-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  padding: 6px 6px 6px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+}
+
+.route-toggle-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background-color 0.2s;
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.15);
+}
+
+.route-toggle-legend__name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s;
+}
+
+/* Right — eye toggle button */
+.route-toggle-legend__eye-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  border-radius: 4px;
+  margin-right: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.route-toggle-legend__eye-btn:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+.route-toggle-legend__item--hidden .route-toggle-legend__eye-btn {
+  color: rgba(255, 255, 255, 0.25);
+}
