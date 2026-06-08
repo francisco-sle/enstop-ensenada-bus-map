@@ -16,8 +16,8 @@
   },
   {
     "id": 2,
-    "name": "Calle Segunda y Gastélum",
-    "common_name": "Parque Revolución",
+    "name": "Calle Segunda y Gast\u00e9lum",
+    "common_name": "Parque Revoluci\u00f3n",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -61,8 +61,8 @@
   },
   {
     "id": 5,
-    "name": "Calle Segunda y Rayón",
-    "common_name": "Calle 2da & Rayón",
+    "name": "Calle Segunda y Ray\u00f3n",
+    "common_name": "Calle 2da & Ray\u00f3n",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -226,8 +226,8 @@
   },
   {
     "id": 16,
-    "name": "Avenida Reforma y Lázaro Cárdenas",
-    "common_name": "Reforma & Lázaro Cárdenas",
+    "name": "Avenida Reforma y L\u00e1zaro C\u00e1rdenas",
+    "common_name": "Reforma & L\u00e1zaro C\u00e1rdenas",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -256,8 +256,8 @@
   },
   {
     "id": 18,
-    "name": "Avenida Reforma Pórticos del Mar",
-    "common_name": "Pórticos del Mar",
+    "name": "Avenida Reforma P\u00f3rticos del Mar",
+    "common_name": "P\u00f3rticos del Mar",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -301,8 +301,8 @@
   },
   {
     "id": 21,
-    "name": "Pedro Loyola y Pórticos del Mar",
-    "common_name": "Pedro Loyola & Pórticos del Mar",
+    "name": "Pedro Loyola y P\u00f3rticos del Mar",
+    "common_name": "Pedro Loyola & P\u00f3rticos del Mar",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -346,8 +346,8 @@
   },
   {
     "id": 24,
-    "name": "Pedro Loyola y Lázaro Cárdenas",
-    "common_name": "Pedro Loyola & Lázaro Cárdenas",
+    "name": "Pedro Loyola y L\u00e1zaro C\u00e1rdenas",
+    "common_name": "Pedro Loyola & L\u00e1zaro C\u00e1rdenas",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -391,8 +391,8 @@
   },
   {
     "id": 27,
-    "name": "Blvd. Costero y Sanginés",
-    "common_name": "Blvd. Costero & Sanginés",
+    "name": "Blvd. Costero y Sangin\u00e9s",
+    "common_name": "Blvd. Costero & Sangin\u00e9s",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -406,8 +406,8 @@
   },
   {
     "id": 28,
-    "name": "Plaza Cívica de la Patria",
-    "common_name": "Plaza Cívica",
+    "name": "Plaza C\u00edvica de la Patria",
+    "common_name": "Plaza C\u00edvica",
     "geom": {
       "type": "Point",
       "coordinates": [
@@ -417,6 +417,186 @@
     },
     "is_terminal": false,
     "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 29,
+    "name": "Calle Segunda y Blvd. Esmeralda",
+    "common_name": "Calle 2da & Esmeralda",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.624975,
+        31.867987
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 30,
+    "name": "Blvd. Esmeralda y Pedro Loyola",
+    "common_name": "Esmeralda & Loyola",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.600449,
+        31.841813
+      ]
+    },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 31,
+    "name": "Blvd. Esmeralda y Av. Reforma",
+    "common_name": "Esmeralda & Reforma",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.588755,
+        31.814096
+      ]
+    },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 32,
+    "name": "Blvd. Esmeralda y Av. Reforma Zona Sur",
+    "common_name": "Esmeralda Sur",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.560436,
+        31.819426
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 33,
+    "name": "Blvd. Esmeralda y L\u00e1zaro C\u00e1rdenas",
+    "common_name": "Esmeralda & L\u00e1zaro C\u00e1rdenas",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.554963,
+        31.831994
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 34,
+    "name": "Blvd. Esmeralda y Cl\u00ednica IMSS",
+    "common_name": "Esmeralda & IMSS",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.568558,
+        31.835365
+      ]
+    },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 35,
+    "name": "Terminal Col. Popular",
+    "common_name": "Terminal Col. Popular",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.594118,
+        31.839765
+      ]
+    },
+    "is_terminal": true,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 36,
+    "name": "Col. Popular y Calle Kiliwas",
+    "common_name": "Col. Popular & Kiliwas",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.578673,
+        31.851281
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 37,
+    "name": "Blvd. Costero y Calle Esmeralda (Regreso)",
+    "common_name": "Costero & Esmeralda",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.553723,
+        31.878549
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 38,
+    "name": "Blvd. Costero y Pedro Loyola (Regreso)",
+    "common_name": "Costero & Loyola",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.573498,
+        31.874646
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 39,
+    "name": "Blvd. Costero y Calle Kiliwas (Regreso)",
+    "common_name": "Costero & Kiliwas",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.607834,
+        31.85388
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 40,
+    "name": "Blvd. Costero y Sangin\u00e9s (Regreso)",
+    "common_name": "Costero & Sangin\u00e9s",
+    "geom": {
+      "type": "Point",
+      "coordinates": [
+        -116.624975,
+        31.867987
+      ]
+    },
+    "is_terminal": false,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   }
 ]

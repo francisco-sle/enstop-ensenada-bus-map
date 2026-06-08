@@ -57,14 +57,21 @@ export const rpcHandlers = [
       return HttpResponse.json({ error: 'Invalid parameters' }, { status: 400 })
     }
 
-    // Since our mock setup has R1 (id: 1) serving all 28 stops
-    const servesStop = p_stop_id >= 1 && p_stop_id <= 28
+    const matchingRoutes = []
     
-    if (servesStop) {
-      return HttpResponse.json(routesData)
+    // Route 1 (id: 1) serves stops 1 to 28
+    if (p_stop_id >= 1 && p_stop_id <= 28) {
+      const r1 = routesData.find(r => r.id === 1)
+      if (r1) matchingRoutes.push(r1)
     }
 
-    return HttpResponse.json([])
+    // Route 2 (id: 2) serves stop 1 and stops 29 to 40
+    if (p_stop_id === 1 || (p_stop_id >= 29 && p_stop_id <= 40)) {
+      const r2 = routesData.find(r => r.id === 2)
+      if (r2) matchingRoutes.push(r2)
+    }
+
+    return HttpResponse.json(matchingRoutes)
   }),
 
   // RPC: current_fare(p_route_id, p_passenger_type)
