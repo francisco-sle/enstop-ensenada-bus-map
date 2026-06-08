@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Bus, ArrowRight } from 'lucide-react'
 import type { RouteDetail } from '../types'
+import { RouteThumbnail } from '../components/RouteThumbnail'
 
 interface RoutesPageProps {
   routes: RouteDetail[]
@@ -21,12 +22,12 @@ export function RoutesPage({ routes }: RoutesPageProps) {
           <Link
             key={route.id}
             to={`/routes/${route.id}`}
-            className="bg-surface rounded-xl border border-white/8 p-4 flex items-center justify-between hover:bg-surface-elevated hover:border-white/12 transition-all duration-200 group active:scale-[0.99] cursor-pointer"
+            className="bg-surface rounded-xl border border-white/8 flex items-center justify-between hover:bg-surface-elevated hover:border-white/12 transition-all duration-200 group active:scale-[0.99] cursor-pointer overflow-hidden h-20"
           >
-            <div className="flex gap-4 items-center overflow-hidden">
+            <div className="flex gap-4 items-center overflow-hidden flex-1 pl-4 py-4 pr-3">
               <div
                 style={{ backgroundColor: route.category?.color_hex || '#3DBFA8' }}
-                className="text-navy-900 w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-lg shadow-md group-hover:scale-105 transition-transform"
+                className="shrink-0 text-navy-900 w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-lg shadow-md group-hover:scale-105 transition-transform"
               >
                 {route.short_name}
               </div>
@@ -43,7 +44,17 @@ export function RoutesPage({ routes }: RoutesPageProps) {
                 </p>
               </div>
             </div>
-            <ArrowRight size={20} className="text-white/40 group-hover:text-teal-400 group-hover:translate-x-0.5 transition-all" />
+            
+            <div className="relative h-full w-24 sm:w-36 shrink-0 border-l border-white/8 group-hover:border-white/12 transition-colors duration-200">
+              <RouteThumbnail 
+                geom={route.geom} 
+                color={route.category?.color_hex || '#3DBFA8'} 
+                className="w-full h-full opacity-85 group-hover:opacity-100 transition-opacity"
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-navy-900/70 backdrop-blur-md p-1.5 rounded-full border border-white/10 text-white/50 group-hover:text-teal-400 group-hover:border-teal-500/20 group-hover:scale-105 transition-all shadow-md pointer-events-none">
+                <ArrowRight size={14} />
+              </div>
+            </div>
           </Link>
         ))}
       </div>
