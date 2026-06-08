@@ -8,9 +8,10 @@ import type { DBStop } from '../../types'
 interface StopDrawerProps {
   stop: DBStop | undefined
   onClose: () => void
+  variant?: 'drawer' | 'inline'
 }
 
-export function StopDrawer({ stop, onClose }: StopDrawerProps) {
+export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProps) {
   const { setOrigin, setDestination } = useRoutingStore()
   const { setSelectedRouteId } = useMapStore()
   const { data: routes, isLoading: loadingRoutes } = useRoutesForStop(stop?.id || null)
@@ -47,8 +48,14 @@ export function StopDrawer({ stop, onClose }: StopDrawerProps) {
     })
   }
 
+  const isInline = variant === 'inline'
+
   return (
-    <div className="absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-card p-4 z-1001 max-h-[70%] overflow-y-auto border-t border-white/8 flex flex-col gap-3 animate-slide-up select-none">
+    <div className={
+      isInline
+        ? "bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-3 select-none animate-fade-up mt-2"
+        : "absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-card p-4 z-1001 max-h-[70%] overflow-y-auto border-t border-white/8 flex flex-col gap-3 animate-slide-up select-none"
+    }>
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="flex gap-2 items-center">
