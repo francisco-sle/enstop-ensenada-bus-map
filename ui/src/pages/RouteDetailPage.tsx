@@ -30,9 +30,9 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
   }
 
   return (
-    <div className="grid grid-rows-[auto_240px_1fr] h-full overflow-hidden select-none animate-fade-up">
+    <div className="flex flex-col h-full overflow-hidden select-none animate-fade-up">
       {/* Header */}
-      <div className="px-4 py-3 bg-surface border-b border-white/8 flex items-center gap-3">
+      <div className="px-4 py-3 bg-surface border-b border-white/8 flex items-center gap-3 shrink-0">
         <button
           onClick={onBack}
           aria-label="Volver a lista de rutas"
@@ -53,63 +53,66 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
         </div>
       </div>
 
-      {/* Map Preview */}
-      <div className="relative border-b border-white/8 bg-navy-800">
-        <BusMap activeRoutes={[route]} allStops={stops} showFullRoutes={false} showRouting={false} focusedRouteId={route.id} />
-      </div>
+      {/* Main Content Split Area */}
+      <div className="flex-1 grid grid-cols-1 grid-rows-[240px_1fr] md:grid-cols-[380px_1fr] lg:grid-cols-[420px_1fr] md:grid-rows-1 overflow-hidden">
+        {/* Details (Stops list & Fare Table) */}
+        <div className="order-2 md:order-1 overflow-y-auto p-4 flex flex-col gap-4 bg-navy-600/10">
+          {/* Description */}
+          {route.description && (
+            <div className="flex flex-col gap-1">
+              <h3 className="text-xs font-semibold text-white/50">Descripción</h3>
+              <p className="text-sm text-white/80 leading-relaxed bg-navy-600/20 border border-white/4 rounded-lg p-3">
+                {route.description}
+              </p>
+            </div>
+          )}
 
-      {/* Details (Stops list & Fare Table) */}
-      <div className="overflow-y-auto p-4 flex flex-col gap-4">
-        {/* Description */}
-        {route.description && (
+          {/* Fares */}
           <div className="flex flex-col gap-1">
-            <h3 className="text-xs font-semibold text-white/50">Descripción</h3>
-            <p className="text-sm text-white/80 leading-relaxed bg-navy-600/20 border border-white/4 rounded-lg p-3">
-              {route.description}
-            </p>
+            <h3 className="text-xs font-semibold text-white/50">Estructura Tarifaria</h3>
+            <FareTable fares={dummyFares} isLoading={false} />
           </div>
-        )}
 
-        {/* Fares */}
-        <div className="flex flex-col gap-1">
-          <h3 className="text-xs font-semibold text-white/50">Estructura Tarifaria</h3>
-          <FareTable fares={dummyFares} isLoading={false} />
-        </div>
-
-        {/* Stops Sequence */}
-        <div className="flex flex-col gap-2">
-          <h3 className="text-xs font-semibold text-white/50">
-            Secuencia de Paradas ({stops.length})
-          </h3>
+          {/* Stops Sequence */}
           <div className="flex flex-col gap-2">
-            {routeStops.map((rs) => (
-              <div
-                key={rs.id}
-                onClick={() => handleStopClick(rs.stop)}
-                className="bg-surface border border-white/8 rounded-xl p-3 cursor-pointer hover:bg-surface-elevated hover:border-white/12 transition-all flex items-center justify-between group active:scale-[0.99]"
-              >
-                <div className="flex gap-3 items-center overflow-hidden">
-                  <span className="bg-navy-600/50 text-white/50 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 group-hover:bg-teal-400 group-hover:text-navy-900 transition-colors">
-                    {rs.sequence}
-                  </span>
-                  <div className="truncate">
-                    <span className="text-sm font-semibold text-white/90 group-hover:text-teal-400 transition-colors block truncate">
-                      {rs.stop.name}
+            <h3 className="text-xs font-semibold text-white/50">
+              Secuencia de Paradas ({stops.length})
+            </h3>
+            <div className="flex flex-col gap-2">
+              {routeStops.map((rs) => (
+                <div
+                  key={rs.id}
+                  onClick={() => handleStopClick(rs.stop)}
+                  className="bg-surface border border-white/8 rounded-xl p-3 cursor-pointer hover:bg-surface-elevated hover:border-white/12 transition-all flex items-center justify-between group active:scale-[0.99]"
+                >
+                  <div className="flex gap-3 items-center overflow-hidden">
+                    <span className="bg-navy-600/50 text-white/50 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 group-hover:bg-teal-400 group-hover:text-navy-900 transition-colors">
+                      {rs.sequence}
                     </span>
-                    {rs.stop.common_name && (
-                      <span className="text-muted text-[10px] block mt-0.5 truncate">
-                        {rs.stop.common_name}
+                    <div className="truncate">
+                      <span className="text-sm font-semibold text-white/90 group-hover:text-teal-400 transition-colors block truncate">
+                        {rs.stop.name}
                       </span>
-                    )}
+                      {rs.stop.common_name && (
+                        <span className="text-muted text-[10px] block mt-0.5 truncate">
+                          {rs.stop.common_name}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {rs.stop.accessible && <Accessibility size={14} className="text-teal-400" />}
+                    <MapPin size={16} className="text-white/30 group-hover:text-teal-400 transition-colors" />
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  {rs.stop.accessible && <Accessibility size={14} className="text-teal-400" />}
-                  <MapPin size={16} className="text-white/30 group-hover:text-teal-400 transition-colors" />
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* Map Preview */}
+        <div className="order-1 md:order-2 relative border-b md:border-b-0 md:border-l border-white/8 bg-navy-800 h-full min-h-0">
+          <BusMap activeRoutes={[route]} allStops={stops} showFullRoutes={false} showRouting={false} focusedRouteId={route.id} />
         </div>
       </div>
     </div>
