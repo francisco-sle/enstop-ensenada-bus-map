@@ -8,6 +8,7 @@ interface BusMapMarkersOptions {
   selectedRouteId: number | null
   activeResult: RoutingResult | null
   currentZoom: number
+  hiddenRouteIds: Set<number>
 }
 
 interface StopMarkerData {
@@ -17,12 +18,41 @@ interface StopMarkerData {
 }
 
 /**
- * Derives the list of stops to render as map markers, applying:
- *   1. Level-of-Detail (LoD) filtering based on the current zoom level.
- *   2. Pin color coding based on selection, routing context, or active route.
+ * Computes a per-stop importance score to drive weighted Level-of-Detail rendering.
  *
- * Keeping this logic out of the render tree avoids deeply nested conditions
- * inside JSX and makes the filtering rules independently testable.
+ * Score components:
+ *   +50  is_terminal
+ *   +20  accessible
+ *   +10  per route serving the stop
+ *   +30  transfer point (served by ≥2 routes)
+ *
+ * Threshold per zoom:
+ *   ≤12 → 70  (terminals only in practice)
+ *   ≤13 → 50  (terminals + high-value stops)
+ *   ≤14 → 20  (terminals + accessible + transfer points)
+ *   ≥15 → 0   (all stops)
+ */
+function stopImportance(stop: DBStop, routeCount: number): number {
+  let score = 0
+  if (stop.is_terminal) score += 50
+  if (stop.accessible) score += 20
+  score += routeCount * 10
+  if (routeCount >= 2) score += 30
+  return score
+}
+
+function importanceThreshold(zoom: number): number {
+  if (zoom <= 12) return 70
+  if (zoom <= 13) return 50
+  if (zoom <= 14) return 20
+  return 0
+}
+
+/**
+ * Derives the list of stops to render as map markers, applying:
+ *   1. Hidden-route suppression — stops exclusively on hidden routes are removed.
+ *   2. Weighted Level-of-Detail filtering based on importance score × zoom threshold.
+ *   3. Pin color coding based on selection, routing context, or active route.
  *
  * @param options.allStops       - Full stops array from the store.
  * @param options.activeRoutes   - Routes currently drawn on the map.
@@ -30,11 +60,8 @@ interface StopMarkerData {
  * @param options.selectedRouteId - ID of the currently highlighted route.
  * @param options.activeResult   - Active routing suggestion (origin/dest stops always shown).
  * @param options.currentZoom    - Current Leaflet zoom level.
+ * @param options.hiddenRouteIds - Set of route IDs whose stops should be suppressed.
  * @returns Array of `{ stop, color, isSelected }` ready to pass to `createStopIcon`.
- *
- * @example
- * const markers = useBusMapMarkers({ allStops, activeRoutes, selectedStopId, selectedRouteId, activeResult, currentZoom })
- * // markers.map(({ stop, color, isSelected }) => <StopMarker ... />)
  */
 export function useBusMapMarkers({
   allStops,
@@ -43,10 +70,19 @@ export function useBusMapMarkers({
   selectedRouteId,
   activeResult,
   currentZoom,
+  hiddenRouteIds,
 }: BusMapMarkersOptions): StopMarkerData[] {
   const currentRoute = selectedRouteId
     ? activeRoutes.find(r => r.id === selectedRouteId) ?? null
     : null
+
+  const threshold = importanceThreshold(currentZoom)
+
+  // Normalize route_stops once at entry — guards against partial fetches where the
+  // join was omitted. All downstream .some() calls are then unconditionally safe.
+  const routeStopsMap = new Map(
+    activeRoutes.map(r => [r.id, r.route_stops ?? []])
+  )
 
   return allStops
     .filter(stop => {
@@ -57,14 +93,20 @@ export function useBusMapMarkers({
       if (
         activeResult &&
         (stop.id === activeResult.originStop.id || stop.id === activeResult.destStop.id)
-      ) {
-        return true
-      }
+      ) return true
 
-      // Level-of-Detail filtering by zoom
-      if (currentZoom <= 12) return stop.is_terminal
-      if (currentZoom <= 14) return stop.is_terminal || stop.accessible
-      return true
+      // Compute which visible routes serve this stop
+      const servingRoutes = activeRoutes.filter(
+        r => !hiddenRouteIds.has(r.id) && (routeStopsMap.get(r.id) ?? []).some(rs => rs.stop_id === stop.id)
+      )
+
+      // Suppress stops that are only on hidden routes (and not selected/routing endpoints)
+      const allServingRoutes = activeRoutes.filter(r => (routeStopsMap.get(r.id) ?? []).some(rs => rs.stop_id === stop.id))
+      if (allServingRoutes.length > 0 && servingRoutes.length === 0) return false
+
+      // Weighted LoD — use visible route count for scoring
+      const score = stopImportance(stop, servingRoutes.length)
+      return score >= threshold
     })
     .map(stop => {
       const isSelected = stop.id === selectedStopId
@@ -76,7 +118,7 @@ export function useBusMapMarkers({
         if (stop.id === activeResult.originStop.id) color = 'var(--color-accent-teal)'
         else if (stop.id === activeResult.destStop.id) color = 'var(--color-accent-warm)'
       } else if (currentRoute) {
-        const servesStop = currentRoute.route_stops.some(rs => rs.stop_id === stop.id)
+        const servesStop = (routeStopsMap.get(currentRoute.id) ?? []).some(rs => rs.stop_id === stop.id)
         if (servesStop) color = currentRoute.category?.color_hex || 'var(--color-accent-teal)'
       }
 

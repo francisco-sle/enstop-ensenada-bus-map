@@ -40,7 +40,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
     <div className="w-full h-full relative overflow-hidden">
       {/* Map Background */}
       <div className="absolute inset-0 z-0">
-        <BusMap activeRoutes={activeRoutes} allStops={allStops} showFullRoutes={false} />
+        <BusMap activeRoutes={activeRoutes} allStops={allStops} showFullRoutes={true} />
       </div>
 
       {/* Floating Geolocation Button */}

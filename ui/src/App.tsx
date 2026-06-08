@@ -1,11 +1,9 @@
 import { Routes, Route, Navigate, NavLink, useNavigate, useParams } from 'react-router-dom'
-import { useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Map, Bus, Info, AlertTriangle } from 'lucide-react'
 
 import { useRoutes } from './api/useRoutes'
 import { useStops } from './api/useStops'
-import { useMapStore } from './store/mapStore'
 import { MapPage } from './pages/MapPage'
 import { RoutesPage } from './pages/RoutesPage'
 import { RouteDetailPage } from './pages/RouteDetailPage'
@@ -25,16 +23,9 @@ const queryClient = new QueryClient({
 function RouteDetailWrapper({ routes }: { routes: RouteDetail[] }) {
   const { routeId } = useParams<{ routeId: string }>()
   const navigate = useNavigate()
-  const { setSelectedRouteId } = useMapStore()
 
   const idNum = Number(routeId)
   const route = routes.find(r => r.id === idNum)
-
-  useEffect(() => {
-    if (!isNaN(idNum)) {
-      setSelectedRouteId(idNum)
-    }
-  }, [idNum, setSelectedRouteId])
 
   if (!route) {
     return <Navigate to="/routes" replace />
@@ -101,7 +92,7 @@ function MainAppShell() {
               path="/map"
               element={
                 <MapPage
-                  activeRoutes={routes as unknown as RouteDetail[] || []}
+                  activeRoutes={routes || []}
                   allStops={stops || []}
                 />
               }
@@ -111,14 +102,14 @@ function MainAppShell() {
               path="/routes"
               element={
                 <RoutesPage
-                  routes={routes as unknown as RouteDetail[] || []}
+                  routes={routes || []}
                 />
               }
             />
 
             <Route
               path="/routes/:routeId"
-              element={<RouteDetailWrapper routes={routes as unknown as RouteDetail[] || []} />}
+              element={<RouteDetailWrapper routes={routes || []} />}
             />
 
             <Route path="/about" element={<AboutPage />} />

@@ -6,6 +6,7 @@ import { useBusMapMarkers } from './useBusMapMarkers'
 import { MapContextMenu } from './MapContextMenu'
 import { ActiveRouteDisplay } from './ActiveRouteDisplay'
 import { RouteLine } from './RouteLine'
+import { RouteToggleLegend } from './RouteToggleLegend'
 import { MapController, MapEventsHandler } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIcon } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
@@ -18,11 +19,13 @@ interface BusMapProps {
   allStops: DBStop[]
   showFullRoutes?: boolean
   showRouting?: boolean
+  focusedRouteId?: number | null
 }
 
-export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRouting = true }: BusMapProps) {
-  const { center, zoom, selectedStopId, selectedRouteId, userLocation, setSelectedStopId } = useMapStore()
+export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRouting = true, focusedRouteId }: BusMapProps) {
+  const { center, zoom, selectedStopId, selectedRouteId: globalSelectedRouteId, userLocation, setSelectedStopId, hiddenRouteIds } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex } = useRoutingStore()
+  const resolvedRouteId = focusedRouteId !== undefined ? focusedRouteId : globalSelectedRouteId
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
   const [currentZoom, setCurrentZoom] = useState(zoom)
   const [prevZoom, setPrevZoom] = useState(zoom)
@@ -40,9 +43,10 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
     allStops,
     activeRoutes,
     selectedStopId,
-    selectedRouteId,
+    selectedRouteId: resolvedRouteId,
     activeResult,
     currentZoom,
+    hiddenRouteIds,
   })
 
   // Pre-build icons once per stopMarkers change — avoids calling renderToString inside JSX.
@@ -99,13 +103,16 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
 
         {/* General Route Lines */}
         {!activeResult && activeRoutes.map(route => {
-          const isSelected = selectedRouteId === route.id
+          const isSelected = resolvedRouteId === route.id
+          const isHidden = hiddenRouteIds.has(route.id)
           if (!showFullRoutes && !isSelected) return null
+          if (isHidden) return null
           return (
             <RouteLine
               key={route.id}
               route={route}
               isSelected={isSelected}
+              isGhosted={resolvedRouteId !== null && !isSelected}
             />
           )
         })}
@@ -128,6 +135,9 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
       {contextMenu && (
         <MapContextMenu position={contextMenu} onClose={() => setContextMenu(null)} />
       )}
+
+      {/* Route Toggle Legend — outside MapContainer to avoid capturing Leaflet events */}
+      {showFullRoutes && <RouteToggleLegend routes={activeRoutes} />}
     </div>
   )
 }
