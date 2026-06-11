@@ -1,7 +1,6 @@
 {
   "buildCommand": "npm run build:mock",
   "outputDirectory": "dist",
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
