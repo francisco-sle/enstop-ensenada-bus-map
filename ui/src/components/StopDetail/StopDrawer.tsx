@@ -59,7 +59,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="flex gap-2 items-center">
-          <MapPin size={24} className="text-teal-400" />
+          <MapPin size={24} className="text-pacific-400" />
           <div>
             <h3 className="text-lg font-bold text-white">{stop.name}</h3>
             {stop.common_name && (
@@ -81,13 +81,13 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
       {/* Attributes */}
       <div className="flex gap-3 flex-wrap">
         {stop.accessible && (
-          <div className="flex items-center gap-1 text-[11px] font-semibold bg-teal-500/10 text-teal-300 px-2 py-1 rounded-sm">
+          <div className="flex items-center gap-1 text-[11px] font-semibold bg-pacific-500/10 text-pacific-300 px-2 py-1 rounded-sm">
             <Accessibility size={14} />
             <span>Accesible</span>
           </div>
         )}
         {stop.is_terminal && (
-          <div className="text-[11px] font-bold bg-amber-500/10 text-amber-300 px-2 py-1 rounded-sm">
+          <div className="text-[11px] font-bold bg-sol-500/10 text-sol-300 px-2 py-1 rounded-sm">
             Terminal
           </div>
         )}
@@ -106,9 +106,9 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
               <button
                 key={route.id}
                 onClick={() => setSelectedRouteId(route.id)}
-                className="bg-navy-600/40 border border-white/8 rounded-full px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold text-white hover:bg-navy-600/80 active:scale-95 transition-all"
+                className="bg-bay-700/40 border border-white/8 rounded-full px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold text-white hover:bg-bay-700/80 active:scale-95 transition-all"
               >
-                <span className="w-2 h-2 rounded-full bg-teal-400"></span>
+                <span className="w-2 h-2 rounded-full bg-pacific-400"></span>
                 {route.short_name}
               </button>
             ))}
@@ -142,7 +142,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
         disabled={isCheckedIn}
         className={`btn w-full mt-1 flex gap-2 items-center justify-center ${
           isCheckedIn
-            ? 'bg-teal-600/20 text-teal-300 border-teal-500/25 cursor-default'
+            ? 'bg-pacific-600/20 text-pacific-300 border-pacific-500/25 cursor-default'
             : 'btn-primary'
         }`}
       >

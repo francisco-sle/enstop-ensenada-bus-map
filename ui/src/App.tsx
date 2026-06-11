@@ -53,15 +53,23 @@ function MainAppShell() {
   const hasError = routesError || stopsError
 
 
-  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  const desktopNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+    [
+      'flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-150 select-none',
+      isActive
+        ? 'bg-pacific-50 text-pacific-600'
+        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+    ].join(' ')
+
+  const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
       'flex flex-col items-center justify-center gap-1 h-full text-[11px] font-semibold transition-colors duration-150 select-none',
-      isActive ? 'text-teal-400' : 'text-white/50 hover:text-white/80'
+      isActive ? 'text-pacific-600' : 'text-slate-400 hover:text-slate-600'
     ].join(' ')
 
   if (isStudio) {
     return (
-      <div className="flex flex-col h-full w-full overflow-hidden bg-navy-600">
+      <div className="flex flex-col h-full w-full overflow-hidden bg-bay-950">
         <main className="flex-1 relative overflow-hidden">
           <Routes>
             <Route path="/studio" element={<EditorPage />} />
@@ -72,24 +80,42 @@ function MainAppShell() {
   }
 
   return (
-    <div className="flex flex-col h-full w-full overflow-hidden bg-navy-600">
+    <div className="flex flex-col h-full w-full overflow-hidden bg-bay-950">
       {/* Top Navbar */}
-      <header className="h-14 shrink-0 flex items-center justify-center px-4 bg-surface border-b border-white/8 shadow-card z-1002">
-        <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-wide text-teal-400 font-display">
+      <header className="h-14 shrink-0 flex items-center justify-between px-4 lg:px-6 bg-white border-b border-slate-200/80 shadow-xs z-1002">
+        <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-wide text-pacific-600 font-display">
           <span>🚌</span> ENStop
         </h1>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center gap-1">
+          <NavLink to="/map" className={desktopNavLinkClass} aria-label="Ir al mapa de rutas">
+            <Map size={16} />
+            <span>Mapa</span>
+          </NavLink>
+
+          <NavLink to="/routes" className={desktopNavLinkClass} aria-label="Ver todas las rutas">
+            <Bus size={16} />
+            <span>Rutas</span>
+          </NavLink>
+
+          <NavLink to="/about" className={desktopNavLinkClass} aria-label="Ver información del proyecto">
+            <Info size={16} />
+            <span>Acerca</span>
+          </NavLink>
+        </nav>
       </header>
 
       {/* Main Content Area */}
       <main className="flex-1 relative overflow-hidden">
         {isLoading ? (
-          <div className="flex flex-col items-center justify-center h-full gap-3 bg-navy-600">
+          <div className="flex flex-col items-center justify-center h-full gap-3 bg-bay-950">
             <div className="skeleton w-20 h-20 rounded-full" />
             <h3 className="text-base font-semibold">Cargando datos de transporte...</h3>
             <p className="text-muted text-xs">Espere un momento, por favor.</p>
           </div>
         ) : hasError ? (
-          <div className="flex flex-col items-center justify-center h-full gap-4 px-6 text-center bg-navy-600">
+          <div className="flex flex-col items-center justify-center h-full gap-4 px-6 text-center bg-bay-950">
             <AlertTriangle size={48} className="text-[#E05050]" />
             <h3 className="text-lg font-bold">Error de Conexión</h3>
             <p className="text-muted text-sm max-w-xs">
@@ -134,22 +160,22 @@ function MainAppShell() {
       </main>
 
       {/* Bottom Navigation Bar */}
-      <nav className="h-[60px] shrink-0 grid grid-cols-3 bg-surface border-t border-white/8 z-1002">
-        <NavLink to="/map" className={navLinkClass} aria-label="Ir al mapa de rutas">
+      <nav className="h-[60px] shrink-0 grid grid-cols-3 bg-white border-t border-slate-200/80 z-1002 lg:hidden">
+        <NavLink to="/map" className={mobileNavLinkClass} aria-label="Ir al mapa de rutas">
           <Map size={20} />
           <span>Mapa</span>
         </NavLink>
 
         <NavLink
           to="/routes"
-          className={navLinkClass}
+          className={mobileNavLinkClass}
           aria-label="Ver todas las rutas"
         >
           <Bus size={20} />
           <span>Rutas</span>
         </NavLink>
 
-        <NavLink to="/about" className={navLinkClass} aria-label="Ver información del proyecto">
+        <NavLink to="/about" className={mobileNavLinkClass} aria-label="Ver información del proyecto">
           <Info size={20} />
           <span>Acerca</span>
         </NavLink>

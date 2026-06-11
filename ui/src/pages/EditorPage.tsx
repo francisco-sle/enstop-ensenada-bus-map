@@ -37,7 +37,7 @@ export function EditorPage() {
   const [routeName, setRouteName] = useState('Nueva Ruta')
   const [routeShortName, setRouteShortName] = useState('N1')
   const [routeDirection, setRouteDirection] = useState<'circular' | 'bidirectional'>('circular')
-  const [routeColor, setRouteColor] = useState('#3DBFA8')
+  const [routeColor, setRouteColor] = useState('#4ca8d4')
   
   // Snapping logic wrapper
   const handleSnapTrace = async (coords: [number, number][]) => {
@@ -155,7 +155,7 @@ export function EditorPage() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col md:flex-row overflow-hidden relative bg-navy-600">
+    <div className="w-full h-full flex flex-col md:flex-row overflow-hidden relative bg-bay-950">
       
       {/* Sidebar - Tools and settings */}
       <div className="w-full md:w-[360px] lg:w-[400px] shrink-0 bg-surface border-r border-white/8 flex flex-col overflow-y-auto z-10 select-none">
@@ -176,8 +176,8 @@ export function EditorPage() {
         </div>
 
         {/* Settings Form */}
-        <div className="p-4 flex flex-col gap-4 border-b border-white/8 bg-navy-900/20">
-          <div className="flex items-center gap-2 text-teal-400 font-semibold text-xs uppercase tracking-wider">
+        <div className="p-4 flex flex-col gap-4 border-b border-white/8 bg-bay-950/20">
+          <div className="flex items-center gap-2 text-pacific-400 font-semibold text-xs uppercase tracking-wider">
             <Settings size={14} />
             <span>Datos de la Ruta</span>
           </div>
@@ -189,7 +189,7 @@ export function EditorPage() {
                 type="text" 
                 value={routeShortName}
                 onChange={e => setRouteShortName(e.target.value)}
-                className="bg-surface-elevated border border-white/8 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-400 font-bold text-center"
+                className="bg-surface-elevated border border-white/8 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-pacific-400 font-bold text-center"
                 placeholder="R1"
               />
             </div>
@@ -199,7 +199,7 @@ export function EditorPage() {
                 type="text" 
                 value={routeName}
                 onChange={e => setRouteName(e.target.value)}
-                className="bg-surface-elevated border border-white/8 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-teal-400"
+                className="bg-surface-elevated border border-white/8 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-pacific-400"
                 placeholder="Centro - Chapultepec"
               />
             </div>
@@ -211,7 +211,7 @@ export function EditorPage() {
               <select 
                 value={routeDirection}
                 onChange={e => setRouteDirection(e.target.value as 'circular' | 'bidirectional')}
-                className="bg-surface-elevated border border-white/8 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-teal-400 cursor-pointer"
+                className="bg-surface-elevated border border-white/8 rounded-lg px-2 py-2 text-xs text-white focus:outline-none focus:border-pacific-400 cursor-pointer"
               >
                 <option value="circular">Circular (Bucle)</option>
                 <option value="bidirectional">Ida/Vuelta</option>
@@ -230,7 +230,7 @@ export function EditorPage() {
                   type="text" 
                   value={routeColor}
                   onChange={e => setRouteColor(e.target.value)}
-                  className="bg-surface-elevated border border-white/8 rounded-lg px-2 py-2 text-[11px] text-white focus:outline-none focus:border-teal-400 uppercase font-mono flex-1 text-center"
+                  className="bg-surface-elevated border border-white/8 rounded-lg px-2 py-2 text-[11px] text-white focus:outline-none focus:border-pacific-400 uppercase font-mono flex-1 text-center"
                 />
               </div>
             </div>
@@ -239,7 +239,7 @@ export function EditorPage() {
 
         {/* Drawing Controls */}
         <div className="p-4 flex flex-col gap-3 border-b border-white/8">
-          <div className="flex items-center gap-2 text-teal-400 font-semibold text-xs uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-pacific-400 font-semibold text-xs uppercase tracking-wider">
             <Layers size={14} />
             <span>Herramientas de Dibujo</span>
           </div>
@@ -249,7 +249,7 @@ export function EditorPage() {
               onClick={() => setMode('view')}
               className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'view' 
-                  ? 'bg-teal/10 border-teal text-teal shadow-glow' 
+                  ? 'bg-pacific/10 border-pacific text-pacific shadow-glow' 
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
               }`}
             >
@@ -261,7 +261,7 @@ export function EditorPage() {
               onClick={() => setMode('draw-route')}
               className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'draw-route' 
-                  ? 'bg-teal/10 border-teal text-teal shadow-glow' 
+                  ? 'bg-pacific/10 border-pacific text-pacific shadow-glow' 
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
               }`}
             >
@@ -273,7 +273,7 @@ export function EditorPage() {
               onClick={() => setMode('add-stop')}
               className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'add-stop' 
-                  ? 'bg-teal/10 border-teal text-teal shadow-glow' 
+                  ? 'bg-pacific/10 border-pacific text-pacific shadow-glow' 
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
               }`}
             >
@@ -327,7 +327,7 @@ export function EditorPage() {
         {/* Stops List */}
         <div className="flex-1 p-4 flex flex-col gap-3 min-h-[200px]">
           <div className="flex items-center justify-between">
-            <span className="text-teal-400 font-semibold text-xs uppercase tracking-wider">
+            <span className="text-pacific-400 font-semibold text-xs uppercase tracking-wider">
               Paradas Colocadas ({stops.length})
             </span>
             {stops.length > 0 && (
@@ -353,14 +353,14 @@ export function EditorPage() {
                   className="bg-surface-elevated border border-white/8 rounded-xl p-3 flex flex-col gap-2 group hover:border-white/12 transition-all"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] bg-teal/15 text-teal font-bold px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] bg-pacific/15 text-pacific font-bold px-1.5 py-0.5 rounded">
                       #{index + 1}
                     </span>
                     <input 
                       type="text" 
                       value={stop.name} 
                       onChange={e => handleUpdateStopName(stop.id, e.target.value)}
-                      className="bg-transparent border-b border-transparent hover:border-white/20 focus:border-teal text-xs text-white font-bold px-1 focus:outline-none flex-1 truncate"
+                      className="bg-transparent border-b border-transparent hover:border-white/20 focus:border-pacific text-xs text-white font-bold px-1 focus:outline-none flex-1 truncate"
                     />
                     <button 
                       onClick={() => handleDeleteStop(stop.id)}
@@ -377,7 +377,7 @@ export function EditorPage() {
                         type="checkbox" 
                         checked={stop.isTerminal}
                         onChange={() => handleToggleTerminal(stop.id)}
-                        className="rounded border-white/10 text-teal bg-navy-600 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5"
+                        className="rounded border-white/10 text-pacific bg-bay-950 focus:ring-0 focus:ring-offset-0 w-3.5 h-3.5"
                       />
                       <span>¿Terminal?</span>
                     </label>
@@ -389,7 +389,7 @@ export function EditorPage() {
         </div>
 
         {/* Footer actions */}
-        <div className="p-4 border-t border-white/8 bg-navy-900/40 mt-auto">
+        <div className="p-4 border-t border-white/8 bg-bay-950/40 mt-auto">
           <button
             onClick={handleExportJSON}
             disabled={routeCoords.length === 0}

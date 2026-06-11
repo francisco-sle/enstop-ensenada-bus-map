@@ -43,14 +43,14 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
     >
       <button
         onClick={handleSetOrigin}
-        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-teal-400 hover:bg-white/5 border-b border-white/6 text-left w-full cursor-pointer transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-pacific-400 hover:bg-white/5 border-b border-white/6 text-left w-full cursor-pointer transition-colors"
       >
         <MapPin size={12} />
         <span>Origen</span>
       </button>
       <button
         onClick={handleSetDestination}
-        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-amber-400 hover:bg-white/5 text-left w-full cursor-pointer transition-colors"
+        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-sol-400 hover:bg-white/5 text-left w-full cursor-pointer transition-colors"
       >
         <Navigation size={12} />
         <span>Destino</span>

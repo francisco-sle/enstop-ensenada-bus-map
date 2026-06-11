@@ -44,7 +44,7 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
                   <span>{meta.icon}</span>
                   <span className="text-sm font-medium text-white/90">{meta.label}</span>
                 </td>
-                <td className="py-3 px-4 text-right font-bold text-teal-400 text-sm">
+                <td className="py-3 px-4 text-right font-bold text-pacific-400 text-sm">
                   {price} <span className="text-[10px] text-white/40 font-normal">MXN</span>
                 </td>
               </tr>
