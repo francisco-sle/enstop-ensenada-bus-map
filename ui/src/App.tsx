@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, NavLink, useNavigate, useParams } from 'react-router-dom'
+import { Routes, Route, Navigate, NavLink, useNavigate, useParams, useLocation } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Map, Bus, Info, AlertTriangle } from 'lucide-react'
 
@@ -8,6 +8,7 @@ import { MapPage } from './pages/MapPage'
 import { RoutesPage } from './pages/RoutesPage'
 import { RouteDetailPage } from './pages/RouteDetailPage'
 import { AboutPage } from './pages/AboutPage'
+import { EditorPage } from './pages/EditorPage'
 import type { RouteDetail } from './types'
 
 // Initialize React Query Client
@@ -35,6 +36,8 @@ function RouteDetailWrapper({ routes }: { routes: RouteDetail[] }) {
 }
 
 function MainAppShell() {
+  const location = useLocation()
+  const isStudio = location.pathname === '/studio'
 
   // Fetch routes and stops
   const { data: routes, isLoading: loadingRoutes, error: routesError, refetch: refetchRoutes } = useRoutes()
@@ -55,6 +58,18 @@ function MainAppShell() {
       'flex flex-col items-center justify-center gap-1 h-full text-[11px] font-semibold transition-colors duration-150 select-none',
       isActive ? 'text-teal-400' : 'text-white/50 hover:text-white/80'
     ].join(' ')
+
+  if (isStudio) {
+    return (
+      <div className="flex flex-col h-full w-full overflow-hidden bg-navy-600">
+        <main className="flex-1 relative overflow-hidden">
+          <Routes>
+            <Route path="/studio" element={<EditorPage />} />
+          </Routes>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col h-full w-full overflow-hidden bg-navy-600">
