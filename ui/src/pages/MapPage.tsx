@@ -96,7 +96,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
         {/* Floating Search Panel (Mobile only) */}
         {isMobile && (
-          <div className="absolute top-5 left-5 z-1000 w-[calc(100%-40px)] max-w-[360px] max-h-[calc(100%-40px)] flex flex-col gap-3">
+          <div className="absolute top-5 left-5 z-1000 w-[calc(100%-96px)] max-w-[480px] max-h-[calc(100%-40px)] flex flex-col gap-3">
             <RoutePlanner stops={allStops} />
             {!isMinimized && routingResults.length > 0 && (
               <div className="bg-surface rounded-xl border border-white/8 p-3 shadow-card animate-fade-up overflow-y-auto min-h-0 flex-1">
