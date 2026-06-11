@@ -41,7 +41,7 @@ export const userLocationIcon = L.divIcon({
 })
 
 export function routingPinIcon(label: 'A' | 'B') {
-  const bgColor = label === 'A' ? 'var(--color-accent-teal)' : 'var(--color-accent-warm)'
+  const bgColor = label === 'A' ? 'var(--color-accent-cerulean)' : 'var(--color-accent-warm)'
   return L.divIcon({
     className: 'routing-pin-marker',
     html: `<div style="

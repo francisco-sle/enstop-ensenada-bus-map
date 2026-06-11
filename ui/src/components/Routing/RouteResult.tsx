@@ -8,7 +8,7 @@ export function RouteResult() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-sm font-semibold flex items-center gap-1.5 text-teal-400 select-none">
+      <h3 className="text-sm font-semibold flex items-center gap-1.5 text-pacific-400 select-none">
         <Clock size={16} />
         <span>Rutas Recomendadas:</span>
       </h3>
@@ -26,8 +26,8 @@ export function RouteResult() {
               onClick={() => setSelectedResultIndex(index)}
               className={`p-3 rounded-lg cursor-pointer transition-all duration-200 border-2 flex flex-col gap-2 ${
                 isSelected
-                  ? 'bg-surface-elevated border-teal-400 shadow-glow'
-                  : 'bg-navy-600/30 border-white/5 hover:bg-navy-600/50 hover:border-white/10'
+                  ? 'bg-surface-elevated border-pacific-400 shadow-glow'
+                  : 'bg-bay-700/30 border-white/5 hover:bg-bay-700/50 hover:border-white/10'
               }`}
             >
               {/* Badge & Time Summary */}
@@ -35,7 +35,7 @@ export function RouteResult() {
                 <div className="flex items-center gap-2 overflow-hidden mr-1">
                   <span
                     style={{ backgroundColor: result.routeColor }}
-                    className="text-navy-900 font-extrabold text-[10px] px-2 py-0.5 rounded-sm shrink-0"
+                    className="text-bay-950 font-extrabold text-[10px] px-2 py-0.5 rounded-sm shrink-0"
                   >
                     {result.routeShortName}
                   </span>
@@ -44,7 +44,7 @@ export function RouteResult() {
                   </span>
                 </div>
                 <div className="shrink-0 flex items-baseline">
-                  <span className="text-lg font-extrabold text-teal-400">
+                  <span className="text-lg font-extrabold text-pacific-400">
                     ~{totalMin}
                   </span>
                   <span className="text-[10px] text-white/40 ml-0.5">
@@ -66,7 +66,7 @@ export function RouteResult() {
                   {/* Origin walking */}
                   <div className="flex gap-2.5 items-start">
                     <div className="flex flex-col items-center self-stretch w-4">
-                      <MapPin size={14} className="text-teal-400 mt-0.5" />
+                      <MapPin size={14} className="text-pacific-400 mt-0.5" />
                       <div className="w-0.5 bg-white/10 flex-1 my-1 min-h-[14px]"></div>
                     </div>
                     <div>
@@ -101,7 +101,7 @@ export function RouteResult() {
                   {/* Destination walking */}
                   <div className="flex gap-2.5 items-start">
                     <div className="w-4 flex justify-center">
-                      <MapPin size={14} className="text-amber-400 mt-0.5" />
+                      <MapPin size={14} className="text-sol-400 mt-0.5" />
                     </div>
                     <div>
                       <span className="text-white/90">Camina {Math.round(result.walkDestKm * 1000)}m hasta tu destino</span>

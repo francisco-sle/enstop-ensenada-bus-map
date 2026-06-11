@@ -4,6 +4,18 @@ import { usePhotonGeocoder } from '../../api/usePhotonGeocoder'
 import { useMapStore } from '../../store/mapStore'
 import type { DBStop } from '../../types'
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return isMobile
+}
+
 export type LocationRole = 'origin' | 'destination'
 
 interface LocationAutocompleteProps {
@@ -46,6 +58,7 @@ export function LocationAutocomplete({
   onMapPickToggle,
   isMapPickActive,
 }: LocationAutocompleteProps) {
+  const isMobile = useIsMobile()
   const [input, setInput] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -59,10 +72,10 @@ export function LocationAutocomplete({
   const displayValue = isFocused ? input : (value?.label || '')
 
   const isOrigin = role === 'origin'
-  const accentClass = isOrigin ? 'text-teal-400' : 'text-amber-400'
+  const accentClass = isOrigin ? 'text-pacific-400' : 'text-sol-400'
   const mapActiveClass = isOrigin
-    ? 'bg-teal-400 text-navy-600 border-teal-400 shadow-glow'
-    : 'bg-amber-400 text-navy-600 border-amber-400 shadow-glow'
+    ? 'bg-pacific-400 text-bay-950 border-pacific-400 shadow-glow'
+    : 'bg-sol-400 text-bay-950 border-sol-400 shadow-glow'
 
   // Close on outside click
   useEffect(() => {
@@ -106,7 +119,7 @@ export function LocationAutocomplete({
 
   return (
     <div ref={containerRef} className="relative flex flex-col gap-1">
-      <label className={`text-[11px] font-semibold text-white/50 flex items-center gap-1`}>
+      <label htmlFor={`${role}-input`} className="text-[11px] font-semibold text-white/50 hidden md:flex items-center gap-1">
         {isOrigin
           ? <MapPin size={12} className={accentClass} />
           : <Navigation size={12} className={accentClass} />
@@ -117,10 +130,18 @@ export function LocationAutocomplete({
       <div className="flex gap-2">
         {/* Text input + clear button */}
         <div className="relative flex-1">
+          {isMobile && (
+            <div className="absolute left-2.5 top-1/2 -translate-y-1/2 flex items-center pointer-events-none">
+              {isOrigin
+                ? <MapPin size={14} className={accentClass} />
+                : <Navigation size={14} className={accentClass} />
+              }
+            </div>
+          )}
           <input
             id={`${role}-input`}
             type="text"
-            placeholder="Escribe parada o selecciona en mapa..."
+            placeholder={isMobile ? (isOrigin ? 'Origen...' : 'Destino...') : 'Escribe parada o selecciona en mapa...'}
             value={displayValue}
             onChange={(e) => {
               setInput(e.target.value)
@@ -132,7 +153,7 @@ export function LocationAutocomplete({
               setInput(value?.label || '')
               setShowDropdown(true)
             }}
-            className="w-full bg-navy-600/50 border border-white/8 rounded-lg py-2 px-3 pr-8 text-sm text-white placeholder-white/20 focus:outline-hidden focus:border-teal-400/50"
+            className="w-full bg-bay-700/50 border border-white/8 rounded-lg py-2 pl-8 md:pl-3 pr-8 text-sm text-white placeholder-white/20 focus:outline-hidden focus:border-pacific-400/50"
           />
           {displayValue && (
             <button
@@ -161,7 +182,7 @@ export function LocationAutocomplete({
 
       {/* Dropdown */}
       {showDropdown && input && (!(!hasStops && !hasAddresses && !photonLoading)) && (
-        <div className="absolute top-[58px] left-0 right-12 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
+        <div className="absolute top-[38px] md:top-[58px] left-0 right-12 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
           {/* Bus stops section */}
           {hasStops && (
             <>

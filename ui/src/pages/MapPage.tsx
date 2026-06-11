@@ -28,7 +28,7 @@ interface MapPageProps {
 
 export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   const { selectedStopId, setSelectedStopId, setUserLocation, setCenter, setZoom } = useMapStore()
-  const { routingResults } = useRoutingStore()
+  const { routingResults, isMinimized } = useRoutingStore()
   const isMobile = useIsMobile()
 
   // Bidirectional URL↔Store sync — handles deep links and browser back/forward
@@ -91,15 +91,15 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
           aria-label="Encontrar mi ubicación actual"
           className="btn absolute top-5 right-5 z-1000 bg-surface border border-white/8 w-11 h-11 rounded-full flex items-center justify-center shadow-card hover:bg-surface-elevated transition-colors"
         >
-          <Locate size={20} className="text-teal-400" />
+          <Locate size={20} className="text-pacific-400" />
         </button>
 
         {/* Floating Search Panel (Mobile only) */}
         {isMobile && (
-          <div className="absolute top-5 left-5 z-1000 w-[calc(100%-40px)] max-w-[360px] flex flex-col gap-3">
+          <div className="absolute top-5 left-5 z-1000 w-[calc(100%-40px)] max-w-[360px] max-h-[calc(100%-40px)] flex flex-col gap-3">
             <RoutePlanner stops={allStops} />
-            {routingResults.length > 0 && (
-              <div className="bg-surface rounded-xl border border-white/8 p-3 shadow-card animate-fade-up max-h-[calc(100vh-240px)] overflow-y-auto">
+            {!isMinimized && routingResults.length > 0 && (
+              <div className="bg-surface rounded-xl border border-white/8 p-3 shadow-card animate-fade-up overflow-y-auto min-h-0 flex-1">
                 <RouteResult />
               </div>
             )}

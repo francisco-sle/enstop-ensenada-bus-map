@@ -6,44 +6,36 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-teal-50: #edfaf7;
-  --color-teal-100: #c5f1e9;
-  --color-teal-200: #8ce3d3;
-  --color-teal-300: #53d5bd;
-  --color-teal-400: #3dbfa8;
-  --color-teal-500: #2fa08c;
-  --color-teal-600: #218070;
-  --color-teal-700: #145f53;
-  --color-teal-800: #0b3f37;
-  --color-teal-900: #04201c;
-  --color-teal: #3dbfa8;
+  --color-pacific-100: oklch(0.93 0.06 228);
+  --color-pacific-200: oklch(0.85 0.10 228);
+  --color-pacific-300: oklch(0.78 0.12 228);
+  --color-pacific-400: oklch(0.68 0.16 228);
+  --color-pacific-500: oklch(0.55 0.18 228);
+  --color-pacific-600: oklch(0.42 0.17 228);
+  --color-pacific: oklch(0.68 0.16 228);
 
-  --color-amber-50: #fef9ee;
-  --color-amber-100: #fdebc6;
-  --color-amber-200: #fad58e;
-  --color-amber-300: #f7bf56;
-  --color-amber-400: #f0a030;
-  --color-amber-500: #d4831a;
-  --color-amber-600: #a86310;
-  --color-amber-700: #7c440a;
-  --color-amber-800: #502805;
-  --color-amber-900: #280f01;
-  --color-amber: #f0a030;
+  --color-sol-50: oklch(0.97 0.03 82);
+  --color-sol-100: oklch(0.94 0.06 82);
+  --color-sol-200: oklch(0.90 0.09 82);
+  --color-sol-300: oklch(0.88 0.12 82);
+  --color-sol-400: oklch(0.78 0.16 82);
+  --color-sol-500: oklch(0.68 0.18 82);
+  --color-sol-600: oklch(0.58 0.16 82);
+  --color-sol-700: oklch(0.48 0.14 82);
+  --color-sol-800: oklch(0.35 0.12 82);
+  --color-sol-900: oklch(0.22 0.08 82);
+  --color-sol: oklch(0.78 0.16 82);
 
-  --color-navy-50: #ebf0f5;
-  --color-navy-100: #c3d3e2;
-  --color-navy-200: #8aaabf;
-  --color-navy-300: #51809c;
-  --color-navy-400: #2a5578;
-  --color-navy-500: #1a3550;
-  --color-navy-600: #0f1e2e;
-  --color-navy-700: #0a1520;
-  --color-navy-800: #050d14;
-  --color-navy-900: #020508;
-  --color-navy: #0f1e2e;
+  --color-bay-500: oklch(0.48 0.07 244);
+  --color-bay-600: oklch(0.40 0.07 244);
+  --color-bay-700: oklch(0.32 0.06 244);
+  --color-bay-800: oklch(0.26 0.06 244);
+  --color-bay-900: oklch(0.21 0.06 244);
+  --color-bay-950: oklch(0.14 0.05 244);
+  --color-bay: oklch(0.21 0.06 244);
 
-  --color-surface: #1a2b3c;
-  --color-surface-elevated: #243446;
+  --color-surface: oklch(0.21 0.06 244);
+  --color-surface-elevated: oklch(0.26 0.06 244);
 
   --color-border: rgba(255, 255, 255, 0.08);
 
@@ -54,7 +46,7 @@
   --text-2xs--line-height: 0.875rem;
 
   --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 20px rgba(61, 191, 168, 0.3);
+  --shadow-glow: 0 0 20px oklch(0.68 0.16 228 / 0.3);
 
   --radius-2xl: 1rem;
   --radius-3xl: 1.5rem;
@@ -118,8 +110,8 @@
            hover:bg-white/10 active:scale-95 select-none;
 }
 @utility btn-primary {
-  @apply bg-teal-400 text-navy-600 border-teal-400
-           hover:bg-teal-300 shadow-glow;
+  @apply bg-pacific-400 text-bay-950 border-pacific-400
+           hover:bg-pacific-300 shadow-glow;
 }
 @utility text-muted {
   @apply text-white/55;
@@ -136,22 +128,22 @@
 @layer base {
   :root {
     /* Brand palette */
-    --color-accent-teal:       #3DBFA8;
-    --color-accent-teal-light: #5DD5BF;
-    --color-accent-warm:       #F0A030;
-    --color-accent-warm-light: #F7BF56;
+    --color-accent-cerulean:       oklch(0.68 0.16 228);
+    --color-accent-cerulean-light: oklch(0.78 0.12 228);
+    --color-accent-warm:       #e0a32e;
+    --color-accent-warm-light: #ecc56e;
     --color-error:             #E05050;
     --color-success:           #4CAF80;
 
-    /* Surfaces — dark / maritime */
-    --color-bg-primary:   #0F1E2E;
-    --color-bg-surface:   #1A2B3C;
-    --color-bg-elevated:  #243446;
+    /* Surfaces — dark / volcanic */
+    --color-bg-primary:   oklch(0.14 0.05 244);
+    --color-bg-surface:   oklch(0.21 0.06 244);
+    --color-bg-elevated:  oklch(0.26 0.06 244);
 
     /* Text */
     --color-text-primary:   rgba(255,255,255,0.92);
     --color-text-secondary: rgba(255,255,255,0.55);
-    --color-text-inverse:   #0F1E2E;
+    --color-text-inverse:   oklch(0.14 0.05 244);
 
     /* Borders */
     --color-border: rgba(255,255,255,0.08);
@@ -181,7 +173,7 @@
 
     /* Shadows */
     --shadow-card: 0 4px 16px rgba(0,0,0,0.25);
-    --shadow-glow: 0 0 20px rgba(61,191,168,0.3);
+    --shadow-glow: 0 0 20px oklch(0.68 0.16 228 / 0.3);
   }
 
   /* Reset & base typography */
@@ -217,7 +209,7 @@
 @layer utilities {
   /* -------------------------------------------------------
    Legacy utility classes — kept for gradual migration
-------------------------------------------------------- */
+ ------------------------------------------------------- */
 }
 
 /* -------------------------------------------------------
@@ -238,26 +230,26 @@
 }
 
 .leaflet-control-attribution {
-  background: rgba(15, 30, 46, 0.7) !important;
+  background: oklch(0.14 0.05 244 / 0.7) !important;
   color: var(--color-text-secondary) !important;
   font-size: 10px !important;
 }
 
 .leaflet-control-attribution a {
-  color: var(--color-accent-teal) !important;
+  color: var(--color-accent-cerulean) !important;
 }
 
 /* -------------------------------------------------------
- Geolocation pulse animation
- Used by the div icon in BusMap.tsx — can't be Tailwind.
+  Geolocation pulse animation
+  Used by the div icon in BusMap.tsx — can't be Tailwind.
 ------------------------------------------------------- */
 .user-location-pulse {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background-color: #3b82f6;
+  background-color: #2d8fdb;
   border: 3px solid white;
-  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  box-shadow: 0 0 0 0 rgba(45, 143, 219, 0.7);
   position: relative;
 }
 
@@ -266,7 +258,7 @@
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(59, 130, 246, 0.5);
+  border: 2px solid rgba(45, 143, 219, 0.5);
   animation: pulse-ring 1.4s ease-out infinite;
 }
 
@@ -285,7 +277,7 @@
    Leaflet custom context menu popup skin overrides
 ------------------------------------------------------- */
 .custom-context-menu-popup .leaflet-popup-content-wrapper {
-  background: #1A2B3C !important;
+  background: oklch(0.21 0.06 244) !important;
   color: #fff !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 8px !important;
@@ -301,7 +293,7 @@
 }
 
 .custom-context-menu-popup .leaflet-popup-tip {
-  background: #1A2B3C !important;
+  background: oklch(0.21 0.06 244) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
@@ -318,7 +310,7 @@
   max-height: 60vh;
   display: flex;
   flex-direction: column;
-  background: rgba(15, 30, 46, 0.88);
+  background: oklch(0.21 0.06 244 / 0.88);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -348,7 +340,7 @@
 .route-toggle-legend__all-btn {
   font-size: 11px;
   font-weight: 500;
-  color: var(--color-accent-teal);
+  color: var(--color-accent-cerulean);
   background: none;
   border: none;
   cursor: pointer;
@@ -357,7 +349,7 @@
   transition: background 0.15s;
 }
 .route-toggle-legend__all-btn:hover {
-  background: rgba(61, 191, 168, 0.12);
+  background: oklch(0.68 0.13 225 / 0.12);
 }
 
 .route-toggle-legend__list {
@@ -378,7 +370,7 @@
   background: rgba(255, 255, 255, 0.04);
 }
 .route-toggle-legend__item--selected {
-  background: rgba(61, 191, 168, 0.08);
+  background: oklch(0.68 0.13 225 / 0.08);
 }
 .route-toggle-legend__item--hidden .route-toggle-legend__name {
   opacity: 0.4;
@@ -440,4 +432,91 @@
 }
 .route-toggle-legend__item--hidden .route-toggle-legend__eye-btn {
   color: rgba(255, 255, 255, 0.25);
+}
+
+/* -------------------------------------------------------
+   RouteToggleLegend — mobile expanded & collapsed states
+------------------------------------------------------- */
+
+/* Header actions wrapper — houses "Ocultar/Mostrar" + collapse chevron */
+.route-toggle-legend__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Collapse button (mobile only) */
+.route-toggle-legend__collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.route-toggle-legend__collapse-btn:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Mobile expanded — fills vertical space above the attribution bar */
+@media (max-width: 767px) {
+  .route-toggle-legend--mobile-expanded {
+    width: calc(100vw - 24px);  /* full-width minus left+right margins */
+    max-width: 360px;
+    left: 12px;
+    right: 12px;
+    bottom: 48px;
+    max-height: calc(100dvh - 180px); /* leave room for top panel + attr */
+  }
+}
+
+/* Collapsed pill — tiny horizontal chip */
+.route-toggle-legend--collapsed {
+  bottom: 48px;
+  right: 12px;
+  width: auto;
+  max-height: none;
+  padding: 0;
+  cursor: pointer;
+  overflow: visible;
+}
+.route-toggle-legend--collapsed:hover {
+  background: oklch(0.26 0.06 244 / 0.92);
+}
+
+.route-toggle-legend__pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+}
+
+.route-toggle-legend__pill-swatches {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.route-toggle-legend__pill-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.route-toggle-legend__pill-hidden {
+  font-weight: 400;
+  color: var(--color-accent-cerulean);
+}
+
+.route-toggle-legend__pill-chevron {
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
 }

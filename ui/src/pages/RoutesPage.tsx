@@ -27,12 +27,12 @@ export function RoutesPage({ routes }: RoutesPageProps) {
             <div className="flex gap-4 items-center overflow-hidden flex-1 pl-4 py-4 pr-3">
               <div
                 style={{ backgroundColor: route.category?.color_hex || '#3DBFA8' }}
-                className="shrink-0 text-navy-900 w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-lg shadow-md group-hover:scale-105 transition-transform"
+                className="shrink-0 text-bay-950 w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-lg shadow-md group-hover:scale-105 transition-transform"
               >
                 {route.short_name}
               </div>
               <div className="truncate">
-                <h3 className="text-sm font-bold text-white group-hover:text-teal-400 transition-colors truncate">
+                <h3 className="text-sm font-bold text-white group-hover:text-pacific-400 transition-colors truncate">
                   {route.name.split('—')[1] || route.name}
                 </h3>
                 <p className="text-muted text-[11px] mt-0.5 flex items-center gap-1">
@@ -51,7 +51,7 @@ export function RoutesPage({ routes }: RoutesPageProps) {
                 color={route.category?.color_hex || '#3DBFA8'} 
                 className="w-full h-full opacity-85 group-hover:opacity-100 transition-opacity"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-navy-900/70 backdrop-blur-md p-1.5 rounded-full border border-white/10 text-white/50 group-hover:text-teal-400 group-hover:border-teal-500/20 group-hover:scale-105 transition-all shadow-md pointer-events-none">
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-bay-950/70 backdrop-blur-md p-1.5 rounded-full border border-white/10 text-white/50 group-hover:text-pacific-400 group-hover:border-pacific-500/20 group-hover:scale-105 transition-all shadow-md pointer-events-none">
                 <ArrowRight size={14} />
               </div>
             </div>

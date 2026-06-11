@@ -115,11 +115,11 @@ export function useBusMapMarkers({
       if (isSelected) {
         color = 'var(--color-accent-warm)'
       } else if (activeResult) {
-        if (stop.id === activeResult.originStop.id) color = 'var(--color-accent-teal)'
+        if (stop.id === activeResult.originStop.id) color = 'var(--color-accent-cerulean)'
         else if (stop.id === activeResult.destStop.id) color = 'var(--color-accent-warm)'
       } else if (currentRoute) {
         const servesStop = (routeStopsMap.get(currentRoute.id) ?? []).some(rs => rs.stop_id === stop.id)
-        if (servesStop) color = currentRoute.category?.color_hex || 'var(--color-accent-teal)'
+        if (servesStop) color = currentRoute.category?.color_hex || 'var(--color-accent-cerulean)'
       }
 
       return { stop, color, isSelected }

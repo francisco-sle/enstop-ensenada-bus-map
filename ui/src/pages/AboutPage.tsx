@@ -15,7 +15,7 @@ export function AboutPage() {
       <div className="flex flex-col gap-3">
         {/* Project Info */}
         <div className="bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-2">
-          <h3 className="text-sm font-bold flex items-center gap-2 text-teal-400">
+          <h3 className="text-sm font-bold flex items-center gap-2 text-pacific-400">
             <Bus size={18} />
             <span>El Proyecto ENStop</span>
           </h3>
@@ -26,7 +26,7 @@ export function AboutPage() {
 
         {/* How to use */}
         <div className="bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-2">
-          <h3 className="text-sm font-bold flex items-center gap-2 text-amber-400">
+          <h3 className="text-sm font-bold flex items-center gap-2 text-sol-400">
             <HelpCircle size={18} />
             <span>¿Cómo viajar en microbús?</span>
           </h3>
@@ -58,7 +58,7 @@ export function AboutPage() {
 
         {/* Developer Studio Link */}
         <div className="bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-2">
-          <h3 className="text-sm font-bold flex items-center gap-2 text-teal-400 font-display">
+          <h3 className="text-sm font-bold flex items-center gap-2 text-pacific-400 font-display">
             <span>🛠️</span>
             <span>Herramientas de Colaborador</span>
           </h3>
