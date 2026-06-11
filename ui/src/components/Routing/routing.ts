@@ -123,6 +123,10 @@ export function computeABRoute(
             subCoords = allCoords.map(c => [c[1], c[0]] as [number, number])
           }
 
+          if (subCoords.length < 2) {
+            continue
+          }
+
           // Calculate walking segments
           const walkOriginKm = distance(originPt, originStopPt, { units: 'kilometers' })
           const walkDestKm = distance(destStopPt, destPt, { units: 'kilometers' })

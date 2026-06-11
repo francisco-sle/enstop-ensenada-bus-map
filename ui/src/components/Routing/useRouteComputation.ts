@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useRoutingStore } from '../../store/routingStore'
 import { computeABRoute, getNearbyStops } from './routing'
-import { useRoute } from '../../api/useRoute'
+import { useRoutes } from '../../api/useRoutes'
 import type { DBStop, RouteDetail } from '../../types'
 
 const NEARBY_RADIUS_KM = 2.0
@@ -58,7 +58,7 @@ interface UseRouteComputationResult {
  */
 export function useRouteComputation(stops: DBStop[]): UseRouteComputationResult {
   const { origin, destination, setRoutingResults } = useRoutingStore()
-  const { data: route1Detail } = useRoute(1)
+  const { data: allRoutes } = useRoutes()
 
   useEffect(() => {
     if (!origin || !destination) {
@@ -71,7 +71,7 @@ export function useRouteComputation(stops: DBStop[]): UseRouteComputationResult 
       return
     }
 
-    if (!route1Detail) return
+    if (!allRoutes) return
 
     const oNearby = getNearbyStops(origin.lat, origin.lng, stops, NEARBY_RADIUS_KM)
     const dNearby = getNearbyStops(destination.lat, destination.lng, stops, NEARBY_RADIUS_KM)
@@ -86,11 +86,11 @@ export function useRouteComputation(stops: DBStop[]): UseRouteComputationResult 
       destination.lat, destination.lng,
       oNearby,
       dNearby,
-      [route1Detail as unknown as RouteDetail]
+      allRoutes as unknown as RouteDetail[]
     )
 
     setRoutingResults(results)
-  }, [origin, destination, route1Detail, stops, setRoutingResults])
+  }, [origin, destination, allRoutes, stops, setRoutingResults])
 
   const errorMsg = deriveErrorMessage(origin, destination, stops)
 

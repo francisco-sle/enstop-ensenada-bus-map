@@ -95,6 +95,7 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
         {/* Active Routing Path */}
         {activeResult && origin && destination && (
           <ActiveRouteDisplay
+            key={`${activeResult.routeId}-${activeResult.originStop.id}-${activeResult.destStop.id}`}
             origin={origin}
             destination={destination}
             activeResult={activeResult}

@@ -132,6 +132,44 @@ describe('A-to-B Transit Routing Algorithm', () => {
     expect(res.walkOriginKm).toBeCloseTo(0, 2)
     expect(res.walkDestKm).toBeCloseTo(0, 2)
   })
+
+  it('should exclude route option if bus segment contains fewer than 2 coordinates', () => {
+    const stopA: DBStop = {
+      id: 1,
+      name: 'Stop A',
+      common_name: 'A',
+      geom: { type: 'Point', coordinates: [-116.625, 31.868] },
+      is_terminal: false,
+      accessible: true,
+      created_at: ''
+    }
+    const stopB: DBStop = {
+      id: 4,
+      name: 'Stop B',
+      common_name: 'B',
+      geom: { type: 'Point', coordinates: [-116.625, 31.868] },
+      is_terminal: false,
+      accessible: true,
+      created_at: ''
+    }
+    const routeWithBothStops: RouteDetail = {
+      ...mockRoute,
+      route_stops: [
+        { id: 1, route_id: 1, stop_id: 1, sequence: 1, stop: stopA },
+        { id: 4, route_id: 1, stop_id: 4, sequence: 2, stop: stopB }
+      ]
+    }
+
+    const results = computeABRoute(
+      31.868, -116.625,
+      31.868, -116.625,
+      [stopA],
+      [stopB],
+      [routeWithBothStops]
+    )
+
+    expect(results).toHaveLength(0)
+  })
 })
 
 describe('getNearbyStops helper function', () => {
