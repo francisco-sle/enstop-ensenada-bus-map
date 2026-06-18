@@ -60,7 +60,7 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
           {/* Origin field */}
           <div className="flex items-center gap-2">
             <MapPin size={14} className="text-pacific-400 shrink-0" />
-            <span className={`text-xs truncate flex-1 block h-4 leading-4 ${origin ? 'text-pacific-300 font-semibold' : 'text-white/25 font-normal'}`}>
+            <span className={`text-sm truncate flex-1 block h-5 leading-5 ${origin ? 'text-pacific-300 font-semibold' : 'text-white/25 font-normal'}`}>
               {origin ? originLabel : 'Elige origen...'}
             </span>
           </div>
@@ -79,7 +79,7 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
           {/* Destination field */}
           <div className="flex items-center gap-2">
             <Navigation size={14} className="text-sol-400 shrink-0" />
-            <span className={`text-xs truncate flex-1 block h-4 leading-4 ${destination ? 'text-sol-300 font-semibold' : 'text-white/25 font-normal'}`}>
+            <span className={`text-sm truncate flex-1 block h-5 leading-5 ${destination ? 'text-sol-300 font-semibold' : 'text-white/25 font-normal'}`}>
               {destination ? destLabel : 'Elige destino...'}
             </span>
           </div>
