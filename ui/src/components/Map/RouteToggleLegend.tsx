@@ -7,6 +7,7 @@ interface RouteToggleLegendProps {
   routes: RouteDetail[]
   isMinimizedProp?: boolean
   onMinimizeChange?: (minimized: boolean) => void
+  pushedUp?: boolean
 }
 
 function useIsMobile() {
@@ -25,7 +26,7 @@ function useIsMobile() {
  * Rendered as a map overlay (outside MapContainer) so it doesn't interfere
  * with Leaflet's event system.
  */
-export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }: RouteToggleLegendProps) {
+export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange, pushedUp }: RouteToggleLegendProps) {
   const { hiddenRouteIds, toggleRouteVisibility, selectedRouteId, setSelectedRouteId } = useMapStore()
   const isMobile = useIsMobile()
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
@@ -95,7 +96,7 @@ export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }:
 
   // ── Full panel ────────────────────────────────────────────────────────────
   return (
-    <div className={`route-toggle-legend${isMobile ? ' route-toggle-legend--mobile-expanded' : ''}${isCollapsing ? ' route-toggle-legend--collapsing' : ''}`}>
+    <div className={`route-toggle-legend${isMobile ? ' route-toggle-legend--mobile-expanded' : ''}${isCollapsing ? ' route-toggle-legend--collapsing' : ''}${pushedUp ? ' route-toggle-legend--pushed-up' : ''}`}>
       <div className="route-toggle-legend__header">
         <span className="route-toggle-legend__title">Rutas</span>
         <div className="route-toggle-legend__header-actions">

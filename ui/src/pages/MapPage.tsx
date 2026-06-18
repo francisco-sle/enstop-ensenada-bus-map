@@ -67,6 +67,11 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
     }, 250)
   }, [routingResults])
 
+  // True when the minimized "Opciones de Ruta" pill is anchored at the bottom
+  const showMinimizedPill =
+    isMobile && isMinimized && routingResults.length > 0 && !selectedStop &&
+    minimizedForResults === routingResults
+
   return (
     <div className="w-full h-full flex flex-col md:flex-row overflow-hidden relative">
       {/* Sidebar Panel (Desktop only) */}
@@ -121,7 +126,9 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
         {/* Mobile Stacked Controls (Bottom Right) */}
         {isMobile && (
-          <div className="absolute bottom-5 right-3 z-1000 flex flex-col gap-2 items-end">
+          <div className={`absolute right-3 z-1000 flex flex-col gap-2 items-end transition-all duration-[250ms] ${
+            showMinimizedPill ? 'bottom-[60px]' : 'bottom-5'
+          }`}>
             <button
               onClick={handleLocateUser}
               aria-label="Encontrar mi ubicación actual"
@@ -145,6 +152,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             routes={activeRoutes}
             isMinimizedProp={false}
             onMinimizeChange={setIsLegendMinimized}
+            pushedUp={showMinimizedPill}
           />
         )}
 
