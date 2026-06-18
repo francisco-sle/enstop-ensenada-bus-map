@@ -201,6 +201,9 @@ export function LocationAutocomplete({
             id={`${role}-input`}
             type="text"
             autoFocus={autoFocus}
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck="false"
             placeholder={isMobile ? (isOrigin ? 'Origen...' : 'Destino...') : 'Escribe parada o selecciona en mapa...'}
             value={displayValue}
             onChange={(e) => {
