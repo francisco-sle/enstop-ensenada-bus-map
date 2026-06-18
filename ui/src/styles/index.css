@@ -55,6 +55,7 @@
   --animate-pulse-ring: pulse-ring 1.4s ease-out infinite;
   --animate-fade-up: fade-up 0.25s ease-out;
   --animate-slide-up: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  --animate-slide-down: slide-down 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 
   @keyframes pulse-ring {
     0% {
@@ -82,6 +83,24 @@
     }
     to {
       transform: translateY(0);
+    }
+  }
+  @keyframes slide-down {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes slide-down-fade {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateY(100%);
+      opacity: 0;
     }
   }
 }
@@ -121,9 +140,7 @@
   @apply animate-pulse bg-white/10 rounded-lg;
 }
 @utility map-overlay-card {
-  @apply bg-surface/80 border border-white/8 shadow-card;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  @apply bg-surface border border-white/8 shadow-card;
 }
 
 
@@ -318,8 +335,6 @@
   display: flex;
   flex-direction: column;
   background: var(--color-bg-surface);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
@@ -463,11 +478,14 @@
   cursor: pointer;
   color: var(--color-text-secondary);
   border-radius: 4px;
-  transition: color 0.15s, background 0.15s;
+  transition: transform 0.15s, color 0.15s, background 0.15s;
 }
 .route-toggle-legend__collapse-btn:hover {
   color: var(--color-text-primary);
   background: rgba(255, 255, 255, 0.06);
+}
+.route-toggle-legend__collapse-btn:active {
+  transform: scale(0.85);
 }
 
 /* Mobile expanded — fills vertical space above the attribution bar */
@@ -480,6 +498,9 @@
     bottom: 20px;
     max-height: calc(100dvh - 180px); /* leave room for top panel + attr */
     animation: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  }
+  .route-toggle-legend--collapsing {
+    animation: slide-down-fade 0.25s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
   }
 }
 

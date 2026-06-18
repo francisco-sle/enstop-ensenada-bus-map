@@ -63,7 +63,7 @@ function MainAppShell() {
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
-      'flex flex-col items-center justify-center gap-1 h-full text-[11px] font-semibold transition-colors duration-150 select-none',
+      'flex flex-col items-center justify-center gap-1 h-full text-[11px] font-semibold transition-all duration-150 active:scale-92 select-none',
       isActive ? 'text-pacific-600' : 'text-slate-400 hover:text-slate-600'
     ].join(' ')
 
