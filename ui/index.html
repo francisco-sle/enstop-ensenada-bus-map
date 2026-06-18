@@ -2,13 +2,86 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+
+    <!-- Viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>ENStop — Rutas de Microbus en Ensenada, BC</title>
+    <meta
+      name="description"
+      content="Consulta las rutas de microbus y transporte público en Ensenada, Baja California. Encuentra paradas, planifica tu viaje y visualiza el mapa de rutas en tiempo real."
+    />
+    <meta name="keywords" content="rutas ensenada, microbus ensenada, transporte publico ensenada, mapa rutas BC, ENStop" />
+    <meta name="author" content="ENStop" />
+    <link rel="canonical" href="https://enstop.app/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://enstop.app/" />
+    <meta property="og:site_name" content="ENStop" />
+    <meta property="og:title" content="ENStop — Rutas de Microbus en Ensenada, BC" />
+    <meta
+      property="og:description"
+      content="Consulta las rutas de microbus y transporte público en Ensenada, Baja California. Encuentra paradas, planifica tu viaje y visualiza el mapa de rutas en tiempo real."
+    />
+    <meta property="og:image" content="https://enstop.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Mapa de rutas de microbus de Ensenada" />
+    <meta property="og:locale" content="es_MX" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ENStop — Rutas de Microbus en Ensenada, BC" />
+    <meta
+      name="twitter:description"
+      content="Consulta las rutas de microbus y transporte público en Ensenada, Baja California. Encuentra paradas, planifica tu viaje y visualiza el mapa de rutas en tiempo real."
+    />
+    <meta name="twitter:image" content="https://enstop.app/og-image.png" />
+    <meta name="twitter:image:alt" content="Mapa de rutas de microbus de Ensenada" />
+
+    <!-- PWA / Browser chrome -->
+    <meta name="theme-color" content="#0D2137" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="ENStop" />
+
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Madimi+One&display=swap" rel="stylesheet" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ENStop - Rutas Ensenada</title>
+
+    <!-- Structured Data: WebApplication -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "ENStop",
+        "url": "https://enstop.app/",
+        "description": "Consulta las rutas de microbus y transporte público en Ensenada, Baja California.",
+        "applicationCategory": "TravelApplication",
+        "operatingSystem": "All",
+        "inLanguage": "es-MX",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "MXN"
+        },
+        "areaServed": {
+          "@type": "City",
+          "name": "Ensenada",
+          "addressRegion": "Baja California",
+          "addressCountry": "MX"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
