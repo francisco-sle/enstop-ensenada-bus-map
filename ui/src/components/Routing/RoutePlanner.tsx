@@ -54,7 +54,7 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
     return (
       <div
         onClick={() => setIsMinimized(false)}
-        className="bg-surface rounded-xl border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-[0.99] transition-all select-none"
+        className="bg-surface rounded-xl border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-98 transition-transform duration-150 select-none"
       >
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Origin field */}

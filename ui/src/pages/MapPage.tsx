@@ -95,9 +95,9 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
           <button
             onClick={handleLocateUser}
             aria-label="Encontrar mi ubicación actual"
-            className="btn absolute top-5 right-5 z-1000 bg-surface border border-white/8 w-11 h-11 rounded-full flex items-center justify-center shadow-card hover:bg-surface-elevated transition-colors"
+            className="absolute top-5 right-5 z-1000 bg-surface border border-white/8 w-11 h-11 rounded-full flex items-center justify-center shadow-card hover:bg-surface-elevated active:scale-95 transition-all text-pacific-400 cursor-pointer"
           >
-            <Locate size={20} className="text-pacific-400" />
+            <Locate size={18} />
           </button>
         )}
 
@@ -114,7 +114,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               aria-label="Encontrar mi ubicación actual"
               className="bg-surface border border-white/8 w-11 h-11 rounded-xl flex items-center justify-center shadow-card hover:bg-surface-elevated active:scale-95 transition-all text-pacific-400 cursor-pointer"
             >
-              <Locate size={20} />
+              <Locate size={18} />
             </button>
             {isLegendMinimized && (
               <RouteToggleLegend
@@ -140,7 +140,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
           <div className={
             isMinimized
               ? "absolute top-4 left-4 right-4 z-1000 flex flex-col gap-3"
-              : "absolute inset-4 z-1005 bg-surface/95 backdrop-blur-xl rounded-2xl border border-white/8 shadow-card flex flex-col p-4 overflow-y-auto animate-slide-up"
+              : "absolute inset-4 z-1005 bg-surface rounded-2xl border border-white/8 shadow-card flex flex-col p-4 overflow-y-auto animate-slide-down"
           }>
             <RoutePlanner stops={allStops} />
           </div>

@@ -30,6 +30,7 @@ export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }:
   const isMobile = useIsMobile()
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
   const [isMinimizedInternal, setIsMinimizedInternal] = useState(isMobile)
+  const [isCollapsing, setIsCollapsing] = useState(false)
 
   const isMinimized = isMinimizedProp !== undefined ? isMinimizedProp : isMinimizedInternal
   const setIsMinimized = (val: boolean) => {
@@ -67,7 +68,7 @@ export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }:
       <button
         type="button"
         onClick={() => setIsMinimized(false)}
-        className="h-11 bg-surface border border-white/8 rounded-xl shadow-card flex items-center gap-2 px-3 hover:bg-surface-elevated active:scale-[0.99] transition-all select-none cursor-pointer"
+        className="h-11 bg-surface border border-white/8 rounded-xl shadow-card flex items-center gap-2 px-3 hover:bg-surface-elevated active:scale-95 transition-transform duration-150 select-none cursor-pointer"
         aria-label="Expandir rutas"
       >
         {/* Swatches preview */}
@@ -94,7 +95,7 @@ export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }:
 
   // ── Full panel ────────────────────────────────────────────────────────────
   return (
-    <div className={`route-toggle-legend${isMobile ? ' route-toggle-legend--mobile-expanded' : ''}`}>
+    <div className={`route-toggle-legend${isMobile ? ' route-toggle-legend--mobile-expanded' : ''}${isCollapsing ? ' route-toggle-legend--collapsing' : ''}`}>
       <div className="route-toggle-legend__header">
         <span className="route-toggle-legend__title">Rutas</span>
         <div className="route-toggle-legend__header-actions">
@@ -108,7 +109,13 @@ export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }:
           {isMobile && (
             <button
               className="route-toggle-legend__collapse-btn"
-              onClick={() => setIsMinimized(true)}
+              onClick={() => {
+                setIsCollapsing(true)
+                setTimeout(() => {
+                  setIsMinimized(true)
+                  setIsCollapsing(false)
+                }, 250)
+              }}
               aria-label="Minimizar panel de rutas"
             >
               <ChevronDown size={14} />

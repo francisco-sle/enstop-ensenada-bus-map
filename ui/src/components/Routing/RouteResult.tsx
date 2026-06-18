@@ -26,8 +26,8 @@ export function RouteResult() {
               onClick={() => setSelectedResultIndex(index)}
               className={`p-3 rounded-lg cursor-pointer transition-all duration-200 border-2 flex flex-col gap-2 ${
                 isSelected
-                  ? 'bg-surface-elevated border-pacific-400 shadow-glow'
-                  : 'bg-bay-700/30 border-white/5 hover:bg-bay-700/50 hover:border-white/10'
+                  ? 'bg-surface-elevated border-pacific-400'
+                  : 'bg-bay-900 border-white/5 hover:bg-bay-800 hover:border-white/10'
               }`}
             >
               {/* Badge & Time Summary */}

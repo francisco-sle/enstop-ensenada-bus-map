@@ -1,3 +1,4 @@
+import { useRef, useLayoutEffect, useState } from 'react'
 import { MapPin, Navigation } from 'lucide-react'
 import { useRoutingStore } from '../../store/routingStore'
 
@@ -25,6 +26,30 @@ interface MapContextMenuProps {
 export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
   const { setOrigin, setDestination } = useRoutingStore()
   const coordLabel = `${position.lat.toFixed(4)}, ${position.lng.toFixed(4)}`
+  const menuRef = useRef<HTMLDivElement>(null)
+  const [coords, setCoords] = useState<{ x: number; y: number } | null>(null)
+
+  useLayoutEffect(() => {
+    if (!menuRef.current) return
+    const menuEl = menuRef.current
+    const parentEl = menuEl.parentElement
+    if (!parentEl) return
+
+    const menuRect = menuEl.getBoundingClientRect()
+    const parentRect = parentEl.getBoundingClientRect()
+
+    let newX = position.x
+    let newY = position.y
+
+    if (position.x + menuRect.width > parentRect.width) {
+      newX = Math.max(8, parentRect.width - menuRect.width - 8)
+    }
+    if (position.y + menuRect.height > parentRect.height) {
+      newY = Math.max(8, parentRect.height - menuRect.height - 8)
+    }
+
+    setCoords({ x: newX, y: newY })
+  }, [position])
 
   const handleSetOrigin = () => {
     setOrigin({ lat: position.lat, lng: position.lng, label: `Origen (${coordLabel})` })
@@ -38,8 +63,13 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
 
   return (
     <div
-      style={{ left: position.x, top: position.y }}
-      className="absolute z-1001 flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up"
+      ref={menuRef}
+      style={{
+        left: coords?.x ?? position.x,
+        top: coords?.y ?? position.y,
+        opacity: coords ? 1 : 0,
+      }}
+      className="absolute z-1001 flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up transition-opacity duration-75"
     >
       <button
         onClick={handleSetOrigin}
