@@ -82,9 +82,12 @@ function MainAppShell() {
   return (
     <div className="flex flex-col h-full w-full overflow-hidden bg-bay-950">
       {/* Top Navbar */}
-      <header className="h-14 shrink-0 flex items-center justify-between px-4 lg:px-6 bg-surface border-b border-white/8 shadow-xs z-1002">
-        <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-wide text-pacific-400 font-display">
-          <span>🚌</span> ENStop
+      <header className="h-14 shrink-0 flex items-center justify-center lg:justify-between px-4 lg:px-6 bg-surface border-b border-white/8 shadow-xs z-1002">
+        <h1
+          className="text-2xl font-normal tracking-wide text-white"
+          style={{ fontFamily: 'var(--font-logo)' }}
+        >
+          ENSTOP
         </h1>
 
         {/* Desktop Navigation */}
