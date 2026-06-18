@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('ENStop PWA E2E Flows', () => {
   test.beforeEach(async ({ page }) => {
     // Open the application locally (VITE dev server runs on 5173 by default)
-    await page.goto('http://localhost:5173/')
+    await page.goto('http://127.0.0.1:5173/')
   })
 
   test('should load the homepage with correct title and elements', async ({ page }) => {
