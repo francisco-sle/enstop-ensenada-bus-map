@@ -35,6 +35,10 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   // `minimizedForResults` is the specific results array reference the user hid.
   // When routingResults changes (new route computed), the reference differs → auto-expand.
   const [minimizedForResults, setMinimizedForResults] = useState<typeof routingResults | null>(null)
+  // Controls exit animation on the expanded drawer before it unmounts
+  const [isCollapsing, setIsCollapsing] = useState(false)
+  // Bumped each time the pill mounts so animate-slide-up always replays
+  const [pillKey, setPillKey] = useState(0)
 
   // Bidirectional URL↔Store sync — handles deep links and browser back/forward
   useUrlStoreSync()
@@ -53,6 +57,15 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
       }
     )
   }, [setUserLocation, setCenter, setZoom])
+
+  const handleMinimizeResults = useCallback(() => {
+    setIsCollapsing(true)
+    setTimeout(() => {
+      setPillKey(k => k + 1)
+      setMinimizedForResults(routingResults)
+      setIsCollapsing(false)
+    }, 250)
+  }, [routingResults])
 
   return (
     <div className="w-full h-full flex flex-col md:flex-row overflow-hidden relative">
@@ -149,8 +162,9 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
         {/* Slide-up Route Results Drawer (Mobile only) */}
         {isMobile && isMinimized && routingResults.length > 0 && !selectedStop && (
           minimizedForResults === routingResults ? (
-            /* Minimized pill — tap to re-expand */
+            /* Minimized pill — key forces remount so animate-slide-up always plays */
             <button
+              key={pillKey}
               onClick={() => setMinimizedForResults(null)}
               className="absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-xl px-4 py-3 z-1001 flex items-center justify-between animate-slide-up select-none cursor-pointer hover:bg-white/5 transition-colors"
             >
@@ -164,14 +178,16 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <span className="text-white/40 text-xs">↑ Ver</span>
             </button>
           ) : (
-            /* Expanded drawer */
-            <div className="absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[60%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none">
+            /* Expanded drawer — plays exit animation before state switches to pill */
+            <div className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[60%] overflow-y-auto flex flex-col gap-3 select-none ${
+              isCollapsing ? 'animate-slide-down-out' : 'animate-slide-up'
+            }`}>
               <div className="flex justify-between items-center pb-1 border-b border-white/5">
                 <span className="text-xs font-bold text-white/50 uppercase tracking-widest flex items-center gap-1.5">
                   <span>🚌</span> Opciones de Ruta
                 </span>
                 <button
-                  onClick={() => setMinimizedForResults(routingResults)}
+                  onClick={handleMinimizeResults}
                   aria-label="Minimizar resultados"
                   className="text-white/50 hover:text-white p-1 transition-colors cursor-pointer"
                 >

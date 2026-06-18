@@ -69,20 +69,20 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
         top: coords?.y ?? position.y,
         opacity: coords ? 1 : 0,
       }}
-      className="absolute z-1001 flex flex-col min-w-[130px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up transition-opacity duration-75"
+      className="absolute z-1001 flex flex-col min-w-[150px] bg-surface rounded-xl overflow-hidden border border-white/8 shadow-card select-none animate-fade-up transition-opacity duration-75 py-1"
     >
       <button
         onClick={handleSetOrigin}
-        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-pacific-400 hover:bg-white/5 border-b border-white/6 text-left w-full cursor-pointer transition-colors"
+        className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-bold text-pacific-400 hover:bg-white/5 border-b border-white/6 text-left w-full cursor-pointer transition-colors"
       >
-        <MapPin size={12} />
+        <MapPin size={14} />
         <span>Origen</span>
       </button>
       <button
         onClick={handleSetDestination}
-        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-sol-400 hover:bg-white/5 text-left w-full cursor-pointer transition-colors"
+        className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-bold text-sol-400 hover:bg-white/5 text-left w-full cursor-pointer transition-colors"
       >
-        <Navigation size={12} />
+        <Navigation size={14} />
         <span>Destino</span>
       </button>
     </div>
