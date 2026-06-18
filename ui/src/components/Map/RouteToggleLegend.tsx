@@ -5,6 +5,8 @@ import type { RouteDetail } from '../../types'
 
 interface RouteToggleLegendProps {
   routes: RouteDetail[]
+  isMinimizedProp?: boolean
+  onMinimizeChange?: (minimized: boolean) => void
 }
 
 function useIsMobile() {
@@ -23,15 +25,26 @@ function useIsMobile() {
  * Rendered as a map overlay (outside MapContainer) so it doesn't interfere
  * with Leaflet's event system.
  */
-export function RouteToggleLegend({ routes }: RouteToggleLegendProps) {
+export function RouteToggleLegend({ routes, isMinimizedProp, onMinimizeChange }: RouteToggleLegendProps) {
   const { hiddenRouteIds, toggleRouteVisibility, selectedRouteId, setSelectedRouteId } = useMapStore()
   const isMobile = useIsMobile()
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
-  const [isMinimized, setIsMinimized] = useState(isMobile)
+  const [isMinimizedInternal, setIsMinimizedInternal] = useState(isMobile)
+
+  const isMinimized = isMinimizedProp !== undefined ? isMinimizedProp : isMinimizedInternal
+  const setIsMinimized = (val: boolean) => {
+    if (onMinimizeChange) {
+      onMinimizeChange(val)
+    } else {
+      setIsMinimizedInternal(val)
+    }
+  }
 
   if (isMobile !== prevIsMobile) {
     setPrevIsMobile(isMobile)
-    setIsMinimized(isMobile)
+    if (isMinimizedProp === undefined) {
+      setIsMinimizedInternal(isMobile)
+    }
   }
 
   if (routes.length === 0) return null
@@ -51,34 +64,33 @@ export function RouteToggleLegend({ routes }: RouteToggleLegendProps) {
   // ── Collapsed pill (mobile only) ──────────────────────────────────────────
   if (isMobile && isMinimized) {
     return (
-      <div
-        className="route-toggle-legend route-toggle-legend--collapsed"
+      <button
+        type="button"
         onClick={() => setIsMinimized(false)}
-        role="button"
+        className="h-11 bg-surface border border-white/8 rounded-xl shadow-card flex items-center gap-2 px-3 hover:bg-surface-elevated active:scale-[0.99] transition-all select-none cursor-pointer"
         aria-label="Expandir rutas"
       >
-        <div className="route-toggle-legend__pill">
-          {/* Swatches preview */}
-          <div className="route-toggle-legend__pill-swatches">
-            {routes.slice(0, 4).map(r => (
-              <span
-                key={r.id}
-                className="route-toggle-legend__swatch"
-                style={{ backgroundColor: hiddenRouteIds.has(r.id) ? '#555' : (r.category?.color_hex || '#3DBFA8') }}
-              />
-            ))}
-          </div>
-          <span className="route-toggle-legend__pill-label">
-            {routes.length} rutas
-            {hiddenRouteIds.size > 0 && (
-              <span className="route-toggle-legend__pill-hidden"> ({visibleCount} visibles)</span>
-            )}
-          </span>
-          <ChevronDown size={14} className="route-toggle-legend__pill-chevron" />
+        {/* Swatches preview */}
+        <div className="flex items-center gap-1 shrink-0">
+          {routes.slice(0, 3).map(r => (
+            <span
+              key={r.id}
+              className="w-2 h-2 rounded-full border border-white/15"
+              style={{ backgroundColor: hiddenRouteIds.has(r.id) ? '#555' : (r.category?.color_hex || '#3DBFA8') }}
+            />
+          ))}
         </div>
-      </div>
+        <span className="text-xs font-semibold text-white/70 whitespace-nowrap">
+          {routes.length} rutas
+          {hiddenRouteIds.size > 0 && (
+            <span className="text-pacific-400"> ({visibleCount})</span>
+          )}
+        </span>
+        <ChevronDown size={14} className="text-white/45 shrink-0" />
+      </button>
     )
   }
+
 
   // ── Full panel ────────────────────────────────────────────────────────────
   return (

@@ -6,7 +6,6 @@ import { useBusMapMarkers } from './useBusMapMarkers'
 import { MapContextMenu } from './MapContextMenu'
 import { ActiveRouteDisplay } from './ActiveRouteDisplay'
 import { RouteLine } from './RouteLine'
-import { RouteToggleLegend } from './RouteToggleLegend'
 import { MapController, MapEventsHandler } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIcon } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
@@ -136,9 +135,6 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
       {contextMenu && (
         <MapContextMenu position={contextMenu} onClose={() => setContextMenu(null)} />
       )}
-
-      {/* Route Toggle Legend — outside MapContainer to avoid capturing Leaflet events */}
-      {showFullRoutes && <RouteToggleLegend routes={activeRoutes} />}
     </div>
   )
 }
