@@ -1,4 +1,4 @@
-import { X, MapPin, Accessibility, Check } from 'lucide-react'
+import { X, MapPin, Accessibility, Check, Navigation, Radio } from 'lucide-react'
 import { useState } from 'react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
@@ -13,7 +13,7 @@ interface StopDrawerProps {
 
 export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProps) {
   const { setOrigin, setDestination } = useRoutingStore()
-  const { setSelectedRouteId } = useMapStore()
+  const { setSelectedRouteId, setSelectedStopId } = useMapStore()
   const { data: routes, isLoading: loadingRoutes } = useRoutesForStop(stop?.id || null)
 
   const [isCheckedIn, setIsCheckedIn] = useState(false)
@@ -28,6 +28,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
       lng,
       label: stop.name
     })
+    setSelectedStopId(null)
   }
 
   const handleSetOrigin = () => {
@@ -37,6 +38,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
       lng,
       label: stop.name
     })
+    setSelectedStopId(null)
   }
 
   const handleSetDestination = () => {
@@ -46,6 +48,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
       lng,
       label: stop.name
     })
+    setSelectedStopId(null)
   }
 
   const isInline = variant === 'inline'
@@ -53,8 +56,8 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
   return (
     <div className={
       isInline
-        ? "bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-3 select-none animate-fade-up mt-2"
-        : "absolute bottom-0 left-0 right-0 bg-surface rounded-t-2xl shadow-card p-4 z-1001 max-h-[70%] overflow-y-auto border-t border-white/8 flex flex-col gap-3 animate-slide-up select-none"
+        ? "map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up mt-2"
+        : "absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none"
     }>
       {/* Header */}
       <div className="flex justify-between items-start">
@@ -120,41 +123,38 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
         )}
       </div>
 
-      {/* Actions */}
-      <div className="grid grid-cols-2 gap-2 mt-2">
+      {/* Actions Row */}
+      <div className="flex gap-2 mt-2 w-full">
         <button
           onClick={handleSetOrigin}
-          className="btn w-full bg-white/5 hover:bg-white/10 text-white/95"
+          className="btn flex-1 bg-white/5 border border-white/8 hover:bg-white/10 text-white/90 flex items-center justify-center gap-1.5 px-2.5 h-11"
         >
-          Partir de aquí
+          <Navigation size={15} className="text-pacific-400 rotate-45" />
+          <span className="text-xs font-semibold">Partir</span>
         </button>
+
         <button
           onClick={handleSetDestination}
-          className="btn w-full bg-white/5 hover:bg-white/10 text-white/95"
+          className="btn flex-1 bg-white/5 border border-white/8 hover:bg-white/10 text-white/90 flex items-center justify-center gap-1.5 px-2.5 h-11"
         >
-          Destino final
+          <MapPin size={15} className="text-sol-400" />
+          <span className="text-xs font-semibold">Destino</span>
+        </button>
+
+        <button
+          onClick={handleCheckIn}
+          disabled={isCheckedIn}
+          title={isCheckedIn ? "¡Fijado como origen!" : "Estoy en esta parada (Marcar como origen)"}
+          aria-label="Estoy en esta parada"
+          className={`btn shrink-0 w-11 h-11 p-0 flex items-center justify-center ${
+            isCheckedIn
+              ? 'bg-pacific-500/10 text-pacific-400 border-pacific-500/20 cursor-default shadow-none'
+              : 'btn-primary'
+          }`}
+        >
+          {isCheckedIn ? <Check size={18} /> : <Radio size={18} />}
         </button>
       </div>
-
-      {/* Check-in option */}
-      <button
-        onClick={handleCheckIn}
-        disabled={isCheckedIn}
-        className={`btn w-full mt-1 flex gap-2 items-center justify-center ${
-          isCheckedIn
-            ? 'bg-pacific-600/20 text-pacific-300 border-pacific-500/25 cursor-default'
-            : 'btn-primary'
-        }`}
-      >
-        {isCheckedIn ? (
-          <>
-            <Check size={18} />
-            <span>¡Registrado aquí! (Origen fijado)</span>
-          </>
-        ) : (
-          <span>Estoy en esta parada</span>
-        )}
-      </button>
     </div>
   )
 }

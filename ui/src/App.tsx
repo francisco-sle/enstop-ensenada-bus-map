@@ -57,8 +57,8 @@ function MainAppShell() {
     [
       'flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-150 select-none',
       isActive
-        ? 'bg-pacific-50 text-pacific-600'
-        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+        ? 'bg-pacific-500/10 text-pacific-300'
+        : 'text-white/60 hover:text-white hover:bg-white/5'
     ].join(' ')
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -82,8 +82,8 @@ function MainAppShell() {
   return (
     <div className="flex flex-col h-full w-full overflow-hidden bg-bay-950">
       {/* Top Navbar */}
-      <header className="h-14 shrink-0 flex items-center justify-between px-4 lg:px-6 bg-white border-b border-slate-200/80 shadow-xs z-1002">
-        <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-wide text-pacific-600 font-display">
+      <header className="h-14 shrink-0 flex items-center justify-between px-4 lg:px-6 bg-surface border-b border-white/8 shadow-xs z-1002">
+        <h1 className="flex items-center gap-2 text-xl font-extrabold tracking-wide text-pacific-400 font-display">
           <span>🚌</span> ENStop
         </h1>
 
