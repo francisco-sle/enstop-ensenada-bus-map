@@ -1,0 +1,23 @@
+{
+  "recommendations": [
+    // Linting & Formatting
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // TypeScript
+    "ms-vscode.vscode-typescript-next",
+
+    // Tailwind CSS
+    "bradlc.vscode-tailwindcss",
+
+    // React
+    "dsznajder.es7-react-js-snippets",
+
+    // Git
+    "eamodio.gitlens",
+
+    // Testing
+    "vitest.explorer",
+    "ms-playwright.playwright"
+  ]
+}
