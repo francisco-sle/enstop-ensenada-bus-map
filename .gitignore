@@ -11,7 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+# Environment / secrets — never commit these
 .env
+.env.*
+!.env.example
+!.env.template
 ui/test-results/
 .vite
 playwright-report/
