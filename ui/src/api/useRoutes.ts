@@ -15,6 +15,6 @@ export function useRoutes() {
         throw new Error(error.message)
       }
       return (data ?? []) as unknown as RouteDetail[]
-    }
+    },
   })
 }

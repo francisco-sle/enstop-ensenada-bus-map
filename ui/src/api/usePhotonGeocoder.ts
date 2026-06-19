@@ -28,9 +28,7 @@ function buildLabel(props: Record<string, string | undefined>): string {
   const parts: string[] = []
   if (props.name) parts.push(props.name)
   if (props.street) {
-    const streetPart = props.housenumber
-      ? `${props.street} ${props.housenumber}`
-      : props.street
+    const streetPart = props.housenumber ? `${props.street} ${props.housenumber}` : props.street
     if (!parts.includes(streetPart)) parts.push(streetPart)
   }
   if (props.city && props.city !== props.name) parts.push(props.city)
@@ -100,14 +98,14 @@ export function usePhotonGeocoder(query: string): {
 
         if (!response.ok) throw new Error(`Photon API error: ${response.status}`)
 
-        const data = await response.json() as {
+        const data = (await response.json()) as {
           features: Array<{
             geometry: { coordinates: [number, number] }
             properties: Record<string, string | undefined>
           }>
         }
 
-        const parsed: PhotonResult[] = data.features.map(f => ({
+        const parsed: PhotonResult[] = data.features.map((f) => ({
           label: buildLabel(f.properties),
           lat: f.geometry.coordinates[1],
           lng: f.geometry.coordinates[0],
@@ -132,4 +130,3 @@ export function usePhotonGeocoder(query: string): {
 
   return { results, isLoading }
 }
-

@@ -10,7 +10,11 @@ const WALK_SPEED_KMH = 5
  * This is more reliable than turf's lineSlice projection, which can snap to the wrong
  * leg of a circular route when both legs run through the same area.
  */
-function nearestCoordIndex(routeCoords: [number, number][], stopLng: number, stopLat: number): number {
+function nearestCoordIndex(
+  routeCoords: [number, number][],
+  stopLng: number,
+  stopLat: number,
+): number {
   let minDistSq = Infinity
   let minIdx = 0
   for (let i = 0; i < routeCoords.length; i++) {
@@ -53,7 +57,7 @@ export function computeABRoute(
   destLng: number,
   nearbyOriginStops: DBStop[],
   nearbyDestStops: DBStop[],
-  routesDetails: RouteDetail[] // pre-fetched details for routes
+  routesDetails: RouteDetail[], // pre-fetched details for routes
 ): RoutingResult[] {
   const results: RoutingResult[] = []
 
@@ -77,8 +81,8 @@ export function computeABRoute(
       // Find routes that serve both stops
       for (const route of routesDetails) {
         const routeStops = route.route_stops || []
-        const originRS = routeStops.find(rs => rs.stop_id === originStop.id)
-        const destRS = routeStops.find(rs => rs.stop_id === destStop.id)
+        const originRS = routeStops.find((rs) => rs.stop_id === originStop.id)
+        const destRS = routeStops.find((rs) => rs.stop_id === destStop.id)
 
         // Route must serve both stops
         if (!originRS || !destRS) continue
@@ -112,15 +116,21 @@ export function computeABRoute(
             const sliced = routeCoords.slice(lo, hi + 1)
             // If the stop order is reversed relative to coord order, flip the slice
             const ordered = originIdx <= destIdx ? sliced : [...sliced].reverse()
-            busDistanceKm = length(lineString(ordered.length >= 2 ? ordered : [ordered[0], ordered[0]]), { units: 'kilometers' })
-            subCoords = ordered.map(c => [c[1], c[0]] as [number, number])
+            busDistanceKm = length(
+              lineString(ordered.length >= 2 ? ordered : [ordered[0], ordered[0]]),
+              { units: 'kilometers' },
+            )
+            subCoords = ordered.map((c) => [c[1], c[0]] as [number, number])
           } else {
             // Circular backward: originIdx → end of line, then start → destIdx
             const coords1 = routeCoords.slice(originIdx)
             const coords2 = routeCoords.slice(0, destIdx + 1)
             const allCoords = [...coords1, ...coords2]
-            busDistanceKm = length(lineString(allCoords.length >= 2 ? allCoords : [allCoords[0], allCoords[0]]), { units: 'kilometers' })
-            subCoords = allCoords.map(c => [c[1], c[0]] as [number, number])
+            busDistanceKm = length(
+              lineString(allCoords.length >= 2 ? allCoords : [allCoords[0], allCoords[0]]),
+              { units: 'kilometers' },
+            )
+            subCoords = allCoords.map((c) => [c[1], c[0]] as [number, number])
           }
 
           if (subCoords.length < 2) {
@@ -147,7 +157,7 @@ export function computeABRoute(
             walkOriginKm,
             walkDestKm,
             totalMinutes,
-            subPolylineCoords: subCoords
+            subPolylineCoords: subCoords,
           })
         } catch (err) {
           // If slicing fails, log and continue
@@ -179,18 +189,16 @@ export function getNearbyStops(
   lat: number,
   lng: number,
   stops: DBStop[],
-  maxDistanceKm: number = 2.0
+  maxDistanceKm: number = 2.0,
 ): DBStop[] {
   const pt = point([lng, lat])
   return stops
-    .map(stop => {
+    .map((stop) => {
       const stopPt = point(stop.geom.coordinates)
       const dist = distance(pt, stopPt, { units: 'kilometers' })
       return { stop, dist }
     })
-    .filter(item => item.dist <= maxDistanceKm)
+    .filter((item) => item.dist <= maxDistanceKm)
     .sort((a, b) => a.dist - b.dist)
-    .map(item => item.stop)
+    .map((item) => item.stop)
 }
-
-

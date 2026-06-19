@@ -21,8 +21,22 @@ interface BusMapProps {
   focusedRouteId?: number | null
 }
 
-export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRouting = true, focusedRouteId }: BusMapProps) {
-  const { center, zoom, selectedStopId, selectedRouteId: globalSelectedRouteId, userLocation, setSelectedStopId, hiddenRouteIds } = useMapStore()
+export function BusMap({
+  activeRoutes,
+  allStops,
+  showFullRoutes = true,
+  showRouting = true,
+  focusedRouteId,
+}: BusMapProps) {
+  const {
+    center,
+    zoom,
+    selectedStopId,
+    selectedRouteId: globalSelectedRouteId,
+    userLocation,
+    setSelectedStopId,
+    hiddenRouteIds,
+  } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex } = useRoutingStore()
   const resolvedRouteId = focusedRouteId !== undefined ? focusedRouteId : globalSelectedRouteId
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
@@ -35,7 +49,8 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
     setCurrentZoom(zoom)
   }
 
-  const activeResult = (showRouting && selectedResultIndex !== null) ? routingResults[selectedResultIndex] : null
+  const activeResult =
+    showRouting && selectedResultIndex !== null ? routingResults[selectedResultIndex] : null
 
   // Derive stop markers outside JSX — LoD filtering + color coding
   const stopMarkers = useBusMapMarkers({
@@ -51,12 +66,13 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
   // Pre-build icons once per stopMarkers change — avoids calling renderToString inside JSX.
   // L.divIcon creation (+ renderToString) is expensive; memoizing collapses ~6 unique combos.
   const stopMarkerIcons = useMemo(
-    () => stopMarkers.map(({ stop, color, isSelected }) => ({
-      stop,
-      icon: createStopIcon(color, isSelected),
-    })),
+    () =>
+      stopMarkers.map(({ stop, color, isSelected }) => ({
+        stop,
+        icon: createStopIcon(color, isSelected),
+      })),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stopMarkers, currentZoom]
+    [stopMarkers, currentZoom],
   )
 
   return (
@@ -65,7 +81,10 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
         center={center}
         zoom={zoom}
         zoomControl={false}
-        maxBounds={[[31.60, -116.90], [32.00, -116.35]]}
+        maxBounds={[
+          [31.6, -116.9],
+          [32.0, -116.35],
+        ]}
         maxBoundsViscosity={0.9}
         minZoom={11}
         style={{ width: '100%', height: '100%' }}
@@ -85,10 +104,18 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
 
         {/* Origin / Destination Pins */}
         {showRouting && origin && (
-          <Marker position={[origin.lat, origin.lng]} icon={routingPinIcon('A')} zIndexOffset={900} />
+          <Marker
+            position={[origin.lat, origin.lng]}
+            icon={routingPinIcon('A')}
+            zIndexOffset={900}
+          />
         )}
         {showRouting && destination && (
-          <Marker position={[destination.lat, destination.lng]} icon={routingPinIcon('B')} zIndexOffset={900} />
+          <Marker
+            position={[destination.lat, destination.lng]}
+            icon={routingPinIcon('B')}
+            zIndexOffset={900}
+          />
         )}
 
         {/* Active Routing Path */}
@@ -102,20 +129,21 @@ export function BusMap({ activeRoutes, allStops, showFullRoutes = true, showRout
         )}
 
         {/* General Route Lines */}
-        {!activeResult && activeRoutes.map(route => {
-          const isSelected = resolvedRouteId === route.id
-          const isHidden = hiddenRouteIds.has(route.id)
-          if (!showFullRoutes && !isSelected) return null
-          if (isHidden) return null
-          return (
-            <RouteLine
-              key={route.id}
-              route={route}
-              isSelected={isSelected}
-              isGhosted={resolvedRouteId !== null && !isSelected}
-            />
-          )
-        })}
+        {!activeResult &&
+          activeRoutes.map((route) => {
+            const isSelected = resolvedRouteId === route.id
+            const isHidden = hiddenRouteIds.has(route.id)
+            if (!showFullRoutes && !isSelected) return null
+            if (isHidden) return null
+            return (
+              <RouteLine
+                key={route.id}
+                route={route}
+                isSelected={isSelected}
+                isGhosted={resolvedRouteId !== null && !isSelected}
+              />
+            )
+          })}
 
         {/* Stop Markers — derived from useBusMapMarkers */}
         {stopMarkerIcons.map(({ stop, icon }) => {

@@ -7,7 +7,8 @@ export function useRoute(id: number) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('routes')
-        .select(`
+        .select(
+          `
           *,
           category:categories(*),
           route_stops (
@@ -17,7 +18,8 @@ export function useRoute(id: number) {
             sequence,
             stop:stops (*)
           )
-        `)
+        `,
+        )
         .eq('id', id)
         .order('sequence', { foreignTable: 'route_stops', ascending: true })
         .single()
@@ -25,9 +27,9 @@ export function useRoute(id: number) {
       if (error) {
         throw new Error(error.message)
       }
-      
+
       return data
     },
-    enabled: !!id
+    enabled: !!id,
   })
 }

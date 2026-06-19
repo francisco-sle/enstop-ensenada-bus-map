@@ -7,7 +7,7 @@
 
 @theme {
   --color-pacific-100: oklch(0.93 0.06 228);
-  --color-pacific-200: oklch(0.85 0.10 228);
+  --color-pacific-200: oklch(0.85 0.1 228);
   --color-pacific-300: oklch(0.78 0.12 228);
   --color-pacific-400: oklch(0.68 0.16 228);
   --color-pacific-500: oklch(0.55 0.18 228);
@@ -16,7 +16,7 @@
 
   --color-sol-50: oklch(0.97 0.03 82);
   --color-sol-100: oklch(0.94 0.06 82);
-  --color-sol-200: oklch(0.90 0.09 82);
+  --color-sol-200: oklch(0.9 0.09 82);
   --color-sol-300: oklch(0.88 0.12 82);
   --color-sol-400: oklch(0.78 0.16 82);
   --color-sol-500: oklch(0.68 0.18 82);
@@ -27,7 +27,7 @@
   --color-sol: oklch(0.78 0.16 82);
 
   --color-bay-500: oklch(0.48 0.07 244);
-  --color-bay-600: oklch(0.40 0.07 244);
+  --color-bay-600: oklch(0.4 0.07 244);
   --color-bay-700: oklch(0.32 0.06 244);
   --color-bay-800: oklch(0.26 0.06 244);
   --color-bay-900: oklch(0.21 0.06 244);
@@ -144,7 +144,6 @@
   @apply bg-surface border border-white/8 shadow-card;
 }
 
-
 /* -------------------------------------------------------
    Design Tokens (CSS Custom Properties)
    Kept as CSS vars so Leaflet & third-party widgets can
@@ -153,25 +152,25 @@
 @layer base {
   :root {
     /* Brand palette */
-    --color-accent-cerulean:       oklch(0.68 0.16 228);
+    --color-accent-cerulean: oklch(0.68 0.16 228);
     --color-accent-cerulean-light: oklch(0.78 0.12 228);
-    --color-accent-warm:       #e0a32e;
+    --color-accent-warm: #e0a32e;
     --color-accent-warm-light: #ecc56e;
-    --color-error:             #E05050;
-    --color-success:           #4CAF80;
+    --color-error: #e05050;
+    --color-success: #4caf80;
 
     /* Surfaces — dark / volcanic */
-    --color-bg-primary:   oklch(0.14 0.05 244);
-    --color-bg-surface:   oklch(0.21 0.06 244);
-    --color-bg-elevated:  oklch(0.26 0.06 244);
+    --color-bg-primary: oklch(0.14 0.05 244);
+    --color-bg-surface: oklch(0.21 0.06 244);
+    --color-bg-elevated: oklch(0.26 0.06 244);
 
     /* Text */
-    --color-text-primary:   rgba(255,255,255,0.92);
-    --color-text-secondary: rgba(255,255,255,0.55);
-    --color-text-inverse:   oklch(0.14 0.05 244);
+    --color-text-primary: rgba(255, 255, 255, 0.92);
+    --color-text-secondary: rgba(255, 255, 255, 0.55);
+    --color-text-inverse: oklch(0.14 0.05 244);
 
     /* Borders */
-    --color-border: rgba(255,255,255,0.08);
+    --color-border: rgba(255, 255, 255, 0.08);
 
     /* Spacing scale (4 px base) */
     --space-1: 4px;
@@ -183,12 +182,12 @@
     --space-8: 32px;
 
     /* Type scale */
-    --font-size-xs:   0.75rem;
-    --font-size-sm:   0.875rem;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
     --font-size-base: 1rem;
-    --font-size-lg:   1.125rem;
-    --font-size-xl:   1.25rem;
-    --font-size-2xl:  1.5rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
 
     /* Radii */
     --radius-sm: 6px;
@@ -197,16 +196,20 @@
     --radius-xl: 24px;
 
     /* Shadows */
-    --shadow-card: 0 4px 16px rgba(0,0,0,0.25);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
     --shadow-glow: 0 0 20px oklch(0.68 0.16 228 / 0.3);
   }
 
   /* Reset & base typography */
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
-  html, body, #root {
+  html,
+  body,
+  #root {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -215,7 +218,11 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family:
+      'Inter',
+      system-ui,
+      -apple-system,
+      sans-serif;
     background-color: var(--color-bg-primary);
     color: var(--color-text-primary);
     -webkit-font-smoothing: antialiased;
@@ -223,8 +230,13 @@
   }
 
   /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
   ::-webkit-scrollbar-thumb {
     background: var(--color-border);
     border-radius: 4px;
@@ -308,7 +320,7 @@
   border-radius: 8px !important;
   padding: 0 !important;
   overflow: hidden !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
 }
 
 .custom-context-menu-popup .leaflet-popup-content {
@@ -322,15 +334,14 @@
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-
 /* -------------------------------------------------------
    RouteToggleLegend — floating overlay (Technique 4)
 ------------------------------------------------------- */
 .route-toggle-legend {
   position: absolute;
-  bottom: 48px;   /* above attribution */
+  bottom: 48px; /* above attribution */
   right: 12px;
-  z-index: 1000;  /* above Leaflet controls */
+  z-index: 1000; /* above Leaflet controls */
   width: 220px;
   max-height: 60vh;
   display: flex;
@@ -446,7 +457,9 @@
   color: var(--color-text-secondary);
   border-radius: 4px;
   margin-right: 8px;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 .route-toggle-legend__eye-btn:hover {
   color: var(--color-text-primary);
@@ -479,7 +492,10 @@
   cursor: pointer;
   color: var(--color-text-secondary);
   border-radius: 4px;
-  transition: transform 0.15s, color 0.15s, background 0.15s;
+  transition:
+    transform 0.15s,
+    color 0.15s,
+    background 0.15s;
 }
 .route-toggle-legend__collapse-btn:hover {
   color: var(--color-text-primary);
@@ -492,14 +508,16 @@
 /* Mobile expanded — fills vertical space above the attribution bar */
 @media (max-width: 767px) {
   .route-toggle-legend--mobile-expanded {
-    width: calc(100vw - 40px);  /* full-width minus left+right margins */
+    width: calc(100vw - 40px); /* full-width minus left+right margins */
     max-width: 480px;
     left: 20px;
     right: 20px;
     bottom: 20px;
     max-height: calc(100dvh - 180px); /* leave room for top panel + attr */
     animation: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) !important;
-    transition: bottom 0.25s cubic-bezier(0.32, 0.72, 0, 1), max-height 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+    transition:
+      bottom 0.25s cubic-bezier(0.32, 0.72, 0, 1),
+      max-height 0.25s cubic-bezier(0.32, 0.72, 0, 1);
   }
   .route-toggle-legend--mobile-expanded.route-toggle-legend--pushed-up {
     bottom: 60px;

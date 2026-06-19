@@ -14,9 +14,9 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Nexus 5'], // mobile-first testing!
-        viewport: { width: 375, height: 812 }
+        viewport: { width: 375, height: 812 },
       },
     },
   ],

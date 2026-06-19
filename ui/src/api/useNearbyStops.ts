@@ -6,11 +6,11 @@ export function useNearbyStops(lat: number | null, lng: number | null, radiusMet
     queryKey: ['nearbyStops', lat, lng, radiusMeters],
     queryFn: async () => {
       if (lat === null || lng === null) return []
-      
+
       const { data, error } = await supabase.rpc('nearby_stops', {
         lat,
         lng,
-        radius_meters: radiusMeters
+        radius_meters: radiusMeters,
       })
 
       if (error) {
@@ -18,6 +18,6 @@ export function useNearbyStops(lat: number | null, lng: number | null, radiusMet
       }
       return data
     },
-    enabled: lat !== null && lng !== null
+    enabled: lat !== null && lng !== null,
   })
 }

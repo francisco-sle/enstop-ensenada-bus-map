@@ -12,14 +12,14 @@ interface RouteLineProps {
 export function RouteLine({ route, isSelected, isGhosted }: RouteLineProps) {
   const positions = useMemo(() => {
     return (route.geom.coordinates as [number, number][]).map(
-      c => [c[1], c[0]] as [number, number]
+      (c) => [c[1], c[0]] as [number, number],
     )
   }, [route.geom.coordinates])
 
   const color = route.category?.color_hex || '#3DBFA8'
 
   // Visual weight/opacity per focus state
-  const weight  = isSelected ? 6  : isGhosted ? 2  : 3
+  const weight = isSelected ? 6 : isGhosted ? 2 : 3
   const opacity = isSelected ? 1.0 : isGhosted ? 0.2 : 0.55
 
   return (
@@ -34,12 +34,7 @@ export function RouteLine({ route, isSelected, isGhosted }: RouteLineProps) {
           interactive={false}
         />
       )}
-      <Polyline
-        positions={positions}
-        color={color}
-        weight={weight}
-        opacity={opacity}
-      />
+      <Polyline positions={positions} color={color} weight={weight} opacity={opacity} />
     </>
   )
 }

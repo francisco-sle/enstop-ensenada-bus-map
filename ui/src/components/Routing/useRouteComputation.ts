@@ -16,7 +16,7 @@ const NEARBY_RADIUS_KM = 2.0
 function deriveErrorMessage(
   origin: { lat: number; lng: number } | null,
   destination: { lat: number; lng: number } | null,
-  stops: DBStop[]
+  stops: DBStop[],
 ): string {
   if (!origin || !destination) return ''
 
@@ -82,11 +82,13 @@ export function useRouteComputation(stops: DBStop[]): UseRouteComputationResult 
     }
 
     const results = computeABRoute(
-      origin.lat, origin.lng,
-      destination.lat, destination.lng,
+      origin.lat,
+      origin.lng,
+      destination.lat,
+      destination.lng,
       oNearby,
       dNearby,
-      allRoutes as unknown as RouteDetail[]
+      allRoutes as unknown as RouteDetail[],
     )
 
     setRoutingResults(results)

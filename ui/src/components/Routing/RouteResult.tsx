@@ -44,12 +44,8 @@ export function RouteResult() {
                   </span>
                 </div>
                 <div className="shrink-0 flex items-baseline">
-                  <span className="text-lg font-extrabold text-pacific-400">
-                    ~{totalMin}
-                  </span>
-                  <span className="text-[10px] text-white/40 ml-0.5">
-                    min
-                  </span>
+                  <span className="text-lg font-extrabold text-pacific-400">~{totalMin}</span>
+                  <span className="text-[10px] text-white/40 ml-0.5">min</span>
                 </div>
               </div>
 
@@ -75,7 +71,7 @@ export function RouteResult() {
                         <strong className="text-white font-bold">{result.originStop.name}</strong>
                       </span>
                       <span className="text-[10px] text-white/40 block">
-                        ~{Math.round(result.walkOriginKm / 5 * 60)} min caminando
+                        ~{Math.round((result.walkOriginKm / 5) * 60)} min caminando
                       </span>
                     </div>
                   </div>
@@ -93,7 +89,8 @@ export function RouteResult() {
                       </span>
                       <span className="text-[10px] text-white/40 block">
                         Viaja {result.busDistanceKm.toFixed(1)} km hasta{' '}
-                        <strong className="text-white font-bold">{result.destStop.name}</strong> (~{busMin} min)
+                        <strong className="text-white font-bold">{result.destStop.name}</strong> (~
+                        {busMin} min)
                       </span>
                     </div>
                   </div>
@@ -104,9 +101,11 @@ export function RouteResult() {
                       <MapPin size={14} className="text-sol-400 mt-0.5" />
                     </div>
                     <div>
-                      <span className="text-white/90">Camina {Math.round(result.walkDestKm * 1000)}m hasta tu destino</span>
+                      <span className="text-white/90">
+                        Camina {Math.round(result.walkDestKm * 1000)}m hasta tu destino
+                      </span>
                       <span className="text-[10px] text-white/40 block">
-                        ~{Math.round(result.walkDestKm / 5 * 60)} min caminando
+                        ~{Math.round((result.walkDestKm / 5) * 60)} min caminando
                       </span>
                     </div>
                   </div>
@@ -121,7 +120,8 @@ export function RouteResult() {
       <div className="flex gap-2 items-center bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
         <Info size={14} className="shrink-0" />
         <span>
-          Tiempos estimados de recorrido. El tráfico y el servicio real de las unidades de transporte público de Ensenada pueden variar.
+          Tiempos estimados de recorrido. El tráfico y el servicio real de las unidades de
+          transporte público de Ensenada pueden variar.
         </span>
       </div>
     </div>

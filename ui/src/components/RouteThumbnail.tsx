@@ -11,21 +11,22 @@ interface RouteThumbnailProps {
 export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailProps) {
   const positions = useMemo(() => {
     if (!geom || geom.type !== 'LineString' || !geom.coordinates) return null
-    return (geom.coordinates as [number, number][]).map(
-      c => [c[1], c[0]] as [number, number]
-    )
+    return (geom.coordinates as [number, number][]).map((c) => [c[1], c[0]] as [number, number])
   }, [geom])
 
   const bounds = useMemo(() => {
     if (!positions || positions.length === 0) return null
-    let minLat = Infinity, minLng = Infinity, maxLat = -Infinity, maxLng = -Infinity
+    let minLat = Infinity,
+      minLng = Infinity,
+      maxLat = -Infinity,
+      maxLng = -Infinity
     for (const [lat, lng] of positions) {
       if (lat < minLat) minLat = lat
       if (lat > maxLat) maxLat = lat
       if (lng < minLng) minLng = lng
       if (lng > maxLng) maxLng = lng
     }
-    
+
     // Zoom in on the route by focusing on the center 65% of the bounding box
     const latCenter = (minLat + maxLat) / 2
     const lngCenter = (minLng + maxLng) / 2
@@ -34,7 +35,7 @@ export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailPr
 
     return [
       [latCenter - latHalfSpan, lngCenter - lngHalfSpan],
-      [latCenter + latHalfSpan, lngCenter + lngHalfSpan]
+      [latCenter + latHalfSpan, lngCenter + lngHalfSpan],
     ] as [[number, number], [number, number]]
   }, [positions])
 
@@ -66,18 +67,8 @@ export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailPr
           attribution=""
         />
         {/* Glow/Halo Effect for high visibility */}
-        <Polyline
-          positions={positions}
-          color="#ffffff"
-          weight={4}
-          opacity={0.85}
-        />
-        <Polyline
-          positions={positions}
-          color={color}
-          weight={2}
-          opacity={1.0}
-        />
+        <Polyline positions={positions} color="#ffffff" weight={4} opacity={0.85} />
+        <Polyline positions={positions} color={color} weight={2} opacity={1.0} />
       </MapContainer>
     </div>
   )

@@ -20,7 +20,10 @@ export function AboutPage() {
             <span>El Proyecto ENStop</span>
           </h3>
           <p className="text-xs text-white/80 leading-relaxed">
-            ENStop es una iniciativa comunitaria para mapear digitalmente las rutas de los microbuses de Ensenada. Nuestro objetivo es facilitar la movilidad urbana brindando información sobre rutas, paradas autorizadas y tarifas oficiales vigentes de forma accesible e interactiva.
+            ENStop es una iniciativa comunitaria para mapear digitalmente las rutas de los
+            microbuses de Ensenada. Nuestro objetivo es facilitar la movilidad urbana brindando
+            información sobre rutas, paradas autorizadas y tarifas oficiales vigentes de forma
+            accesible e interactiva.
           </p>
         </div>
 
@@ -32,13 +35,18 @@ export function AboutPage() {
           </h3>
           <ul className="text-xs text-white/80 leading-relaxed list-disc list-inside flex flex-col gap-2.5">
             <li>
-              <strong className="text-white">Tarifas:</strong> El costo normal es de $13.00 MXN. Estudiantes y personas con discapacidad pagan tarifa preferencial de $7.00 MXN al mostrar su credencial correspondiente.
+              <strong className="text-white">Tarifas:</strong> El costo normal es de $13.00 MXN.
+              Estudiantes y personas con discapacidad pagan tarifa preferencial de $7.00 MXN al
+              mostrar su credencial correspondiente.
             </li>
             <li>
-              <strong className="text-white">Paradas:</strong> Aunque los microbuses a veces se detienen a petición del usuario, te recomendamos utilizar las paradas oficiales señaladas para mejorar la seguridad y fluidez vial.
+              <strong className="text-white">Paradas:</strong> Aunque los microbuses a veces se
+              detienen a petición del usuario, te recomendamos utilizar las paradas oficiales
+              señaladas para mejorar la seguridad y fluidez vial.
             </li>
             <li>
-              <strong className="text-white">Bajar del autobús:</strong> Solicita tu bajada con anticipación diciendo "Bajan en la esquina" o tocando el timbre de la unidad.
+              <strong className="text-white">Bajar del autobús:</strong> Solicita tu bajada con
+              anticipación diciendo "Bajan en la esquina" o tocando el timbre de la unidad.
             </li>
           </ul>
         </div>
@@ -47,11 +55,11 @@ export function AboutPage() {
         <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl flex gap-3 items-start">
           <AlertCircle size={20} className="text-amber-400 shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-xs font-bold text-amber-300">
-              Aviso Importante
-            </h3>
+            <h3 className="text-xs font-bold text-amber-300">Aviso Importante</h3>
             <p className="text-[10px] leading-relaxed mt-1 text-white/80">
-              Esta es una aplicación independiente y no oficial. Las rutas y tiempos de paso son aproximaciones y no representan de forma vinculante los horarios o recorridos oficiales de las empresas transportistas de Ensenada o el Ayuntamiento.
+              Esta es una aplicación independiente y no oficial. Las rutas y tiempos de paso son
+              aproximaciones y no representan de forma vinculante los horarios o recorridos
+              oficiales de las empresas transportistas de Ensenada o el Ayuntamiento.
             </p>
           </div>
         </div>
@@ -63,7 +71,8 @@ export function AboutPage() {
             <span>Herramientas de Colaborador</span>
           </h3>
           <p className="text-xs text-white/80 leading-relaxed">
-            ¿Eres desarrollador, tester o quieres colaborar creando nuevos recorridos? Accede al estudio para pintar rutas manualmente y colocarlas en el mapa.
+            ¿Eres desarrollador, tester o quieres colaborar creando nuevos recorridos? Accede al
+            estudio para pintar rutas manualmente y colocarlas en el mapa.
           </p>
           <Link to="/studio" className="btn btn-primary text-center mt-1 text-xs py-2 min-h-0">
             Abrir Diseñador de Rutas

@@ -38,10 +38,12 @@ function rdpSimplify(coords: [number, number][], epsilon: number): [number, numb
     const px = coords[i][0] - first[0]
     const py = coords[i][1] - first[1]
     // Perpendicular distance from point to the first→last line
-    const perp = lineLen === 0
-      ? Math.sqrt(px * px + py * py)
-      : Math.abs(px * dy - py * dx) / lineLen
-    if (perp > maxDist) { maxDist = perp; maxIdx = i }
+    const perp =
+      lineLen === 0 ? Math.sqrt(px * px + py * py) : Math.abs(px * dy - py * dx) / lineLen
+    if (perp > maxDist) {
+      maxDist = perp
+      maxIdx = i
+    }
   }
 
   if (maxDist > epsilon) {
@@ -84,7 +86,8 @@ function pruneOvershoots(coords: [number, number][]): [number, number][] {
       const dot = v1[0] * v2[0] + v1[1] * v2[1]
       const cosTheta = dot / (len1 * len2)
 
-      if (cosTheta < -0.8) { // Only prune extreme zigzags (>145°), not valid U-turns at bus termini
+      if (cosTheta < -0.8) {
+        // Only prune extreme zigzags (>145°), not valid U-turns at bus termini
         let pruneStart = i
         let pruneEnd = i
         let bestDistance = Infinity
@@ -95,7 +98,7 @@ function pruneOvershoots(coords: [number, number][]): [number, number][] {
         for (let left = Math.max(0, i - maxSearch); left < i; left++) {
           for (let right = i + 1; right < Math.min(result.length, i + maxSearch); right++) {
             const dist = getDistanceMeters(result[left], result[right])
-            
+
             // If the backtrack returns to a point within 35 meters
             if (dist < 35) {
               let pathDist = 0
@@ -132,7 +135,10 @@ export function useOsrmRoute() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const snapCoordinates = async (coords: [number, number][], profile: 'driving' | 'foot' = 'driving'): Promise<[number, number][]> => {
+  const snapCoordinates = async (
+    coords: [number, number][],
+    profile: 'driving' | 'foot' = 'driving',
+  ): Promise<[number, number][]> => {
     if (coords.length < 2) return coords
     setLoading(true)
     setError(null)
@@ -151,28 +157,32 @@ export function useOsrmRoute() {
       if (prunedCoords.length > 100) {
         const step = Math.ceil(prunedCoords.length / 99)
         queryCoordsArray = prunedCoords.filter((_, idx) => idx % step === 0)
-        if (queryCoordsArray[queryCoordsArray.length - 1] !== prunedCoords[prunedCoords.length - 1]) {
+        if (
+          queryCoordsArray[queryCoordsArray.length - 1] !== prunedCoords[prunedCoords.length - 1]
+        ) {
           queryCoordsArray.push(prunedCoords[prunedCoords.length - 1])
         }
       }
 
-      const queryCoords = queryCoordsArray.map(c => `${c[1]},${c[0]}`).join(';')
+      const queryCoords = queryCoordsArray.map((c) => `${c[1]},${c[0]}`).join(';')
       // 35m snap radius — tolerant enough for imprecise hand-painting near road edges without jumping blocks
       const radiuses = queryCoordsArray.map(() => '35').join(';')
 
       // Build bearing string: each waypoint gets the bearing FROM the prior point.
       // Range of ±45° allows for painting imprecision while still disambiguating direction.
-      const bearings = queryCoordsArray.map((_, i) => {
-        if (queryCoordsArray.length < 2) return ''
-        const fromPt = i === 0 ? queryCoordsArray[0] : queryCoordsArray[i - 1]
-        const toPt = i === 0 ? queryCoordsArray[1] : queryCoordsArray[i]
-        const bearing = Math.round(getBearing(fromPt, toPt))
-        return `${bearing},45`
-      }).join(';')
-      
+      const bearings = queryCoordsArray
+        .map((_, i) => {
+          if (queryCoordsArray.length < 2) return ''
+          const fromPt = i === 0 ? queryCoordsArray[0] : queryCoordsArray[i - 1]
+          const toPt = i === 0 ? queryCoordsArray[1] : queryCoordsArray[i]
+          const bearing = Math.round(getBearing(fromPt, toPt))
+          return `${bearing},45`
+        })
+        .join(';')
+
       // 1. Try Match API first (best for freehand traces)
       const matchUrl = `https://router.project-osrm.org/match/v1/${profile}/${queryCoords}?overview=full&geometries=geojson&tidy=true&radiuses=${radiuses}&bearings=${bearings}`
-      
+
       try {
         const matchRes = await fetch(matchUrl)
         if (matchRes.ok) {
@@ -181,10 +191,15 @@ export function useOsrmRoute() {
             // OSRM returns multiple disjoint sub-matchings when it fragments the trace.
             // Concatenating them causes ghost loops on two-way streets.
             // Strategy: pick only the single longest matching by geometry coordinate count.
-            const best = matchData.matchings.reduce((acc: { geometry: { coordinates: [number, number][] } }, m: { geometry: { coordinates: [number, number][] } }) => 
-              m.geometry.coordinates.length > acc.geometry.coordinates.length ? m : acc
+            const best = matchData.matchings.reduce(
+              (
+                acc: { geometry: { coordinates: [number, number][] } },
+                m: { geometry: { coordinates: [number, number][] } },
+              ) => (m.geometry.coordinates.length > acc.geometry.coordinates.length ? m : acc),
             )
-            const snapped = best.geometry.coordinates.map((c: [number, number]) => [c[1], c[0]] as [number, number])
+            const snapped = best.geometry.coordinates.map(
+              (c: [number, number]) => [c[1], c[0]] as [number, number],
+            )
             return snapped
           }
         }
@@ -198,11 +213,11 @@ export function useOsrmRoute() {
       if (!routeRes.ok) {
         throw new Error(`OSRM request failed: ${routeRes.statusText}`)
       }
-      
+
       const routeData = await routeRes.json()
       if (routeData.code === 'Ok' && routeData.routes && routeData.routes.length > 0) {
         const snapped = routeData.routes[0].geometry.coordinates.map(
-          (c: [number, number]) => [c[1], c[0]] as [number, number]
+          (c: [number, number]) => [c[1], c[0]] as [number, number],
         )
         return snapped
       } else {

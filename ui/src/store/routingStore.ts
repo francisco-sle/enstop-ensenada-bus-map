@@ -28,9 +28,18 @@ export const useRoutingStore = create<RoutingState>((set) => ({
   isMinimized: true,
   setOrigin: (origin) => set({ origin }),
   setDestination: (destination) => set({ destination }),
-  setRoutingResults: (routingResults) => set({ routingResults, selectedResultIndex: routingResults.length > 0 ? 0 : null }),
+  setRoutingResults: (routingResults) =>
+    set({ routingResults, selectedResultIndex: routingResults.length > 0 ? 0 : null }),
   setSelectedResultIndex: (selectedResultIndex) => set({ selectedResultIndex }),
   setMapClickMode: (mapClickMode) => set({ mapClickMode }),
   setIsMinimized: (isMinimized) => set({ isMinimized }),
-  clearRouting: () => set({ origin: null, destination: null, routingResults: [], selectedResultIndex: null, mapClickMode: null, isMinimized: true })
+  clearRouting: () =>
+    set({
+      origin: null,
+      destination: null,
+      routingResults: [],
+      selectedResultIndex: null,
+      mapClickMode: null,
+      isMinimized: true,
+    }),
 }))

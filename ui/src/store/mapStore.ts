@@ -17,7 +17,7 @@ interface MapState {
 }
 
 export const useMapStore = create<MapState>((set) => ({
-  center: [31.83, -116.60], // Ensenada central view covering Reforma
+  center: [31.83, -116.6], // Ensenada central view covering Reforma
   zoom: 13,
   selectedStopId: null,
   selectedRouteId: null,
@@ -31,8 +31,13 @@ export const useMapStore = create<MapState>((set) => ({
   toggleRouteVisibility: (id) =>
     set((state) => {
       const next = new Set(state.hiddenRouteIds)
-      if (next.has(id)) { next.delete(id) } else { next.add(id) }
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
       return { hiddenRouteIds: next }
     }),
-  resetMap: () => set({ selectedStopId: null, selectedRouteId: null, zoom: 13, center: [31.83, -116.60] })
+  resetMap: () =>
+    set({ selectedStopId: null, selectedRouteId: null, zoom: 13, center: [31.83, -116.6] }),
 }))

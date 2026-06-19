@@ -76,7 +76,7 @@ export function LocationAutocomplete({
   const { setCenter, setZoom } = useMapStore()
 
   const { results: photonResults, isLoading: photonLoading } = usePhotonGeocoder(
-    isFocused ? input : ''
+    isFocused ? input : '',
   )
 
   // Show committed label when blurred; if no value committed yet, keep whatever the user typed
@@ -101,16 +101,18 @@ export function LocationAutocomplete({
   }, [])
 
   const filteredStops = stops
-    .filter(stop =>
-      stop.name.toLowerCase().includes(input.toLowerCase()) ||
-      (stop.common_name && stop.common_name.toLowerCase().includes(input.toLowerCase()))
+    .filter(
+      (stop) =>
+        stop.name.toLowerCase().includes(input.toLowerCase()) ||
+        (stop.common_name && stop.common_name.toLowerCase().includes(input.toLowerCase())),
     )
     .slice(0, 5)
 
   const hasStops = filteredStops.length > 0
   const hasAddresses = photonResults.length > 0
   const showEmpty = isFocused && input && !photonLoading && !hasStops && !hasAddresses
-  const showResults = showDropdown && input && (hasStops || hasAddresses || photonLoading || !!showEmpty)
+  const showResults =
+    showDropdown && input && (hasStops || hasAddresses || photonLoading || !!showEmpty)
 
   const handleStopSelect = (stop: DBStop) => {
     const [lng, lat] = stop.geom.coordinates
@@ -136,7 +138,7 @@ export function LocationAutocomplete({
           <div className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white/25 border-b border-white/5">
             Paradas de Bus
           </div>
-          {filteredStops.map(stop => (
+          {filteredStops.map((stop) => (
             <button
               key={stop.id}
               type="button"
@@ -183,7 +185,10 @@ export function LocationAutocomplete({
 
   return (
     <div ref={containerRef} className="relative flex flex-col gap-1">
-      <label htmlFor={`${role}-input`} className="text-[11px] font-semibold text-white/50 hidden md:block">
+      <label
+        htmlFor={`${role}-input`}
+        className="text-[11px] font-semibold text-white/50 hidden md:block"
+      >
         {isOrigin ? 'Punto de Partida (Origen)' : 'Destino Final'}
       </label>
 
@@ -192,10 +197,11 @@ export function LocationAutocomplete({
         <div className="relative flex-1">
           {/* Leading icon — always shown (desktop uses it too now) */}
           <div className="absolute left-3 top-0 bottom-0 flex items-center pointer-events-none">
-            {isOrigin
-              ? <MapPin size={14} className={accentClass} />
-              : <Navigation size={14} className={accentClass} />
-            }
+            {isOrigin ? (
+              <MapPin size={14} className={accentClass} />
+            ) : (
+              <Navigation size={14} className={accentClass} />
+            )}
           </div>
           <input
             id={`${role}-input`}
@@ -204,7 +210,13 @@ export function LocationAutocomplete({
             autoComplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={isMobile ? (isOrigin ? 'Origen...' : 'Destino...') : 'Escribe parada o selecciona en mapa...'}
+            placeholder={
+              isMobile
+                ? isOrigin
+                  ? 'Origen...'
+                  : 'Destino...'
+                : 'Escribe parada o selecciona en mapa...'
+            }
             value={displayValue}
             onChange={(e) => {
               setInput(e.target.value)
@@ -222,7 +234,10 @@ export function LocationAutocomplete({
           {displayValue && (
             <button
               type="button"
-              onClick={() => { onSelect(null); setInput('') }}
+              onClick={() => {
+                onSelect(null)
+                setInput('')
+              }}
               className="absolute right-2 top-0 bottom-0 flex items-center text-white/35 hover:text-white/60"
             >
               <X size={14} />

@@ -29,17 +29,17 @@ export const rpcHandlers = [
     }
 
     const stopsWithDistance = stopsData
-      .map(stop => {
+      .map((stop) => {
         const [stopLng, stopLat] = stop.geom.coordinates
         const dist = getDistanceMeters(lat, lng, stopLat, stopLng)
         return { ...stop, distance: dist }
       })
-      .filter(stop => stop.distance <= radius_meters)
+      .filter((stop) => stop.distance <= radius_meters)
       .sort((a, b) => a.distance - b.distance)
       .slice(0, 20)
 
     // Remove the calculated distance property to match DB signature
-    const result = stopsWithDistance.map(s => {
+    const result = stopsWithDistance.map((s) => {
       const stopCopy: Partial<typeof s> = { ...s }
       delete stopCopy.distance
       return stopCopy
@@ -58,16 +58,16 @@ export const rpcHandlers = [
     }
 
     const matchingRoutes = []
-    
+
     // Route 1 (id: 1) serves stops 1 to 28
     if (p_stop_id >= 1 && p_stop_id <= 28) {
-      const r1 = routesData.find(r => r.id === 1)
+      const r1 = routesData.find((r) => r.id === 1)
       if (r1) matchingRoutes.push(r1)
     }
 
     // Route 2 (id: 2) serves stop 1 and stops 29 to 40
     if (p_stop_id === 1 || (p_stop_id >= 29 && p_stop_id <= 40)) {
-      const r2 = routesData.find(r => r.id === 2)
+      const r2 = routesData.find((r) => r.id === 2)
       if (r2) matchingRoutes.push(r2)
     }
 
@@ -86,10 +86,10 @@ export const rpcHandlers = [
     // Find current effective fare
     const matchingFares = faresData
       .filter(
-        fare =>
+        (fare) =>
           fare.route_id === p_route_id &&
           fare.passenger_type === p_passenger_type &&
-          new Date(fare.effective_from) <= new Date()
+          new Date(fare.effective_from) <= new Date(),
       )
       .sort((a, b) => new Date(b.effective_from).getTime() - new Date(a.effective_from).getTime())
 
@@ -98,5 +98,5 @@ export const rpcHandlers = [
     }
 
     return HttpResponse.json(null, { status: 404 })
-  })
+  }),
 ]
