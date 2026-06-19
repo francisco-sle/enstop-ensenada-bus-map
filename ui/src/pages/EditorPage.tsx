@@ -253,7 +253,7 @@ export function EditorPage() {
               onClick={() => setMode('view')}
               className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'view'
-                  ? 'bg-pacific/10 border-pacific text-pacific shadow-glow'
+                  ? 'bg-pacific/10 border-pacific text-pacific'
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
               }`}
             >
@@ -265,7 +265,7 @@ export function EditorPage() {
               onClick={() => setMode('draw-route')}
               className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'draw-route'
-                  ? 'bg-pacific/10 border-pacific text-pacific shadow-glow'
+                  ? 'bg-pacific/10 border-pacific text-pacific'
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
               }`}
             >
@@ -277,7 +277,7 @@ export function EditorPage() {
               onClick={() => setMode('add-stop')}
               className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'add-stop'
-                  ? 'bg-pacific/10 border-pacific text-pacific shadow-glow'
+                  ? 'bg-pacific/10 border-pacific text-pacific'
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
               }`}
             >
