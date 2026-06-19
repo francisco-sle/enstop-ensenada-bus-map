@@ -22,7 +22,7 @@ export function ActiveRouteDisplay({ origin, destination, activeResult }: Active
   // Snap walk origin leg to streets
   const { snappedCoords: walkOriginCoords } = useSnappedPolyline(
     [[origin.lat, origin.lng], originStopCoords],
-    'foot'
+    'foot',
   )
 
   // Use pre-snapped route coordinates directly for the bus segment
@@ -31,24 +31,16 @@ export function ActiveRouteDisplay({ origin, destination, activeResult }: Active
   // Snap walk destination leg to streets
   const { snappedCoords: walkDestCoords } = useSnappedPolyline(
     [destStopCoords, [destination.lat, destination.lng]],
-    'foot'
+    'foot',
   )
 
   return (
     <>
       {/* Solid route path trace */}
-      <Polyline
-        positions={busCoords}
-        color={activeResult.routeColor}
-        weight={8}
-        opacity={0.85}
-      />
+      <Polyline positions={busCoords} color={activeResult.routeColor} weight={8} opacity={0.85} />
 
       {/* Moving arrows following the route direction */}
-      <RouteTracker
-        coords={busCoords}
-        color={activeResult.routeColor}
-      />
+      <RouteTracker coords={busCoords} color={activeResult.routeColor} />
 
       {/* Walking leg from origin to boarding stop */}
       <Polyline

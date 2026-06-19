@@ -42,7 +42,7 @@ export default defineConfig([
 
       // General quality
       'no-console': ['warn', { allow: ['warn', 'error'] }],
-      'eqeqeq': ['error', 'always'],
+      eqeqeq: ['error', 'always'],
       'prefer-const': 'error',
     },
   },

@@ -8,7 +8,7 @@ export function useRoutesForStop(stopId: number | null) {
       if (stopId === null) return []
 
       const { data, error } = await supabase.rpc('routes_for_stop', {
-        p_stop_id: stopId
+        p_stop_id: stopId,
       })
 
       if (error) {
@@ -16,6 +16,6 @@ export function useRoutesForStop(stopId: number | null) {
       }
       return data
     },
-    enabled: stopId !== null
+    enabled: stopId !== null,
   })
 }

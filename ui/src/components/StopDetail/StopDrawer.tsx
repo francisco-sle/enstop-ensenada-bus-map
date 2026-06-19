@@ -26,7 +26,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
     setOrigin({
       lat,
       lng,
-      label: stop.name
+      label: stop.name,
     })
     setSelectedStopId(null)
   }
@@ -36,7 +36,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
     setOrigin({
       lat,
       lng,
-      label: stop.name
+      label: stop.name,
     })
     setSelectedStopId(null)
   }
@@ -46,7 +46,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
     setDestination({
       lat,
       lng,
-      label: stop.name
+      label: stop.name,
     })
     setSelectedStopId(null)
   }
@@ -54,11 +54,13 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
   const isInline = variant === 'inline'
 
   return (
-    <div className={
-      isInline
-        ? "map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up mt-2"
-        : "absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none"
-    }>
+    <div
+      className={
+        isInline
+          ? 'map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up mt-2'
+          : 'absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none'
+      }
+    >
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="flex gap-2 items-center">
@@ -66,9 +68,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
           <div>
             <h3 className="text-lg font-bold text-white">{stop.name}</h3>
             {stop.common_name && (
-              <span className="text-muted text-xs block mt-0.5">
-                Alias: {stop.common_name}
-              </span>
+              <span className="text-muted text-xs block mt-0.5">Alias: {stop.common_name}</span>
             )}
           </div>
         </div>
@@ -98,14 +98,12 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
 
       {/* Routes Serving Stop */}
       <div>
-        <h4 className="text-xs font-semibold text-white/50 mb-2">
-          Rutas que pasan por aquí:
-        </h4>
+        <h4 className="text-xs font-semibold text-white/50 mb-2">Rutas que pasan por aquí:</h4>
         {loadingRoutes ? (
           <div className="skeleton h-10 w-full" />
         ) : routes && routes.length > 0 ? (
           <div className="flex gap-2 flex-wrap">
-            {routes.map(route => (
+            {routes.map((route) => (
               <button
                 key={route.id}
                 onClick={() => setSelectedRouteId(route.id)}
@@ -144,7 +142,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
         <button
           onClick={handleCheckIn}
           disabled={isCheckedIn}
-          title={isCheckedIn ? "¡Fijado como origen!" : "Estoy en esta parada (Marcar como origen)"}
+          title={isCheckedIn ? '¡Fijado como origen!' : 'Estoy en esta parada (Marcar como origen)'}
           aria-label="Estoy en esta parada"
           className={`btn shrink-0 w-11 h-11 p-0 flex items-center justify-center ${
             isCheckedIn

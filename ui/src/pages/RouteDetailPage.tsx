@@ -13,13 +13,45 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
   const { setCenter, setZoom, setSelectedStopId } = useMapStore()
 
   const routeStops = route.route_stops || []
-  const stops = routeStops.map(rs => rs.stop)
+  const stops = routeStops.map((rs) => rs.stop)
 
   const dummyFares = [
-    { id: 1, route_id: route.id, passenger_type: 'normal' as const, fare_mxn: 13.00, effective_from: '2024-01-01', notes: '', updated_at: '' },
-    { id: 2, route_id: route.id, passenger_type: 'student_government' as const, fare_mxn: 7.00, effective_from: '2024-01-01', notes: '', updated_at: '' },
-    { id: 3, route_id: route.id, passenger_type: 'student_highschool' as const, fare_mxn: 10.00, effective_from: '2024-01-01', notes: '', updated_at: '' },
-    { id: 4, route_id: route.id, passenger_type: 'disability' as const, fare_mxn: 7.00, effective_from: '2024-01-01', notes: '', updated_at: '' }
+    {
+      id: 1,
+      route_id: route.id,
+      passenger_type: 'normal' as const,
+      fare_mxn: 13.0,
+      effective_from: '2024-01-01',
+      notes: '',
+      updated_at: '',
+    },
+    {
+      id: 2,
+      route_id: route.id,
+      passenger_type: 'student_government' as const,
+      fare_mxn: 7.0,
+      effective_from: '2024-01-01',
+      notes: '',
+      updated_at: '',
+    },
+    {
+      id: 3,
+      route_id: route.id,
+      passenger_type: 'student_highschool' as const,
+      fare_mxn: 10.0,
+      effective_from: '2024-01-01',
+      notes: '',
+      updated_at: '',
+    },
+    {
+      id: 4,
+      route_id: route.id,
+      passenger_type: 'disability' as const,
+      fare_mxn: 7.0,
+      effective_from: '2024-01-01',
+      notes: '',
+      updated_at: '',
+    },
   ]
 
   const handleStopClick = (stop: DBStop) => {
@@ -102,7 +134,10 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0">
                     {rs.stop.accessible && <Accessibility size={14} className="text-pacific-400" />}
-                    <MapPin size={16} className="text-white/30 group-hover:text-pacific-400 transition-colors" />
+                    <MapPin
+                      size={16}
+                      className="text-white/30 group-hover:text-pacific-400 transition-colors"
+                    />
                   </div>
                 </div>
               ))}
@@ -112,7 +147,13 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
 
         {/* Map Preview */}
         <div className="order-1 md:order-2 relative border-b md:border-b-0 md:border-l border-white/8 bg-bay-900 h-full min-h-0">
-          <BusMap activeRoutes={[route]} allStops={stops} showFullRoutes={false} showRouting={false} focusedRouteId={route.id} />
+          <BusMap
+            activeRoutes={[route]}
+            allStops={stops}
+            showFullRoutes={false}
+            showRouting={false}
+            focusedRouteId={route.id}
+          />
         </div>
       </div>
     </div>

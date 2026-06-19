@@ -5,7 +5,7 @@ import type {} from 'leaflet-polylinedecorator'
 
 // Set global L on window so the dependency leaflet-rotatedmarker can find it
 if (typeof window !== 'undefined') {
-  (window as typeof globalThis & { L?: typeof L }).L = L
+  ;(window as typeof globalThis & { L?: typeof L }).L = L
 }
 
 import 'leaflet-polylinedecorator/src/L.PolylineDecorator.js'

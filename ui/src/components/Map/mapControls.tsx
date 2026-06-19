@@ -48,10 +48,18 @@ export function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerPr
         onRightClick({ lat, lng, x: containerPoint.x, y: containerPoint.y })
       }
     },
-    click() { onRightClick(null) },
-    zoomstart() { onRightClick(null) },
-    movestart() { onRightClick(null) },
-    zoomend() { onZoomEnd(map.getZoom()) },
+    click() {
+      onRightClick(null)
+    },
+    zoomstart() {
+      onRightClick(null)
+    },
+    movestart() {
+      onRightClick(null)
+    },
+    zoomend() {
+      onZoomEnd(map.getZoom())
+    },
   })
   return null
 }

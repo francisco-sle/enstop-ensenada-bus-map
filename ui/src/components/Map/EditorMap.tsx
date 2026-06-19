@@ -61,7 +61,7 @@ function EditorEventsHandler({
       if (mode === 'add-stop') {
         onMapClick([e.latlng.lat, e.latlng.lng])
       }
-    }
+    },
   })
 
   // Global mouseup handler in case user releases click outside the map
@@ -149,13 +149,16 @@ export function EditorMap({
         center={center}
         zoom={zoom}
         zoomControl={false}
-        maxBounds={[[31.60, -116.90], [32.00, -116.35]]}
+        maxBounds={[
+          [31.6, -116.9],
+          [32.0, -116.35],
+        ]}
         maxBoundsViscosity={0.9}
         minZoom={11}
         style={{ width: '100%', height: '100%' }}
       >
         <EditorMapController center={center} zoom={zoom} />
-        
+
         <EditorEventsHandler
           mode={mode}
           onDrawStart={handleDrawStart}
@@ -191,7 +194,7 @@ export function EditorMap({
         )}
 
         {/* Placed Stops Markers */}
-        {stops.map(stop => (
+        {stops.map((stop) => (
           <Marker
             key={stop.id}
             position={[stop.lat, stop.lng]}
@@ -201,7 +204,7 @@ export function EditorMap({
                 if (window.confirm(`¿Eliminar parada "${stop.name}"?`)) {
                   onDeleteStop(stop.id)
                 }
-              }
+              },
             }}
           />
         ))}

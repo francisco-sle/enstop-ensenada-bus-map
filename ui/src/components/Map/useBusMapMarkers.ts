@@ -73,19 +73,17 @@ export function useBusMapMarkers({
   hiddenRouteIds,
 }: BusMapMarkersOptions): StopMarkerData[] {
   const currentRoute = selectedRouteId
-    ? activeRoutes.find(r => r.id === selectedRouteId) ?? null
+    ? (activeRoutes.find((r) => r.id === selectedRouteId) ?? null)
     : null
 
   const threshold = importanceThreshold(currentZoom)
 
   // Normalize route_stops once at entry — guards against partial fetches where the
   // join was omitted. All downstream .some() calls are then unconditionally safe.
-  const routeStopsMap = new Map(
-    activeRoutes.map(r => [r.id, r.route_stops ?? []])
-  )
+  const routeStopsMap = new Map(activeRoutes.map((r) => [r.id, r.route_stops ?? []]))
 
   return allStops
-    .filter(stop => {
+    .filter((stop) => {
       // Priority 1: always show the selected stop
       if (stop.id === selectedStopId) return true
 
@@ -93,22 +91,27 @@ export function useBusMapMarkers({
       if (
         activeResult &&
         (stop.id === activeResult.originStop.id || stop.id === activeResult.destStop.id)
-      ) return true
+      )
+        return true
 
       // Compute which visible routes serve this stop
       const servingRoutes = activeRoutes.filter(
-        r => !hiddenRouteIds.has(r.id) && (routeStopsMap.get(r.id) ?? []).some(rs => rs.stop_id === stop.id)
+        (r) =>
+          !hiddenRouteIds.has(r.id) &&
+          (routeStopsMap.get(r.id) ?? []).some((rs) => rs.stop_id === stop.id),
       )
 
       // Suppress stops that are only on hidden routes (and not selected/routing endpoints)
-      const allServingRoutes = activeRoutes.filter(r => (routeStopsMap.get(r.id) ?? []).some(rs => rs.stop_id === stop.id))
+      const allServingRoutes = activeRoutes.filter((r) =>
+        (routeStopsMap.get(r.id) ?? []).some((rs) => rs.stop_id === stop.id),
+      )
       if (allServingRoutes.length > 0 && servingRoutes.length === 0) return false
 
       // Weighted LoD — use visible route count for scoring
       const score = stopImportance(stop, servingRoutes.length)
       return score >= threshold
     })
-    .map(stop => {
+    .map((stop) => {
       const isSelected = stop.id === selectedStopId
       let color = '#2563EB' // default blue
 
@@ -118,7 +121,9 @@ export function useBusMapMarkers({
         if (stop.id === activeResult.originStop.id) color = 'var(--color-accent-cerulean)'
         else if (stop.id === activeResult.destStop.id) color = 'var(--color-accent-warm)'
       } else if (currentRoute) {
-        const servesStop = (routeStopsMap.get(currentRoute.id) ?? []).some(rs => rs.stop_id === stop.id)
+        const servesStop = (routeStopsMap.get(currentRoute.id) ?? []).some(
+          (rs) => rs.stop_id === stop.id,
+        )
         if (servesStop) color = currentRoute.category?.color_hex || 'var(--color-accent-cerulean)'
       }
 

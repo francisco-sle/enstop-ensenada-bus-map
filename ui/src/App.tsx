@@ -1,4 +1,12 @@
-import { Routes, Route, Navigate, NavLink, useNavigate, useParams, useLocation } from 'react-router-dom'
+import {
+  Routes,
+  Route,
+  Navigate,
+  NavLink,
+  useNavigate,
+  useParams,
+  useLocation,
+} from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Map, Bus, Info, AlertTriangle } from 'lucide-react'
 
@@ -16,9 +24,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: 1
-    }
-  }
+      retry: 1,
+    },
+  },
 })
 
 function RouteDetailWrapper({ routes }: { routes: RouteDetail[] }) {
@@ -26,7 +34,7 @@ function RouteDetailWrapper({ routes }: { routes: RouteDetail[] }) {
   const navigate = useNavigate()
 
   const idNum = Number(routeId)
-  const route = routes.find(r => r.id === idNum)
+  const route = routes.find((r) => r.id === idNum)
 
   if (!route) {
     return <Navigate to="/routes" replace />
@@ -40,9 +48,18 @@ function MainAppShell() {
   const isStudio = location.pathname === '/studio'
 
   // Fetch routes and stops
-  const { data: routes, isLoading: loadingRoutes, error: routesError, refetch: refetchRoutes } = useRoutes()
-  const { data: stops, isLoading: loadingStops, error: stopsError, refetch: refetchStops } = useStops()
-
+  const {
+    data: routes,
+    isLoading: loadingRoutes,
+    error: routesError,
+    refetch: refetchRoutes,
+  } = useRoutes()
+  const {
+    data: stops,
+    isLoading: loadingStops,
+    error: stopsError,
+    refetch: refetchStops,
+  } = useStops()
 
   const handleRetry = () => {
     refetchRoutes()
@@ -52,19 +69,18 @@ function MainAppShell() {
   const isLoading = loadingRoutes || loadingStops
   const hasError = routesError || stopsError
 
-
   const desktopNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
       'flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-150 select-none',
       isActive
         ? 'bg-pacific-500/10 text-pacific-300'
-        : 'text-white/60 hover:text-white hover:bg-white/5'
+        : 'text-white/60 hover:text-white hover:bg-white/5',
     ].join(' ')
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     [
       'flex flex-col items-center justify-center gap-1 h-full text-[11px] font-semibold transition-all duration-150 active:scale-92 select-none',
-      isActive ? 'text-pacific-600' : 'text-slate-400 hover:text-slate-600'
+      isActive ? 'text-pacific-600' : 'text-slate-400 hover:text-slate-600',
     ].join(' ')
 
   if (isStudio) {
@@ -87,7 +103,7 @@ function MainAppShell() {
           className="text-2xl font-normal tracking-wide text-white"
           style={{ fontFamily: 'var(--font-logo)' }}
         >
-          ENSTOP
+          ENSTOP - MAP
         </h1>
 
         {/* Desktop Navigation */}
@@ -102,7 +118,11 @@ function MainAppShell() {
             <span>Rutas</span>
           </NavLink>
 
-          <NavLink to="/about" className={desktopNavLinkClass} aria-label="Ver información del proyecto">
+          <NavLink
+            to="/about"
+            className={desktopNavLinkClass}
+            aria-label="Ver información del proyecto"
+          >
             <Info size={16} />
             <span>Acerca</span>
           </NavLink>
@@ -122,7 +142,8 @@ function MainAppShell() {
             <AlertTriangle size={48} className="text-[#E05050]" />
             <h3 className="text-lg font-bold">Error de Conexión</h3>
             <p className="text-muted text-sm max-w-xs">
-              No se pudo establecer conexión con el servidor. Revisa tu conexión a internet o reintenta.
+              No se pudo establecer conexión con el servidor. Revisa tu conexión a internet o
+              reintenta.
             </p>
             <button onClick={handleRetry} className="btn btn-primary mt-2">
               Reintentar
@@ -134,27 +155,12 @@ function MainAppShell() {
 
             <Route
               path="/map"
-              element={
-                <MapPage
-                  activeRoutes={routes || []}
-                  allStops={stops || []}
-                />
-              }
+              element={<MapPage activeRoutes={routes || []} allStops={stops || []} />}
             />
 
-            <Route
-              path="/routes"
-              element={
-                <RoutesPage
-                  routes={routes || []}
-                />
-              }
-            />
+            <Route path="/routes" element={<RoutesPage routes={routes || []} />} />
 
-            <Route
-              path="/routes/:routeId"
-              element={<RouteDetailWrapper routes={routes || []} />}
-            />
+            <Route path="/routes/:routeId" element={<RouteDetailWrapper routes={routes || []} />} />
 
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<Navigate to="/map" replace />} />
@@ -169,16 +175,16 @@ function MainAppShell() {
           <span>Mapa</span>
         </NavLink>
 
-        <NavLink
-          to="/routes"
-          className={mobileNavLinkClass}
-          aria-label="Ver todas las rutas"
-        >
+        <NavLink to="/routes" className={mobileNavLinkClass} aria-label="Ver todas las rutas">
           <Bus size={20} />
           <span>Rutas</span>
         </NavLink>
 
-        <NavLink to="/about" className={mobileNavLinkClass} aria-label="Ver información del proyecto">
+        <NavLink
+          to="/about"
+          className={mobileNavLinkClass}
+          aria-label="Ver información del proyecto"
+        >
           <Info size={20} />
           <span>Acerca</span>
         </NavLink>

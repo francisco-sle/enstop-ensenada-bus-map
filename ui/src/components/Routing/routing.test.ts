@@ -11,7 +11,7 @@ const mockStops: DBStop[] = [
     geom: { type: 'Point', coordinates: [-116.625, 31.868] },
     is_terminal: true,
     accessible: true,
-    created_at: ''
+    created_at: '',
   },
   {
     id: 2,
@@ -20,17 +20,17 @@ const mockStops: DBStop[] = [
     geom: { type: 'Point', coordinates: [-116.621, 31.865] },
     is_terminal: false,
     accessible: true,
-    created_at: ''
+    created_at: '',
   },
   {
     id: 3,
     name: 'Terminal Chapultepec',
     common_name: 'Chapultepec',
-    geom: { type: 'Point', coordinates: [-116.580, 31.784] },
+    geom: { type: 'Point', coordinates: [-116.58, 31.784] },
     is_terminal: true,
     accessible: true,
-    created_at: ''
-  }
+    created_at: '',
+  },
 ]
 
 // Mock Route Detail for R1
@@ -46,21 +46,21 @@ const mockRoute: RouteDetail = {
   category: {
     id: 1,
     name: 'Centro–Chapultepec',
-    color_hex: '#3DBFA8'
+    color_hex: '#3DBFA8',
   },
   geom: {
     type: 'LineString',
     coordinates: [
       [-116.625, 31.868],
       [-116.621, 31.865],
-      [-116.580, 31.784]
-    ]
+      [-116.58, 31.784],
+    ],
   },
   route_stops: [
     { id: 1, route_id: 1, stop_id: 1, sequence: 1, stop: mockStops[0] },
     { id: 2, route_id: 1, stop_id: 2, sequence: 2, stop: mockStops[1] },
-    { id: 3, route_id: 1, stop_id: 3, sequence: 3, stop: mockStops[2] }
-  ]
+    { id: 3, route_id: 1, stop_id: 3, sequence: 3, stop: mockStops[2] },
+  ],
 }
 
 describe('A-to-B Transit Routing Algorithm', () => {
@@ -69,14 +69,16 @@ describe('A-to-B Transit Routing Algorithm', () => {
     const originLat = 31.868
     const originLng = -116.625
     const destLat = 31.784
-    const destLng = -116.580
+    const destLng = -116.58
 
     const results = computeABRoute(
-      originLat, originLng,
-      destLat, destLng,
+      originLat,
+      originLng,
+      destLat,
+      destLng,
       [mockStops[0]], // nearby origin stops
       [mockStops[2]], // nearby dest stops
-      [mockRoute]
+      [mockRoute],
     )
 
     expect(results).toHaveLength(1)
@@ -93,21 +95,23 @@ describe('A-to-B Transit Routing Algorithm', () => {
     // Make route one-way (inbound)
     const nonCircularRoute: RouteDetail = {
       ...mockRoute,
-      direction: 'inbound'
+      direction: 'inbound',
     }
 
     // User wants to go from Stop 3 to Stop 1 (against sequence direction)
     const originLat = 31.784
-    const originLng = -116.580
+    const originLng = -116.58
     const destLat = 31.868
     const destLng = -116.625
 
     const results = computeABRoute(
-      originLat, originLng,
-      destLat, destLng,
+      originLat,
+      originLng,
+      destLat,
+      destLng,
       [mockStops[2]],
       [mockStops[0]],
-      [nonCircularRoute]
+      [nonCircularRoute],
     )
 
     expect(results).toHaveLength(0)
@@ -118,11 +122,13 @@ describe('A-to-B Transit Routing Algorithm', () => {
     const originLng = -116.625
     // Walk to stop 2 is 0.5km
     const results = computeABRoute(
-      originLat, originLng,
-      31.865, -116.621,
+      originLat,
+      originLng,
+      31.865,
+      -116.621,
       [mockStops[0]],
       [mockStops[1]],
-      [mockRoute]
+      [mockRoute],
     )
 
     expect(results).toHaveLength(1)
@@ -141,7 +147,7 @@ describe('A-to-B Transit Routing Algorithm', () => {
       geom: { type: 'Point', coordinates: [-116.625, 31.868] },
       is_terminal: false,
       accessible: true,
-      created_at: ''
+      created_at: '',
     }
     const stopB: DBStop = {
       id: 4,
@@ -150,22 +156,24 @@ describe('A-to-B Transit Routing Algorithm', () => {
       geom: { type: 'Point', coordinates: [-116.625, 31.868] },
       is_terminal: false,
       accessible: true,
-      created_at: ''
+      created_at: '',
     }
     const routeWithBothStops: RouteDetail = {
       ...mockRoute,
       route_stops: [
         { id: 1, route_id: 1, stop_id: 1, sequence: 1, stop: stopA },
-        { id: 4, route_id: 1, stop_id: 4, sequence: 2, stop: stopB }
-      ]
+        { id: 4, route_id: 1, stop_id: 4, sequence: 2, stop: stopB },
+      ],
     }
 
     const results = computeABRoute(
-      31.868, -116.625,
-      31.868, -116.625,
+      31.868,
+      -116.625,
+      31.868,
+      -116.625,
       [stopA],
       [stopB],
-      [routeWithBothStops]
+      [routeWithBothStops],
     )
 
     expect(results).toHaveLength(0)
@@ -189,4 +197,3 @@ describe('getNearbyStops helper function', () => {
     expect(nearby[0].id).toBe(3)
   })
 })
-

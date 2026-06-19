@@ -9,7 +9,7 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-2 py-2 select-none">
-        {[1, 2, 3, 4].map(i => (
+        {[1, 2, 3, 4].map((i) => (
           <div key={i} className="skeleton h-9 w-full" />
         ))}
       </div>
@@ -21,7 +21,7 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
     normal: { label: 'General / Normal', icon: '👤' },
     student_highschool: { label: 'Estudiante (Prepa/Uni)', icon: '🎒' },
     student_government: { label: 'Estudiante (Gobierno)', icon: '🏷️' },
-    disability: { label: 'Discapacidad / Preferencial', icon: '♿' }
+    disability: { label: 'Discapacidad / Preferencial', icon: '♿' },
   }
 
   return (
@@ -35,7 +35,7 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
         </thead>
         <tbody className="divide-y divide-white/8">
           {Object.entries(passengerTypesMap).map(([type, meta]) => {
-            const rule = fares?.find(f => f.passenger_type === type)
+            const rule = fares?.find((f) => f.passenger_type === type)
             const price = rule ? `$${Number(rule.fare_mxn).toFixed(2)}` : '$13.00*'
 
             return (

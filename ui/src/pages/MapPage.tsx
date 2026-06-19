@@ -43,7 +43,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   // Bidirectional URL↔Store sync — handles deep links and browser back/forward
   useUrlStoreSync()
 
-  const selectedStop = allStops.find(s => s.id === selectedStopId)
+  const selectedStop = allStops.find((s) => s.id === selectedStopId)
 
   const handleLocateUser = useCallback(() => {
     navigator.geolocation.getCurrentPosition(
@@ -54,14 +54,14 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
       },
       (error) => {
         console.warn('Geolocation permission denied or failed:', error)
-      }
+      },
     )
   }, [setUserLocation, setCenter, setZoom])
 
   const handleMinimizeResults = useCallback(() => {
     setIsCollapsing(true)
     setTimeout(() => {
-      setPillKey(k => k + 1)
+      setPillKey((k) => k + 1)
       setMinimizedForResults(routingResults)
       setIsCollapsing(false)
     }, 250)
@@ -69,7 +69,10 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
   // True when the minimized "Opciones de Ruta" pill is anchored at the bottom
   const showMinimizedPill =
-    isMobile && isMinimized && routingResults.length > 0 && !selectedStop &&
+    isMobile &&
+    isMinimized &&
+    routingResults.length > 0 &&
+    !selectedStop &&
     minimizedForResults === routingResults
 
   return (
@@ -79,13 +82,17 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
         <div className="w-[380px] lg:w-[420px] shrink-0 bg-surface border-r border-white/8 flex flex-col gap-4 p-4 overflow-y-auto z-10 select-none">
           <div className="flex flex-col gap-1">
             <h2 className="text-sm font-bold text-white">Planificador de Rutas</h2>
-            <p className="text-xs text-white/55">Busca paradas para planificar tu ruta en Ensenada.</p>
+            <p className="text-xs text-white/55">
+              Busca paradas para planificar tu ruta en Ensenada.
+            </p>
           </div>
           <RoutePlanner stops={allStops} />
 
           {routingResults.length > 0 && (
             <div className="mt-2 flex flex-col gap-3">
-              <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider">Opciones de Ruta</h3>
+              <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+                Opciones de Ruta
+              </h3>
               <RouteResult />
             </div>
           )}
@@ -120,15 +127,15 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
         )}
 
         {/* Route Toggle Legend (Desktop only) */}
-        {!isMobile && (
-          <RouteToggleLegend routes={activeRoutes} isMinimizedProp={false} />
-        )}
+        {!isMobile && <RouteToggleLegend routes={activeRoutes} isMinimizedProp={false} />}
 
         {/* Mobile Stacked Controls (Bottom Right) */}
         {isMobile && (
-          <div className={`absolute right-3 z-1000 flex flex-col gap-2 items-end transition-all duration-[250ms] ${
-            showMinimizedPill ? 'bottom-[60px]' : 'bottom-5'
-          }`}>
+          <div
+            className={`absolute right-3 z-1000 flex flex-col gap-2 items-end transition-all duration-[250ms] ${
+              showMinimizedPill ? 'bottom-[60px]' : 'bottom-5'
+            }`}
+          >
             <button
               onClick={handleLocateUser}
               aria-label="Encontrar mi ubicación actual"
@@ -158,18 +165,23 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
         {/* Floating Search Panel (Mobile only) */}
         {isMobile && (
-          <div className={
-            isMinimized
-              ? "absolute top-4 left-4 right-4 z-1000 flex flex-col gap-3"
-              : "absolute inset-4 z-1005 bg-surface rounded-2xl border border-white/8 shadow-card flex flex-col p-4 overflow-y-auto animate-slide-down"
-          }>
+          <div
+            className={
+              isMinimized
+                ? 'absolute top-4 left-4 right-4 z-1000 flex flex-col gap-3'
+                : 'absolute inset-4 z-1005 bg-surface rounded-2xl border border-white/8 shadow-card flex flex-col p-4 overflow-y-auto animate-slide-down'
+            }
+          >
             <RoutePlanner stops={allStops} />
           </div>
         )}
 
         {/* Slide-up Route Results Drawer (Mobile only) */}
-        {isMobile && isMinimized && routingResults.length > 0 && !selectedStop && (
-          minimizedForResults === routingResults ? (
+        {isMobile &&
+          isMinimized &&
+          routingResults.length > 0 &&
+          !selectedStop &&
+          (minimizedForResults === routingResults ? (
             /* Minimized pill — key forces remount so animate-slide-up always plays */
             <button
               key={pillKey}
@@ -187,9 +199,11 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             </button>
           ) : (
             /* Expanded drawer — plays exit animation before state switches to pill */
-            <div className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[60%] overflow-y-auto flex flex-col gap-3 select-none ${
-              isCollapsing ? 'animate-slide-down-out' : 'animate-slide-up'
-            }`}>
+            <div
+              className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[60%] overflow-y-auto flex flex-col gap-3 select-none ${
+                isCollapsing ? 'animate-slide-down-out' : 'animate-slide-up'
+              }`}
+            >
               <div className="flex justify-between items-center pb-1 border-b border-white/5">
                 <span className="text-xs font-bold text-white/50 uppercase tracking-widest flex items-center gap-1.5">
                   <span>🚌</span> Opciones de Ruta
@@ -204,8 +218,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               </div>
               <RouteResult />
             </div>
-          )
-        )}
+          ))}
 
         {/* Slide-up Stop Detail Drawer (Mobile only) */}
         {isMobile && selectedStop && (

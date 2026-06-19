@@ -9,27 +9,40 @@ export function createStopIcon(colorHex: string, isSelected: boolean) {
   const safeColor = sanitizeColor(colorHex)
   const size = isSelected ? 32 : 24
   const pinHtml = renderToString(
-    <div style={{
-      position: 'relative', width: `${size}px`, height: `${size}px`,
-      display: 'flex', justifyContent: 'center', alignItems: 'center',
-      filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.35))',
-      transition: 'all 0.2s ease-in-out',
-    }}>
+    <div
+      style={{
+        position: 'relative',
+        width: `${size}px`,
+        height: `${size}px`,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.35))',
+        transition: 'all 0.2s ease-in-out',
+      }}
+    >
       <MapPin size={size} color="#ffffff" fill={safeColor} strokeWidth={1.5} />
-      <div style={{
-        position: 'absolute', top: '38%', left: '50%',
-        transform: 'translate(-50%, -50%)',
-        color: '#ffffff', display: 'flex', justifyContent: 'center', alignItems: 'center',
-      }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: '38%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          color: '#ffffff',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <Bus size={isSelected ? 14 : 10} />
       </div>
-    </div>
+    </div>,
   )
   return L.divIcon({
     className: 'custom-stop-marker',
     html: pinHtml,
     iconSize: [size, size],
-    iconAnchor: [size / 2, size * 22 / 24],
+    iconAnchor: [size / 2, (size * 22) / 24],
   })
 }
 
