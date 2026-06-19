@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Bus, HelpCircle, AlertCircle } from 'lucide-react'
 
 export function AboutPage() {
@@ -62,21 +61,6 @@ export function AboutPage() {
               oficiales de las empresas transportistas de Ensenada o el Ayuntamiento.
             </p>
           </div>
-        </div>
-
-        {/* Developer Studio Link */}
-        <div className="bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-2">
-          <h3 className="text-sm font-bold flex items-center gap-2 text-pacific-400 font-display">
-            <span>🛠️</span>
-            <span>Herramientas de Colaborador</span>
-          </h3>
-          <p className="text-xs text-white/80 leading-relaxed">
-            ¿Eres desarrollador, tester o quieres colaborar creando nuevos recorridos? Accede al
-            estudio para pintar rutas manualmente y colocarlas en el mapa.
-          </p>
-          <Link to="/studio" className="btn btn-primary text-center mt-1 text-xs py-2 min-h-0">
-            Abrir Diseñador de Rutas
-          </Link>
         </div>
       </div>
     </div>
