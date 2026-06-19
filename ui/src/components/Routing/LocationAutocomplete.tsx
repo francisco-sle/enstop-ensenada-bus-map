@@ -85,8 +85,8 @@ export function LocationAutocomplete({
   const isOrigin = role === 'origin'
   const accentClass = isOrigin ? 'text-pacific-400' : 'text-sol-400'
   const mapActiveClass = isOrigin
-    ? 'bg-pacific-400 text-bay-950 border-pacific-400 shadow-glow'
-    : 'bg-sol-400 text-bay-950 border-sol-400 shadow-glow'
+    ? 'bg-pacific-400 text-bay-950 border-pacific-400'
+    : 'bg-sol-400 text-bay-950 border-sol-400'
 
   // Close on outside click
   useEffect(() => {
