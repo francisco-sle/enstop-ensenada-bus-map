@@ -103,7 +103,7 @@ function MainAppShell() {
           className="text-2xl font-normal tracking-wide text-white"
           style={{ fontFamily: 'var(--font-logo)' }}
         >
-          ENSTOP - MAP
+          ENSTOP
         </h1>
 
         {/* Desktop Navigation */}
