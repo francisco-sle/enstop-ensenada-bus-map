@@ -22,6 +22,9 @@
     "db:types": "supabase gen types typescript --local > ui/src/types/supabase-generated.ts",
     "db:studio": "supabase studio",
     "lint": "npm --prefix ui run lint",
+    "lint:fix": "npm --prefix ui run lint:fix",
+    "format": "npm --prefix ui run format",
+    "format:check": "npm --prefix ui run format:check",
     "typecheck": "npm --prefix ui run typecheck"
   }
 }

@@ -146,6 +146,9 @@ The app is served at `http://localhost:5173` by default.
 | `npm run test` | Run Vitest unit tests |
 | `npm run test:e2e` | Run Playwright end-to-end tests |
 | `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Run ESLint and auto-fix violations |
+| `npm run format` | Format all files with Prettier |
+| `npm run format:check` | Check formatting without writing changes |
 | `npm run typecheck` | Run `tsc --noEmit` type check |
 | `npm run db:start` | Start local Supabase stack |
 | `npm run db:stop` | Stop local Supabase stack |
@@ -153,6 +156,38 @@ The app is served at `http://localhost:5173` by default.
 | `npm run db:diff` | Diff local schema against remote |
 | `npm run db:push` | Push migrations to remote Supabase project |
 | `npm run db:studio` | Open Supabase Studio UI |
+
+---
+
+---
+
+## Editor Setup (VS Code)
+
+This repository ships a `.vscode/` directory with recommended extensions and workspace settings. When you open the project, VS Code will prompt you to install the recommended extensions.
+
+### Recommended Extensions
+
+| Extension | Purpose |
+|---|---|
+| [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) (`dbaeumer.vscode-eslint`) | Inline lint errors and warnings |
+| [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (`esbenp.prettier-vscode`) | Format-on-save |
+| [TypeScript Nightly](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next) (`ms-vscode.vscode-typescript-next`) | Latest TS language features |
+| [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) (`bradlc.vscode-tailwindcss`) | Class autocomplete + `@theme` token hints |
+| [ES7 React Snippets](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets) (`dsznajder.es7-react-js-snippets`) | React component boilerplate shortcuts |
+| [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) (`eamodio.gitlens`) | Inline blame and history |
+| [Vitest](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) (`vitest.explorer`) | Run/debug unit tests from the sidebar |
+| [Playwright](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) (`ms-playwright.playwright`) | Run/debug e2e tests from the sidebar |
+
+### Workspace Behavior
+
+The `.vscode/settings.json` configures the following automatically:
+
+- **Format on save** — Prettier runs on every save.
+- **ESLint fix on save** — Auto-fixable ESLint violations are corrected on save (`source.fixAll.eslint`).
+- **Workspace TypeScript SDK** — Uses the local `typescript` version from `ui/node_modules` for accurate type checking.
+- **Tailwind IntelliSense** — Points at `ui/src/styles/index.css` so `@theme` tokens resolve in class autocomplete.
+
+> If VS Code doesn't prompt for extensions automatically, open the **Command Palette** (`Ctrl+Shift+P`) and run **Extensions: Show Recommended Extensions**.
 
 ---
 
