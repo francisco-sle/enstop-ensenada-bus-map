@@ -1,0 +1,8 @@
+export const FARES = {
+  NORMAL: 13.0,
+  STUDENT_GOVERNMENT: 7.0,
+  STUDENT_HIGHSCHOOL: 10.0,
+  DISABILITY: 7.0,
+} as const
+
+export const DEFAULT_FARE = FARES.NORMAL

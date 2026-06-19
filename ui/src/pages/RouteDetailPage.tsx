@@ -1,6 +1,7 @@
 import { ArrowLeft, MapPin, Accessibility } from 'lucide-react'
 import { BusMap } from '../components/Map/BusMap'
 import { FareTable } from '../components/RouteDetail/FareTable'
+import { FARES } from '../constants/fares'
 import { useMapStore } from '../store/mapStore'
 import type { RouteDetail, DBStop } from '../types'
 
@@ -20,7 +21,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       id: 1,
       route_id: route.id,
       passenger_type: 'normal' as const,
-      fare_mxn: 13.0,
+      fare_mxn: FARES.NORMAL,
       effective_from: '2024-01-01',
       notes: '',
       updated_at: '',
@@ -29,7 +30,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       id: 2,
       route_id: route.id,
       passenger_type: 'student_government' as const,
-      fare_mxn: 7.0,
+      fare_mxn: FARES.STUDENT_GOVERNMENT,
       effective_from: '2024-01-01',
       notes: '',
       updated_at: '',
@@ -38,7 +39,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       id: 3,
       route_id: route.id,
       passenger_type: 'student_highschool' as const,
-      fare_mxn: 10.0,
+      fare_mxn: FARES.STUDENT_HIGHSCHOOL,
       effective_from: '2024-01-01',
       notes: '',
       updated_at: '',
@@ -47,7 +48,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       id: 4,
       route_id: route.id,
       passenger_type: 'disability' as const,
-      fare_mxn: 7.0,
+      fare_mxn: FARES.DISABILITY,
       effective_from: '2024-01-01',
       notes: '',
       updated_at: '',
