@@ -36,6 +36,15 @@ function getRouteStops(routeId: number) {
 }
 
 export const routesHandlers = [
+  // Handle Edge Function route-proxy for geometries
+  http.post('*/functions/v1/route-proxy', () => {
+    const degradedGeometries = routesData.map((route) => ({
+      route_id: route.id,
+      geom: route.geom || null,
+    }))
+    return HttpResponse.json(degradedGeometries)
+  }),
+
   // Handle routes request
   http.get('*/rest/v1/routes', ({ request }) => {
     const url = new URL(request.url)
