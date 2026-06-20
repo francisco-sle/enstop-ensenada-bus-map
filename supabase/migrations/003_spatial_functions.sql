@@ -13,10 +13,28 @@ RETURNS SETOF stops AS $$
   LIMIT 20;
 $$ LANGUAGE sql STABLE;
 
--- Active routes serving a given stop
+-- Active routes serving a given stop (returns route metadata; geom is omitted for security)
 CREATE OR REPLACE FUNCTION routes_for_stop(p_stop_id INT)
-RETURNS SETOF routes AS $$
-  SELECT r.* FROM routes r
+RETURNS TABLE (
+  id INT,
+  name TEXT,
+  short_name TEXT,
+  category_id INT,
+  description TEXT,
+  direction TEXT,
+  is_active BOOLEAN,
+  created_at TIMESTAMPTZ
+) AS $$
+  SELECT 
+    r.id, 
+    r.name, 
+    r.short_name, 
+    r.category_id, 
+    r.description, 
+    r.direction, 
+    r.is_active, 
+    r.created_at 
+  FROM routes r
   JOIN route_stops rs ON rs.route_id = r.id
   WHERE rs.stop_id = p_stop_id AND r.is_active = TRUE;
 $$ LANGUAGE sql STABLE;

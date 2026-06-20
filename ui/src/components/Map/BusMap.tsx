@@ -135,6 +135,7 @@ export function BusMap({
             const isHidden = hiddenRouteIds.has(route.id)
             if (!showFullRoutes && !isSelected) return null
             if (isHidden) return null
+            if (!route.geom) return null
             return (
               <RouteLine
                 key={route.id}

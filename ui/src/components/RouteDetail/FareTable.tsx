@@ -37,7 +37,9 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
         <tbody className="divide-y divide-white/8">
           {Object.entries(passengerTypesMap).map(([type, meta]) => {
             const rule = fares?.find((f) => f.passenger_type === type)
-            const price = rule ? `$${Number(rule.fare_mxn).toFixed(2)}` : `$${DEFAULT_FARE.toFixed(2)}*`
+            const price = rule
+              ? `$${Number(rule.fare_mxn).toFixed(2)}`
+              : `$${DEFAULT_FARE.toFixed(2)}*`
 
             return (
               <tr key={type} className="hover:bg-white/2 transition-colors">

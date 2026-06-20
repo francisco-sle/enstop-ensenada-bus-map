@@ -4,7 +4,7 @@
 -- Direct table SELECT on routes is blocked by RLS (see 002_rls_policies.sql).
 
 CREATE OR REPLACE FUNCTION get_degraded_routes()
-RETURNS TABLE(route_id BIGINT, geom GEOMETRY)
+RETURNS TABLE(route_id BIGINT, geom JSON)
 LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
@@ -12,7 +12,7 @@ BEGIN
   RETURN QUERY
     SELECT
       r.id::BIGINT,
-      ST_SimplifyPreserveTopology(r.geom, 0.0005)
+      ST_AsGeoJSON(ST_SimplifyPreserveTopology(r.geom, 0.0005))::json
     FROM routes r
     WHERE r.is_active = TRUE;
 END;

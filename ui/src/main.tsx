@@ -12,6 +12,16 @@ async function prepareApp() {
       onUnhandledRequest: 'bypass',
     })
   }
+  // Deregister any stale MSW service worker from a previous mock session.
+  // Prevents intercepted requests when VITE_USE_MOCKS is toggled off.
+  if ('serviceWorker' in navigator) {
+    const registrations = await navigator.serviceWorker.getRegistrations()
+    await Promise.all(
+      registrations
+        .filter((r) => r.active?.scriptURL.includes('mockServiceWorker'))
+        .map((r) => r.unregister()),
+    )
+  }
   return Promise.resolve()
 }
 

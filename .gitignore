@@ -34,3 +34,4 @@ blob-report/
 
 plans
 supabase/seed.private.sql
+supabase/functions/.env

@@ -49,10 +49,11 @@ function MainAppShell() {
   const location = useLocation()
   const isStudio = location.pathname === '/studio'
 
-  // In local dev / CI (no VITE_TURNSTILE_SITE_KEY), bypass the challenge gate.
+  // In local dev / CI (no VITE_TURNSTILE_SITE_KEY), seed Cloudflare's always-passing
+  // test token so the Edge Function proxy is exercised without a real challenge.
   const hasTurnstile = !!import.meta.env.VITE_TURNSTILE_SITE_KEY
   const [turnstileToken, setTurnstileToken] = useState<string | null>(
-    hasTurnstile ? null : 'dev-bypass',
+    hasTurnstile ? null : '1x00000000000000000000AA',
   )
 
   // Fetch routes and stops
