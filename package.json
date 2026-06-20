@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "npm --prefix ui run dev",
     "dev:mock": "npm --prefix ui run dev:mock",
-    "dev:local": "supabase start && npm --prefix ui run dev:local",
+    "dev:local": "./scripts/dev-local.sh",
     "build": "npm --prefix ui run build && cp -r ui/dist ./dist",
     "build:mock": "VITE_USE_MOCKS=true npm --prefix ui run build && cp -r ui/dist ./dist",
     "preview": "npm --prefix ui run preview",
@@ -26,5 +26,8 @@
     "format": "npm --prefix ui run format",
     "format:check": "npm --prefix ui run format:check",
     "typecheck": "npm --prefix ui run typecheck"
+  },
+  "devDependencies": {
+    "supabase": "^2.107.0"
   }
 }
