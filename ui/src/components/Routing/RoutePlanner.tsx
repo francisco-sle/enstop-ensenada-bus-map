@@ -4,7 +4,7 @@ import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
 import { useRouteComputation } from './useRouteComputation'
 import { LocationAutocomplete } from './LocationAutocomplete'
-import type { DBStop } from '../../types'
+import type { DBStop, RouteDetail } from '../../types'
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -20,9 +20,10 @@ function useIsMobile() {
 
 interface RoutePlannerProps {
   stops: DBStop[]
+  routes: RouteDetail[]
 }
 
-export function RoutePlanner({ stops }: RoutePlannerProps) {
+export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
   const {
     origin,
     destination,
@@ -39,7 +40,7 @@ export function RoutePlanner({ stops }: RoutePlannerProps) {
   const isMobile = useIsMobile()
 
   // Route computation side effect + validation message derivation
-  const { errorMsg } = useRouteComputation(stops)
+  const { errorMsg } = useRouteComputation(stops, routes)
 
   const handleSwap = () => {
     const tempOrigin = origin

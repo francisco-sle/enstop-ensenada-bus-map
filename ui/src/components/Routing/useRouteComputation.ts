@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { useRoutingStore } from '../../store/routingStore'
 import { computeABRoute, getNearbyStops } from './routing'
-import { useRoutes } from '../../api/useRoutes'
 import type { DBStop, RouteDetail } from '../../types'
 
 const NEARBY_RADIUS_KM = 2.0
@@ -48,17 +47,21 @@ interface UseRouteComputationResult {
  *   in both a `useEffect` and the render body of `RoutePlanner`.
  *
  * @param stops - Full stop list used for proximity lookups.
+ * @param routes - Route list passed down from the App shell (avoids a duplicate fetch).
  * @returns `{ errorMsg }` — a derived validation string for display in the UI.
  *
  * @example
- * function RoutePlanner({ stops }) {
- *   const { errorMsg } = useRouteComputation(stops)
+ * function RoutePlanner({ stops, routes }) {
+ *   const { errorMsg } = useRouteComputation(stops, routes)
  *   return errorMsg ? <ErrorBanner msg={errorMsg} /> : null
  * }
  */
-export function useRouteComputation(stops: DBStop[]): UseRouteComputationResult {
+export function useRouteComputation(
+  stops: DBStop[],
+  routes: RouteDetail[] | undefined,
+): UseRouteComputationResult {
   const { origin, destination, setRoutingResults } = useRoutingStore()
-  const { data: allRoutes } = useRoutes()
+  const allRoutes = routes
 
   useEffect(() => {
     if (!origin || !destination) {

@@ -86,7 +86,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               Busca paradas para planificar tu ruta en Ensenada.
             </p>
           </div>
-          <RoutePlanner stops={allStops} />
+          <RoutePlanner stops={allStops} routes={activeRoutes} />
 
           {routingResults.length > 0 && (
             <div className="mt-2 flex flex-col gap-3">
@@ -172,7 +172,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                 : 'absolute inset-4 z-1005 bg-surface rounded-2xl border border-white/8 shadow-card flex flex-col p-4 overflow-y-auto animate-slide-down'
             }
           >
-            <RoutePlanner stops={allStops} />
+            <RoutePlanner stops={allStops} routes={activeRoutes} />
           </div>
         )}
 

@@ -7,8 +7,11 @@
 ## Table of Contents
 
 - [Project Description](#project-description)
+- [Architecture Overview](#architecture-overview)
 - [Tech Stack](#tech-stack)
 - [Local Development Setup](#local-development-setup)
+- [Environment Variables](#environment-variables)
+- [Editor Setup](#editor-setup-vs-code)
 - [Contributing](#contributing)
 - [Troubleshooting](#troubleshooting)
 
@@ -25,12 +28,57 @@ ENStop is a full-stack geospatial web application that models Ensenada's public 
 - **Editor (`/studio`)** — Admin canvas for drawing and persisting new bus routes with OSRM road-snapping and RDP simplification.
 - **Offline/CI mode** — MSW mock layer activated by `VITE_USE_MOCKS=true`.
 
+---
+
+## Architecture Overview
+
 The monorepo is split into two layers:
 
 | Layer | Path | Purpose |
 |---|---|---|
 | **Frontend** | `ui/` | React SPA (Vite + TypeScript) |
-| **Backend** | `supabase/` | Postgres 15 + PostGIS schema, RLS policies, spatial RPC functions |
+| **Backend** | `supabase/` | Postgres 15 + PostGIS schema, RLS policies, spatial RPCs, Edge Functions |
+
+### Data-Decoupled Design
+
+Route geometry is **never exposed directly to the client**. The `routes` table has no public SELECT policy; all geometry reads flow through a Deno Edge Function proxy:
+
+```
+Browser
+  └─► route-proxy (Edge Function)
+        ├─ Cloudflare Turnstile validation
+        ├─ In-memory rate limiting (30 req/min per IP)
+        └─► get_degraded_routes() RPC  ← ST_SimplifyPreserveTopology(0.0005)
+              └─► routes table (service_role only)
+```
+
+Non-geometric metadata (route names, colors, stops, fares) continues to be fetched directly from Supabase under standard RLS.
+
+**Local development bypass:** When `VITE_TURNSTILE_SITE_KEY` is absent, the app detects this and queries Supabase directly with a full join, restoring the original dev-mode behavior. No Edge Function is required to run locally.
+
+### Database Migrations
+
+Four ordered SQL migrations define the full database surface:
+
+| File | Purpose |
+|---|---|
+| `001_initial_schema.sql` | Tables: `categories`, `routes`, `stops`, `route_stops`, `fare_rules` |
+| `002_rls_policies.sql` | Row-Level Security — `routes` table is SELECT-locked; all others are public-readable |
+| `003_spatial_functions.sql` | PostGIS RPCs: `nearby_stops`, `routes_for_stop` |
+| `20260619200000_spatial_degradation.sql` | `get_degraded_routes()` — returns topology-simplified geometry; EXECUTE granted to `service_role` only |
+
+### Seed Files
+
+| File | Status | Purpose |
+|---|---|---|
+| `supabase/seed.sql` | **Committed** | Minimal 2-stop mock route for CI/CD |
+| `supabase/seed.private.sql` | **Git-ignored** | High-fidelity production coordinates |
+
+### Edge Functions
+
+| Function | Path | Purpose |
+|---|---|---|
+| `route-proxy` | `supabase/functions/route-proxy/index.ts` | Turnstile-gated, rate-limited geometry proxy |
 
 ---
 
@@ -51,6 +99,7 @@ The monorepo is split into two layers:
 | Icons | lucide-react |
 | Geocoding | Photon API |
 | Road Snapping | OSRM public API |
+| Bot Protection | Cloudflare Turnstile (`@marsidev/react-turnstile`) |
 | Testing | Vitest (unit) + Playwright (e2e) |
 | Mocking | MSW v2 |
 
@@ -59,9 +108,10 @@ The monorepo is split into two layers:
 | Category | Technology |
 |---|---|
 | Database | Postgres 15 + PostGIS |
-| Backend-as-a-Service | Supabase (Auth, RLS, RPC) |
+| Backend-as-a-Service | Supabase (Auth, RLS, RPC, Edge Functions) |
+| Edge Runtime | Deno (`supabase/functions/`) |
 | Client | `@supabase/supabase-js` v2 |
-| Migrations | 3 ordered SQL files: `initial_schema` → `rls_policies` → `spatial_functions` |
+| Migrations | 4 ordered SQL files (see Architecture Overview) |
 
 ---
 
@@ -93,16 +143,11 @@ This installs all workspace dependencies, including those in `ui/`.
 
 ### 3. Configure environment variables
 
-Copy the example environment file and fill in your Supabase credentials:
-
 ```bash
-cp ui/.env.example ui/.env.local
+cp ui/.env.local.example ui/.env.local
 ```
 
-| Variable | Description |
-|---|---|
-| `VITE_SUPABASE_URL` | Your Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | Your Supabase anon public key |
+Fill in your Supabase credentials. The new `VITE_TURNSTILE_SITE_KEY` field can be left blank for local development — the app bypasses the challenge gate automatically when the key is absent. See [Environment Variables](#environment-variables) for full details.
 
 ### 4. Start the local Supabase stack
 
@@ -110,7 +155,9 @@ cp ui/.env.example ui/.env.local
 npm run db:start
 ```
 
-This spins up a local Postgres + PostGIS instance via Docker, runs all migrations, and seeds Ensenada route/stop data from `supabase/seed.sql`.
+This spins up a local Postgres + PostGIS instance via Docker, runs all migrations, and seeds mock route/stop data from `supabase/seed.sql`.
+
+> **Note:** The committed `seed.sql` contains a minimal 2-stop mock route (safe for CI/CD). Real Ensenada coordinates are stored in the git-ignored `supabase/seed.private.sql`. Copy your high-fidelity data there after cloning.
 
 ### 5. Generate TypeScript types from the database schema
 
@@ -159,6 +206,28 @@ The app is served at `http://localhost:5173` by default.
 
 ---
 
+## Environment Variables
+
+### Frontend (`ui/.env.local`)
+
+| Variable | Required | Description |
+|---|---|---|
+| `VITE_SUPABASE_URL` | ✅ Always | Supabase project URL (local: `http://localhost:54321`) |
+| `VITE_SUPABASE_ANON_KEY` | ✅ Always | Supabase anon public key |
+| `VITE_USE_MOCKS` | — | Set `true` to activate MSW mock handlers |
+| `VITE_TURNSTILE_SITE_KEY` | Production only | Cloudflare Turnstile site key. **Leave blank for local dev** — the app bypasses the challenge gate automatically. |
+
+### Edge Function secrets (set via Supabase CLI)
+
+These are server-side secrets injected into the Deno runtime. They are **not** Vite variables and must never be committed.
+
+| Secret | Description | How to set |
+|---|---|---|
+| `TURNSTILE_SECRET` | Cloudflare Turnstile secret key | `supabase secrets set TURNSTILE_SECRET=...` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role JWT (auto-injected on deploy) | `supabase secrets set SUPABASE_SERVICE_ROLE_KEY=...` |
+
+See [`TODO.md`](./TODO.md) for step-by-step instructions on obtaining these values from the Cloudflare and Supabase dashboards, plus a production deploy checklist.
+
 ---
 
 ## Editor Setup (VS Code)
@@ -169,25 +238,25 @@ This repository ships a `.vscode/` directory with recommended extensions and wor
 
 | Extension | Purpose |
 |---|---|
-| [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) (`dbaeumer.vscode-eslint`) | Inline lint errors and warnings |
-| [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (`esbenp.prettier-vscode`) | Format-on-save |
-| [TypeScript Nightly](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next) (`ms-vscode.vscode-typescript-next`) | Latest TS language features |
-| [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) (`bradlc.vscode-tailwindcss`) | Class autocomplete + `@theme` token hints |
-| [ES7 React Snippets](https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snippets) (`dsznajder.es7-react-js-snippets`) | React component boilerplate shortcuts |
-| [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) (`eamodio.gitlens`) | Inline blame and history |
-| [Vitest](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) (`vitest.explorer`) | Run/debug unit tests from the sidebar |
-| [Playwright](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) (`ms-playwright.playwright`) | Run/debug e2e tests from the sidebar |
+| [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) | Inline lint errors and warnings |
+| [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) | Format-on-save |
+| [TypeScript Nightly](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next) | Latest TS language features |
+| [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) | Class autocomplete + `@theme` token hints |
+| [Deno](https://marketplace.visualstudio.com/items?itemName=denoland.vscode-deno) | Deno runtime types for `supabase/functions/` |
+| [Vitest](https://marketplace.visualstudio.com/items?itemName=vitest.explorer) | Run/debug unit tests from the sidebar |
+| [Playwright](https://marketplace.visualstudio.com/items?itemName=ms-playwright.playwright) | Run/debug e2e tests from the sidebar |
 
 ### Workspace Behavior
 
 The `.vscode/settings.json` configures the following automatically:
 
 - **Format on save** — Prettier runs on every save.
-- **ESLint fix on save** — Auto-fixable ESLint violations are corrected on save (`source.fixAll.eslint`).
-- **Workspace TypeScript SDK** — Uses the local `typescript` version from `ui/node_modules` for accurate type checking.
+- **ESLint fix on save** — Auto-fixable ESLint violations are corrected on save.
+- **Workspace TypeScript SDK** — Uses the local `typescript` version from `ui/node_modules`.
 - **Tailwind IntelliSense** — Points at `ui/src/styles/index.css` so `@theme` tokens resolve in class autocomplete.
+- **Deno** — The `supabase/functions/` directory uses a scoped `deno.json` so the Deno language server activates only there, avoiding conflicts with the Vite TypeScript project.
 
-> If VS Code doesn't prompt for extensions automatically, open the **Command Palette** (`Ctrl+Shift+P`) and run **Extensions: Show Recommended Extensions**.
+> If VS Code doesn't prompt for extensions automatically, open the Command Palette (`Ctrl+Shift+P`) and run **Extensions: Show Recommended Extensions**.
 
 ---
 
@@ -213,6 +282,7 @@ Read [`architecture.md`](./architecture.md) before writing any code. It is the s
 - **No dynamic Tailwind class interpolation** — all class strings must be fully static literals.
 - **State management** — use the existing Zustand stores (`useMapStore`, `useRoutingStore`). Do not create new global state without discussion.
 - **API hooks** — add new Supabase queries as TanStack Query hooks in `ui/src/api/`, one file per entity.
+- **Route geometry** — never query the `routes` table geometry columns directly from the frontend. All geometry must flow through `route-proxy`.
 - **No ad-hoc patches** — trace bugs to root cause before touching code. Refactor over band-aid fixes.
 
 ### 4. Test your changes
@@ -287,6 +357,16 @@ If the app loads but shows no routes or stops, your environment variables are li
 
 ---
 
+### Map loads but routes have no geometry
+
+In production, route geometry is served via the `route-proxy` Edge Function. If routes appear as empty lines:
+
+1. Confirm `VITE_TURNSTILE_SITE_KEY` is set in your environment.
+2. Confirm the Edge Function secrets are configured (`TURNSTILE_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`).
+3. Check the Edge Function logs: **Supabase Dashboard → Edge Functions → route-proxy → Logs**.
+
+---
+
 ### Resetting a broken local database
 
 If migrations or seed data are in a bad state:
@@ -295,4 +375,4 @@ If migrations or seed data are in a bad state:
 npm run db:reset
 ```
 
-This drops and recreates the local database, re-runs all migrations, and re-seeds the data.
+This drops and recreates the local database, re-runs all migrations, and re-seeds the data. Remember to repopulate `supabase/seed.private.sql` afterward if needed.

@@ -4,9 +4,11 @@ ALTER TABLE stops       ENABLE ROW LEVEL SECURITY;
 ALTER TABLE route_stops ENABLE ROW LEVEL SECURITY;
 ALTER TABLE fare_rules  ENABLE ROW LEVEL SECURITY;
 
--- Public read-only for all tables
+-- routes: NO direct SELECT for anon/authenticated — geometry reads are proxy-only.
+-- The route-proxy Edge Function calls get_degraded_routes() via service_role key,
+-- which bypasses RLS entirely. Clients never hit the routes table directly.
+-- All other tables remain publicly readable (stops, categories, fares are not sensitive).
 CREATE POLICY "public_read_categories"  ON categories  FOR SELECT USING (TRUE);
-CREATE POLICY "public_read_routes"      ON routes      FOR SELECT USING (is_active = TRUE);
 CREATE POLICY "public_read_stops"       ON stops       FOR SELECT USING (TRUE);
 CREATE POLICY "public_read_route_stops" ON route_stops FOR SELECT USING (TRUE);
 CREATE POLICY "public_read_fare_rules"  ON fare_rules  FOR SELECT USING (TRUE);

@@ -31,3 +31,6 @@ blob-report/
 *.njsproj
 *.sln
 *.sw?
+
+plans
+supabase/seed.private.sql

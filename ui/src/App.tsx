@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   Routes,
   Route,
@@ -8,6 +9,7 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Turnstile } from '@marsidev/react-turnstile'
 import { Map, Bus, Info, AlertTriangle } from 'lucide-react'
 
 import { useRoutes } from './api/useRoutes'
@@ -47,13 +49,19 @@ function MainAppShell() {
   const location = useLocation()
   const isStudio = location.pathname === '/studio'
 
+  // In local dev / CI (no VITE_TURNSTILE_SITE_KEY), bypass the challenge gate.
+  const hasTurnstile = !!import.meta.env.VITE_TURNSTILE_SITE_KEY
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(
+    hasTurnstile ? null : 'dev-bypass',
+  )
+
   // Fetch routes and stops
   const {
     data: routes,
     isLoading: loadingRoutes,
     error: routesError,
     refetch: refetchRoutes,
-  } = useRoutes()
+  } = useRoutes(turnstileToken)
   const {
     data: stops,
     isLoading: loadingStops,
@@ -131,7 +139,15 @@ function MainAppShell() {
 
       {/* Main Content Area */}
       <main className="flex-1 relative overflow-hidden">
-        {isLoading ? (
+        {/* Cloudflare Turnstile — skipped in dev when VITE_TURNSTILE_SITE_KEY is unset */}
+        {hasTurnstile && !turnstileToken && (
+          <Turnstile
+            siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+            onSuccess={(token: string) => setTurnstileToken(token)}
+            options={{ appearance: 'interaction-only' }}
+          />
+        )}
+        {isLoading || !turnstileToken ? (
           <div className="flex flex-col items-center justify-center h-full gap-3 bg-bay-950">
             <div className="skeleton w-20 h-20 rounded-full" />
             <h3 className="text-base font-semibold">Cargando datos de transporte...</h3>
