@@ -63,7 +63,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden select-none animate-fade-up">
+    <div className="flex flex-col h-full overflow-hidden select-none animate-fade-up bg-bay-950">
       {/* Header */}
       <div className="px-4 py-3 bg-surface border-b border-white/8 flex items-center gap-3 shrink-0">
         <button
@@ -87,9 +87,9 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       </div>
 
       {/* Main Content Split Area */}
-      <div className="flex-1 grid grid-cols-1 grid-rows-[240px_1fr] md:grid-cols-[380px_1fr] lg:grid-cols-[420px_1fr] md:grid-rows-1 overflow-hidden">
+      <div className="flex-1 grid grid-cols-1 grid-rows-[240px_1fr] md:grid-cols-[380px_1fr] lg:grid-cols-[420px_1fr] md:grid-rows-1 overflow-hidden bg-bay-950">
         {/* Details (Stops list & Fare Table) */}
-        <div className="order-2 md:order-1 overflow-y-auto p-4 flex flex-col gap-4 bg-bay-700/10">
+        <div className="order-2 md:order-1 overflow-y-auto p-4 flex flex-col gap-4 bg-bay-950">
           {/* Description */}
           {route.description && (
             <div className="flex flex-col gap-1">
@@ -147,14 +147,16 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
         </div>
 
         {/* Map Preview */}
-        <div className="order-1 md:order-2 relative border-b md:border-b-0 md:border-l border-white/8 bg-bay-900 h-full min-h-0">
-          <BusMap
-            activeRoutes={[route]}
-            allStops={stops}
-            showFullRoutes={false}
-            showRouting={false}
-            focusedRouteId={route.id}
-          />
+        <div className="order-1 md:order-2 relative bg-bay-950 h-full min-h-0 md:p-2 md:pl-0 lg:p-2.5 lg:pl-0">
+          <div className="w-full h-full relative md:rounded-[24px] lg:rounded-[32px] overflow-hidden md:border md:border-white/10 md:shadow-card border-b border-white/8 md:border-b-0">
+            <BusMap
+              activeRoutes={[route]}
+              allStops={stops}
+              showFullRoutes={false}
+              showRouting={false}
+              focusedRouteId={route.id}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -139,11 +139,14 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
     // Full-screen expanded planner for mobile
     return (
       <div className="flex flex-col gap-0 overflow-y-auto flex-1">
-        {/* Mini-header: title on left, borderless back button on right */}
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-semibold text-white/50 uppercase tracking-wider">
-            ¿A dónde vas?
-          </span>
+        {/* Mini-header: ENSTOP logo on left, borderless back button on right */}
+        <div className="flex items-center justify-between mb-4">
+          <h1
+            className="text-2xl font-normal tracking-wide text-white"
+            style={{ fontFamily: 'var(--font-logo)' }}
+          >
+            ENSTOP
+          </h1>
           <button
             type="button"
             onClick={() => setIsMinimized(true)}
@@ -153,6 +156,10 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
             <ArrowLeft size={18} />
           </button>
         </div>
+
+        <span className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 block">
+          ¿A dónde vas?
+        </span>
 
         {/* Full-width stacked inputs with swap button on the right */}
         <div className="flex items-center gap-3">

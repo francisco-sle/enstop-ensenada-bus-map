@@ -48,6 +48,7 @@ function RouteDetailWrapper({ routes }: { routes: RouteDetail[] }) {
 function MainAppShell() {
   const location = useLocation()
   const isStudio = location.pathname === '/studio'
+  const isMapPage = location.pathname === '/map' || location.pathname === '/'
 
   // In local dev / CI (no VITE_TURNSTILE_SITE_KEY), seed Cloudflare's always-passing
   // test token so the Edge Function proxy is exercised without a real challenge.
@@ -107,7 +108,9 @@ function MainAppShell() {
   return (
     <div className="flex flex-col h-full w-full overflow-hidden bg-bay-950">
       {/* Top Navbar */}
-      <header className="h-14 shrink-0 flex items-center justify-center lg:justify-between px-4 lg:px-6 bg-surface border-b border-white/8 shadow-xs z-1002">
+      <header
+        className={`h-14 shrink-0 items-center justify-center lg:justify-between px-4 lg:px-6 bg-surface border-b border-white/8 shadow-xs z-1002 ${isMapPage ? 'hidden lg:flex' : 'flex'}`}
+      >
         <h1
           className="text-2xl font-normal tracking-wide text-white"
           style={{ fontFamily: 'var(--font-logo)' }}
