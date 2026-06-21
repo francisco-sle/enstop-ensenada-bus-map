@@ -187,18 +187,37 @@ export function useOsrmRoute() {
 
       // Helper to compute node mapping to trace indices
       const computeNodes = (trace: [number, number][]) => {
-        return queryCoordsArray.map((coord) => {
-          let bestIdx = 0
-          let minDist = Infinity
-          for (let i = 0; i < trace.length; i++) {
-            const d = getDistanceMeters(coord, trace[i])
-            if (d < minDist) {
-              minDist = d
-              bestIdx = i
+        // Extract corners directly from the OSRM physical trace
+        // Epsilon 0.00005 degrees ≈ 5 meters. This preserves all street corners.
+        const corners = rdpSimplify(trace, 0.00005)
+
+        const nodes: { coord: [number, number]; traceIndex: number }[] = []
+        let searchStartIdx = 0
+
+        for (const coord of corners) {
+          // Search forward from the last found index to support intersecting loops correctly
+          let idx = -1
+          for (let i = searchStartIdx; i < trace.length; i++) {
+            if (trace[i][0] === coord[0] && trace[i][1] === coord[1]) {
+              idx = i
+              break
             }
           }
-          return { coord: trace[bestIdx], traceIndex: bestIdx }
-        })
+
+          if (idx !== -1) {
+            nodes.push({ coord: trace[idx], traceIndex: idx })
+            searchStartIdx = idx
+          } else {
+            // Fallback if precision issues occur (very rare)
+            const fallbackIdx = trace.findIndex((t) => t[0] === coord[0] && t[1] === coord[1])
+            if (fallbackIdx !== -1) {
+              nodes.push({ coord: trace[fallbackIdx], traceIndex: fallbackIdx })
+              searchStartIdx = fallbackIdx
+            }
+          }
+        }
+
+        return nodes
       }
 
       // 1. Try Match API first (best for freehand traces)

@@ -8,6 +8,7 @@ import {
   Undo2,
   Trash2,
   Download,
+  Upload,
   Info,
   Layers,
   Settings,
@@ -41,6 +42,7 @@ export function EditorPage() {
   const [stops, setStops] = useState<PlacedStop[]>([])
 
   const dragStartStrokesRef = useRef<DrawStroke[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Route details metadata
   const [routeName, setRouteName] = useState('Nueva Ruta')
@@ -170,16 +172,22 @@ export function EditorPage() {
 
         const origCurrTraceIdx = stroke.nodes[nodeIndex].traceIndex
 
-        let deleteBeforeCount = 0
+        let deleteBeforeCount: number
         if (nodeIndex > 0) {
           const origPrevTraceIdx = stroke.nodes[nodeIndex - 1].traceIndex
           deleteBeforeCount = Math.max(0, origCurrTraceIdx - origPrevTraceIdx - 1)
+        } else {
+          // If dragging the first node, ensure any dangling trace points before it are deleted
+          deleteBeforeCount = origCurrTraceIdx
         }
 
-        let deleteAfterCount = 0
+        let deleteAfterCount: number
         if (nodeIndex < stroke.nodes.length - 1) {
           const origNextTraceIdx = stroke.nodes[nodeIndex + 1].traceIndex
           deleteAfterCount = Math.max(0, origNextTraceIdx - origCurrTraceIdx - 1)
+        } else {
+          // If dragging the last node, ensure any dangling trace points after it are deleted
+          deleteAfterCount = stroke.trace.length - 1 - origCurrTraceIdx
         }
 
         let totalDeleted = 0
@@ -298,15 +306,38 @@ export function EditorPage() {
     }
   }
 
-  const handleExportJSON = () => {
-    // Format the data exactly like db schema / mocks structure
-    // coords must be [lng, lat] for GeoJSON
+  const handleExportRoute = () => {
     const flatCoords = strokes.flatMap((s) => s.trace)
     const formattedRouteGeom = {
       type: 'LineString',
       coordinates: flatCoords.map((c) => [c[1], c[0]]),
     }
 
+    const exportedRoute = {
+      id: 999,
+      name: `${routeShortName} — ${routeName}`,
+      short_name: routeShortName,
+      category_id: 1,
+      description: `Creada en Enstop Editor`,
+      direction: routeDirection,
+      geom: formattedRouteGeom,
+      route_stops: stops.map((_, i) => ({
+        stop_id: 1000 + i,
+        sequence: i + 1,
+      })),
+    }
+
+    const dataStr =
+      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportedRoute, null, 2))
+    const downloadAnchor = document.createElement('a')
+    downloadAnchor.setAttribute('href', dataStr)
+    downloadAnchor.setAttribute('download', `route-${routeShortName.toLowerCase() || 'new'}.json`)
+    document.body.appendChild(downloadAnchor)
+    downloadAnchor.click()
+    downloadAnchor.remove()
+  }
+
+  const handleExportStops = () => {
     const exportedStops = stops.map((s, index) => ({
       id: 1000 + index,
       name: s.name,
@@ -320,33 +351,72 @@ export function EditorPage() {
       created_at: new Date().toISOString(),
     }))
 
-    const exportedRoute = {
-      id: 999,
-      name: `${routeShortName} — ${routeName}`,
-      short_name: routeShortName,
-      category_id: 1,
-      description: `Creada en Enstop Editor`,
-      direction: routeDirection,
-      geom: formattedRouteGeom,
-      route_stops: exportedStops.map((s, i) => ({
-        stop_id: s.id,
-        sequence: i + 1,
-      })),
-    }
-
-    const exportPayload = {
-      route: exportedRoute,
-      stops: exportedStops,
-    }
-
     const dataStr =
-      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportPayload, null, 2))
+      'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportedStops, null, 2))
     const downloadAnchor = document.createElement('a')
     downloadAnchor.setAttribute('href', dataStr)
-    downloadAnchor.setAttribute('download', `route-${routeShortName.toLowerCase()}.json`)
+    downloadAnchor.setAttribute('download', `stops-${routeShortName.toLowerCase() || 'new'}.json`)
     document.body.appendChild(downloadAnchor)
     downloadAnchor.click()
     downloadAnchor.remove()
+  }
+
+  const handleImportJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (ev) => {
+      try {
+        const text = ev.target?.result as string
+        const data = JSON.parse(text)
+
+        if (Array.isArray(data)) {
+          // Assume stops
+          const importedStops = data
+            .filter((s: any) => s.geom?.type === 'Point')
+            .map((s: any) => ({
+              id: `stop-${Date.now()}-${Math.random()}`,
+              name: s.name || s.common_name || 'Parada Importada',
+              lat: s.geom.coordinates[1],
+              lng: s.geom.coordinates[0],
+              isTerminal: !!s.is_terminal,
+            }))
+
+          if (importedStops.length > 0) {
+            setStops((prev) => [...prev, ...importedStops])
+            alert(`Se han importado ${importedStops.length} paradas con éxito.`)
+          } else {
+            alert('El archivo no contiene un formato de paradas válido.')
+          }
+        } else if (data && data.geom && data.geom.type === 'LineString') {
+          // Assume route
+          const coordinates = data.geom.coordinates as [number, number][]
+          const trace = coordinates.map((c) => [c[1], c[0]] as [number, number])
+
+          const importedStroke: DrawStroke = {
+            id: `imported-${Date.now()}`,
+            trace,
+            nodes: [
+              { coord: trace[0], traceIndex: 0 },
+              { coord: trace[trace.length - 1], traceIndex: trace.length - 1 },
+            ],
+          }
+
+          saveState([...strokes, importedStroke])
+          alert('Ruta importada con éxito.')
+        } else {
+          alert('Formato de archivo JSON no reconocido.')
+        }
+      } catch (err) {
+        console.error(err)
+        alert('Error al leer el archivo JSON.')
+      }
+
+      e.target.value = ''
+    }
+
+    reader.readAsText(file)
   }
 
   return (
@@ -591,15 +661,39 @@ export function EditorPage() {
         </div>
 
         {/* Footer actions */}
-        <div className="p-4 border-t border-white/8 bg-bay-950/40 mt-auto">
+        <div className="p-4 border-t border-white/8 bg-bay-950/40 mt-auto flex flex-col gap-2">
+          <div className="flex gap-2">
+            <button
+              onClick={handleExportRoute}
+              disabled={strokes.length === 0}
+              className="flex-1 btn btn-primary py-3 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Download size={16} />
+              <span>Ruta JSON</span>
+            </button>
+            <button
+              onClick={handleExportStops}
+              disabled={stops.length === 0}
+              className="flex-1 btn bg-pacific/10 text-pacific hover:bg-pacific/20 border-transparent py-3 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Download size={16} />
+              <span>Paradas JSON</span>
+            </button>
+          </div>
           <button
-            onClick={handleExportJSON}
-            disabled={strokes.length === 0}
-            className="w-full btn btn-primary py-3 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full btn bg-surface hover:bg-surface-elevated py-2 flex items-center justify-center gap-2 border border-white/10 text-white/70"
           >
-            <Download size={16} />
-            <span>Exportar Ruta en JSON</span>
+            <Upload size={14} />
+            <span className="text-xs">Importar JSON (Ruta o Paradas)</span>
           </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImportJSON}
+            accept=".json"
+            className="hidden"
+          />
         </div>
       </div>
 

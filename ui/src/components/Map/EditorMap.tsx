@@ -12,6 +12,13 @@ const nodeIcon = L.divIcon({
   iconAnchor: [6, 6],
 })
 
+const activeNodeIcon = L.divIcon({
+  className:
+    'bg-amber-400 border-2 border-white rounded-full cursor-pointer shadow-[0_0_0_4px_rgba(251,191,36,0.4)] !w-3.5 !h-3.5 animate-pulse',
+  iconSize: [14, 14],
+  iconAnchor: [7, 7],
+})
+
 // A simpler MapController to center/zoom without store dependency issues
 function EditorMapController({ center, zoom }: { center: [number, number]; zoom: number }) {
   const map = useMap()
@@ -275,26 +282,30 @@ export function EditorMap({
         ))}
 
         {/* Draggable Nodes for the Snapped Traces */}
-        {mode === 'draw-route' &&
-          strokes.map((stroke) =>
-            stroke.nodes.map((node, idx) => (
+        {/* Render Editable Nodes */}
+        {strokes.map((stroke, strokeIndex) => {
+          const isLastStroke = strokeIndex === strokes.length - 1
+          return stroke.nodes.map((node, nodeIndex) => {
+            const isTerminalNode = isLastStroke && nodeIndex === stroke.nodes.length - 1
+            return (
               <Marker
-                key={`node-${stroke.id}-${node.traceIndex}`}
+                key={`node-${stroke.id}-${nodeIndex}`}
                 position={node.coord}
-                draggable={true}
-                icon={nodeIcon}
+                icon={isTerminalNode ? activeNodeIcon : nodeIcon}
+                draggable={mode === 'draw-route'}
                 eventHandlers={{
-                  dragstart: () => onNodeDragStart(),
+                  dragstart: onNodeDragStart,
                   drag: (e) =>
-                    onNodeDrag(stroke.id, idx, [
+                    onNodeDrag(stroke.id, nodeIndex, [
                       e.target.getLatLng().lat,
                       e.target.getLatLng().lng,
                     ]),
-                  dragend: () => onNodeDragEnd(),
+                  dragend: onNodeDragEnd,
                 }}
               />
-            )),
-          )}
+            )
+          })
+        })}
 
         {/* Active painting trace */}
         {paintCoords.length > 0 && (
