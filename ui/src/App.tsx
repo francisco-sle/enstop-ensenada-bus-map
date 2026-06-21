@@ -20,6 +20,7 @@ import { RouteDetailPage } from './pages/RouteDetailPage'
 import { AboutPage } from './pages/AboutPage'
 import { EditorPage } from './pages/EditorPage'
 import type { RouteDetail } from './types'
+import { Logo } from './components/Logo'
 
 // Initialize React Query Client
 const queryClient = new QueryClient({
@@ -111,12 +112,7 @@ function MainAppShell() {
       <header
         className={`h-14 shrink-0 items-center justify-center lg:justify-between px-4 lg:px-6 bg-surface border-b border-white/8 shadow-xs z-1002 ${isMapPage ? 'hidden lg:flex' : 'flex'}`}
       >
-        <h1
-          className="text-2xl font-normal tracking-wide text-white"
-          style={{ fontFamily: 'var(--font-logo)' }}
-        >
-          ENSTOP
-        </h1>
+        <Logo className="text-2xl text-white" />
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center gap-1">

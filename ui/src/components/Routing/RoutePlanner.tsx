@@ -5,6 +5,7 @@ import { useMapStore } from '../../store/mapStore'
 import { useRouteComputation } from './useRouteComputation'
 import { LocationAutocomplete } from './LocationAutocomplete'
 import type { DBStop, RouteDetail } from '../../types'
+import { Logo } from '../Logo'
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
@@ -158,12 +159,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
           <div className="flex flex-col flex-1">
             {/* Mini-header: ENSTOP logo on left, borderless back button on right */}
             <div className="flex items-center justify-between mb-4">
-              <h1
-                className="text-2xl font-normal tracking-wide text-white"
-                style={{ fontFamily: 'var(--font-logo)' }}
-              >
-                ENSTOP
-              </h1>
+              <Logo className="text-2xl text-white" />
               <button
                 type="button"
                 onClick={() => toggleMinimize(true)}
