@@ -16,6 +16,7 @@ dist-ssr
 .env.*
 !.env.example
 !.env.template
+!.env.mock
 ui/test-results/
 .vite
 playwright-report/
