@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:mock": "VITE_USE_MOCKS=true vite",
+    "dev:mock": "vite --mode mock",
     "dev:local": "supabase start && vite",
     "build": "tsc && vite build",
-    "build:mock": "VITE_USE_MOCKS=true tsc && VITE_USE_MOCKS=true vite build",
+    "build:mock": "tsc && vite build --mode mock",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

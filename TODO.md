@@ -70,3 +70,9 @@ The service role JWT that lets the Edge Function bypass RLS and call
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` set via `supabase secrets set` (if not auto-injected)
 - [ ] Edge Function deployed: `supabase functions deploy route-proxy`
 - [ ] RLS migration `20260619200000_spatial_degradation.sql` applied to production DB
+
+---
+
+## Future Enhancements
+
+- [ ] **Convert to Progressive Web App (PWA):** See [pwa-considerations.md](file:///home/francisco/repos/enstop/plans/pwa-considerations.md) for implementation details (offline map tiles, route caching, and installability).
