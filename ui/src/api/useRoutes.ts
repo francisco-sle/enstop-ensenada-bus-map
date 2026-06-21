@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { supabase } from './supabase'
+import { supabase, supabaseUrl, supabaseAnonKey } from './supabase'
 import type { RouteDetail } from '../types'
 
 // Shape returned by the route-proxy Edge Function (geom is GeoJSON via ST_AsGeoJSON)
@@ -9,12 +9,12 @@ interface DegradedRoute {
 }
 
 async function fetchDegradedGeometry(token: string): Promise<DegradedRoute[]> {
-  const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/route-proxy`, {
+  const res = await fetch(`${supabaseUrl}/functions/v1/route-proxy`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       // Required by local Kong gateway; anon key is public by design.
-      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      Authorization: `Bearer ${supabaseAnonKey}`,
     },
     body: JSON.stringify({ token }),
   })
