@@ -6,14 +6,14 @@ import './styles/index.css'
 import App from './App.tsx'
 
 async function prepareApp() {
-  if (import.meta.env.MODE === 'mock') {
+  if (import.meta.env.VITE_USE_MOCKS === 'true') {
     const { worker } = await import('./mocks/browser')
     return worker.start({
       onUnhandledRequest: 'bypass',
     })
   }
   // Deregister any stale MSW service worker from a previous mock session.
-  // Prevents intercepted requests when mock mode is disabled.
+  // Prevents intercepted requests when VITE_USE_MOCKS is toggled off.
   if ('serviceWorker' in navigator) {
     const registrations = await navigator.serviceWorker.getRegistrations()
     await Promise.all(
