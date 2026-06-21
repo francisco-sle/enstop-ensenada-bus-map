@@ -4,18 +4,6 @@ import { usePhotonGeocoder } from '../../api/usePhotonGeocoder'
 import { useMapStore } from '../../store/mapStore'
 import type { DBStop } from '../../types'
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  return isMobile
-}
-
 export type LocationRole = 'origin' | 'destination'
 
 interface LocationAutocompleteProps {
@@ -68,7 +56,6 @@ export function LocationAutocomplete({
   inlineResults = false,
   autoFocus = false,
 }: LocationAutocompleteProps) {
-  const isMobile = useIsMobile()
   const [input, setInput] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -185,14 +172,19 @@ export function LocationAutocomplete({
 
   return (
     <div ref={containerRef} className="relative flex flex-col gap-1">
-      <label
-        htmlFor={`${role}-input`}
-        className="text-[11px] font-semibold text-white/50 hidden md:block"
-      >
-        {isOrigin ? 'Punto de Partida (Origen)' : 'Destino Final'}
-      </label>
-
       <div className="flex gap-2 items-center">
+        {/* Map-pick toggle */}
+        <button
+          type="button"
+          onClick={onMapPickToggle}
+          title="Seleccionar en el mapa"
+          className={`btn rounded-full w-11 h-11 p-0 shrink-0 ${
+            isMapPickActive ? mapActiveClass : 'btn-secondary'
+          }`}
+        >
+          <Map size={14} />
+        </button>
+
         {/* Text input + icon + clear button */}
         <div className="relative flex-1">
           {/* Leading icon — always shown (desktop uses it too now) */}
@@ -210,13 +202,7 @@ export function LocationAutocomplete({
             autoComplete="off"
             autoCorrect="off"
             spellCheck="false"
-            placeholder={
-              isMobile
-                ? isOrigin
-                  ? 'Origen...'
-                  : 'Destino...'
-                : 'Escribe parada o selecciona en mapa...'
-            }
+            placeholder={isOrigin ? 'Elige punto de partida, o en el mapa...' : 'Elige destino...'}
             value={displayValue}
             onChange={(e) => {
               setInput(e.target.value)
@@ -251,18 +237,6 @@ export function LocationAutocomplete({
             </div>
           )}
         </div>
-
-        {/* Map-pick toggle */}
-        <button
-          type="button"
-          onClick={onMapPickToggle}
-          title="Seleccionar en el mapa"
-          className={`btn rounded-full w-11 h-11 p-0 shrink-0 ${
-            isMapPickActive ? mapActiveClass : 'bg-white/5 border-white/8 hover:bg-white/10'
-          }`}
-        >
-          <Map size={14} />
-        </button>
       </div>
 
       {/* Inline results — rendered as static flow inside overlay */}

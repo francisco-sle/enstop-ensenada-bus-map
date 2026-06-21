@@ -632,7 +632,7 @@ export function EditorPage() {
             <button
               onClick={handleUndo}
               disabled={history.length === 0}
-              className="flex-1 btn py-2 min-h-0 text-xs gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn btn-secondary flex-1 py-2 min-h-0 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
               title="Deshacer (Ctrl+Z)"
             >
               <Undo2 size={14} />
@@ -642,7 +642,7 @@ export function EditorPage() {
             <button
               onClick={handleClearRoute}
               disabled={strokes.length === 0}
-              className="flex-1 btn py-2 min-h-0 text-xs gap-1.5 text-red-400 hover:text-red-300 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn btn-secondary flex-1 py-2 min-h-0 text-xs text-red-400 hover:text-red-300 disabled:opacity-40 disabled:cursor-not-allowed"
               title="Borrar ruta entera"
             >
               <Trash2 size={14} />
@@ -725,7 +725,7 @@ export function EditorPage() {
             <button
               onClick={handleExportRoute}
               disabled={strokes.length === 0}
-              className="flex-1 btn btn-primary py-3 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn btn-primary flex-1 py-3 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Download size={16} />
               <span>Ruta JSON</span>
@@ -733,7 +733,7 @@ export function EditorPage() {
             <button
               onClick={handleExportStops}
               disabled={stops.length === 0}
-              className="flex-1 btn bg-pacific/10 text-pacific hover:bg-pacific/20 border-transparent py-3 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
+              className="btn btn-secondary flex-1 py-3 text-brand-primary disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Download size={16} />
               <span>Paradas JSON</span>
@@ -741,7 +741,7 @@ export function EditorPage() {
           </div>
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="w-full btn bg-surface hover:bg-surface-elevated py-2 flex items-center justify-center gap-2 border border-white/10 text-white/70"
+            className="btn btn-secondary w-full py-2"
           >
             <Upload size={14} />
             <span className="text-xs">Importar JSON (Ruta o Paradas)</span>

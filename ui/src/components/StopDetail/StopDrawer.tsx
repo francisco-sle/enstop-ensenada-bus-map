@@ -123,18 +123,12 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
 
       {/* Actions Row */}
       <div className="flex gap-2 mt-2 w-full">
-        <button
-          onClick={handleSetOrigin}
-          className="btn flex-1 bg-white/5 border border-white/8 hover:bg-white/10 text-white/90 flex items-center justify-center gap-1.5 px-2.5 h-11"
-        >
+        <button onClick={handleSetOrigin} className="btn btn-secondary flex-1 px-2.5 h-11">
           <Navigation size={15} className="text-pacific-400 rotate-45" />
           <span className="text-xs font-semibold">Partir</span>
         </button>
 
-        <button
-          onClick={handleSetDestination}
-          className="btn flex-1 bg-white/5 border border-white/8 hover:bg-white/10 text-white/90 flex items-center justify-center gap-1.5 px-2.5 h-11"
-        >
+        <button onClick={handleSetDestination} className="btn btn-secondary flex-1 px-2.5 h-11">
           <MapPin size={15} className="text-sol-400" />
           <span className="text-xs font-semibold">Destino</span>
         </button>
@@ -144,7 +138,7 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
           disabled={isCheckedIn}
           title={isCheckedIn ? '¡Fijado como origen!' : 'Estoy en esta parada (Marcar como origen)'}
           aria-label="Estoy en esta parada"
-          className={`btn shrink-0 w-11 h-11 p-0 flex items-center justify-center ${
+          className={`btn shrink-0 w-11 h-11 p-0 ${
             isCheckedIn
               ? 'bg-pacific-500/10 text-pacific-400 border-pacific-500/20 cursor-default shadow-none'
               : 'btn-primary'

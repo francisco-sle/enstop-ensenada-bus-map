@@ -6,6 +6,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  /* System Brand Tokens */
+  --color-brand-primary: oklch(0.68 0.16 228);
+  --color-brand-secondary: oklch(0.78 0.16 82);
+  --color-surface-bg: oklch(0.21 0.06 244);
+  --color-surface-elevated: oklch(0.26 0.06 244);
+
   --color-pacific-100: oklch(0.93 0.06 228);
   --color-pacific-200: oklch(0.85 0.1 228);
   --color-pacific-300: oklch(0.78 0.12 228);
@@ -125,14 +131,20 @@
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center rounded-lg px-4 min-h-11
-           text-sm font-semibold transition-all duration-150 cursor-pointer
-           border border-white/10 bg-white/5 text-white/80
-           hover:bg-white/10 active:scale-95 select-none;
+  @apply inline-flex flex-row items-center justify-center rounded-lg px-4 min-h-11
+         text-sm font-semibold transition-all duration-150 cursor-pointer
+         select-none gap-2;
 }
 @utility btn-primary {
-  @apply bg-pacific-400 text-bay-950 border-pacific-400
-           hover:bg-pacific-300;
+  @apply bg-brand-primary text-white border-none
+         hover:bg-brand-primary/90 active:scale-95;
+}
+@utility btn-secondary {
+  @apply bg-white/5 text-white/80 border-none
+         hover:bg-white/10 active:scale-95;
+}
+@utility divider {
+  @apply border-t border-solid border-surface-elevated/20 w-full;
 }
 @utility text-muted {
   @apply text-white/55;
@@ -160,9 +172,9 @@
     --color-success: #4caf80;
 
     /* Surfaces — dark / volcanic */
-    --color-bg-primary: oklch(0.14 0.05 244);
-    --color-bg-surface: oklch(0.21 0.06 244);
-    --color-bg-elevated: oklch(0.26 0.06 244);
+    --color-bg-primary: var(--color-surface-bg);
+    --color-bg-surface: var(--color-surface-bg);
+    --color-bg-elevated: var(--color-surface-elevated);
 
     /* Text */
     --color-text-primary: rgba(255, 255, 255, 0.92);
