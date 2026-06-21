@@ -10,6 +10,7 @@ import { MapController, MapEventsHandler } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIcon } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
 import type { DBStop, RouteDetail } from '../../types'
+import { mapStyles } from './mapConfig'
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -93,8 +94,9 @@ export function BusMap({
         <MapEventsHandler onRightClick={setContextMenu} onZoomEnd={setCurrentZoom} />
 
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url={mapStyles.lightMode.url}
+          attribution={mapStyles.lightMode.attribution}
+          maxZoom={mapStyles.lightMode.maxZoom}
         />
 
         {/* User GPS Location */}

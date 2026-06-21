@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
 import type { RouteDetail } from '../types'
+import { mapStyles } from './Map/mapConfig'
 
 interface RouteThumbnailProps {
   geom: RouteDetail['geom']
@@ -63,8 +64,9 @@ export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailPr
         style={{ width: '100%', height: '100%', background: '#0F1E2E' }}
       >
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution=""
+          url={mapStyles.lightMode.url}
+          attribution={mapStyles.lightMode.attribution}
+          maxZoom={mapStyles.lightMode.maxZoom}
         />
         {/* Glow/Halo Effect for high visibility */}
         <Polyline positions={positions} color="#ffffff" weight={4} opacity={0.85} />

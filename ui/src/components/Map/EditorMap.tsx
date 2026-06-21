@@ -5,6 +5,7 @@ import { createStopIcon } from './mapIcons'
 import { useMapStore } from '../../store/mapStore'
 import type { DrawStroke } from '../../pages/EditorPage'
 import type { SnappedRoute } from '../../hooks/useOsrmRoute'
+import { mapStyles } from './mapConfig'
 
 const nodeIcon = L.divIcon({
   className: 'bg-white border-2 border-pacific rounded-full cursor-pointer shadow-sm !w-3 !h-3',
@@ -272,8 +273,9 @@ export function EditorMap({
         />
 
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url={mapStyles.lightMode.url}
+          attribution={mapStyles.lightMode.attribution}
+          maxZoom={mapStyles.lightMode.maxZoom}
         />
 
         {/* Existing Snapped Route Lines */}
