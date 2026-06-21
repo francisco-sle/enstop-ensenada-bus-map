@@ -187,9 +187,10 @@ The app is served at `http://localhost:5173` by default.
 
 | Script | Description |
 |---|---|
-| `npm run dev` | Start Vite dev server against local Supabase |
-| `npm run dev:mock` | Start Vite dev server with MSW offline mocks |
-| `npm run build` | Type-check + production build → `dist/` |
+| `npm run dev` | Start Vite dev server against local Supabase (`.env.local`) |
+| `npm run dev:mock` | Start Vite dev server with MSW offline mocks (`.env.mock`) |
+| `npm run dev:external` | Start Vite dev server against a remote dev database (`.env.dev`) |
+| `npm run build` | Type-check + production build → `dist/` (uses Cloudflare Build Variables) |
 | `npm run test` | Run Vitest unit tests |
 | `npm run test:e2e` | Run Playwright end-to-end tests |
 | `npm run lint` | Run ESLint |
@@ -208,13 +209,33 @@ The app is served at `http://localhost:5173` by default.
 
 ## Environment Variables
 
-### Frontend (`ui/.env.local`)
+### Frontend
 
+The frontend uses Vite's native mode system to load environment variables. **`.env.local` is the ultimate override** — it is git-ignored and reserved for your personal credentials.
+
+| Environment | Command | File Loaded | Purpose |
+|---|---|---|---|
+| **Local Development** | `npm run dev` | `.env.local` | Develop against the local Supabase CLI instance (`http://localhost:54321`). Mocks are disabled by default. |
+| **Mock Development** | `npm run dev:mock` | `.env.mock` | Forces `VITE_USE_MOCKS=true`. MSW intercepts all requests so no Supabase backend is needed. |
+| **External Dev** | `npm run dev:external` | `.env.dev` | Connect to a remote, non-production Supabase instance. |
+
+#### Required Variables (in `.env.local` or `.env.dev`)
 | Variable | Required | Description |
 |---|---|---|
-| `VITE_SUPABASE_URL` | ✅ Always | Supabase project URL (local: `http://localhost:54321`) |
+| `VITE_SUPABASE_URL` | ✅ Always | Supabase project URL |
 | `VITE_SUPABASE_ANON_KEY` | ✅ Always | Supabase anon public key |
-| `VITE_TURNSTILE_SITE_KEY` | Production only | Cloudflare Turnstile site key. **Leave blank for local dev** — the app bypasses the challenge gate automatically. |
+| `VITE_USE_MOCKS` | ✅ Always | `true` or `false` to enable/disable MSW layer |
+| `VITE_TURNSTILE_SITE_KEY` | Production | Cloudflare Turnstile site key. **Leave blank for local dev**. |
+
+### Production Deployment (Cloudflare Pages)
+
+We do **not** commit a `.env.production` file for security reasons. Instead, production variables must be injected during the build step via the Cloudflare Dashboard:
+
+1. Go to **Cloudflare Dashboard → Pages → enstop-ensenada-bus-map**.
+2. Navigate to **Settings → Environment variables**.
+3. Under the **Production** section (specifically the **Build variables**), add your variables.
+
+*Note: While the backend is in active development, set `VITE_USE_MOCKS=true` in Cloudflare so the production deployment can safely serve mock data.*
 
 ### Edge Function secrets (set via Supabase CLI)
 
