@@ -40,6 +40,9 @@ export function EditorPage() {
   const [history, setHistory] = useState<DrawStroke[][]>([])
   const [future, setFuture] = useState<DrawStroke[][]>([])
   const [stops, setStops] = useState<PlacedStop[]>([])
+  const [selectedNode, setSelectedNode] = useState<{ strokeId: string; nodeIndex: number } | null>(
+    null,
+  )
 
   const dragStartStrokesRef = useRef<DrawStroke[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -254,6 +257,57 @@ export function EditorPage() {
     setStops((prev) => prev.map((s) => (s.id === id ? { ...s, name } : s)))
   }
 
+  const handleDeleteNode = useCallback(
+    (strokeId: string, nodeIndex: number) => {
+      const strokeIdx = strokes.findIndex((s) => s.id === strokeId)
+      if (strokeIdx === -1) return
+      const stroke = strokes[strokeIdx]
+
+      if (stroke.nodes.length <= 2) {
+        alert('No se puede eliminar. La ruta debe tener al menos un inicio y un fin.')
+        return
+      }
+
+      const newStroke = { ...stroke, nodes: [...stroke.nodes], trace: [...stroke.trace] }
+
+      if (nodeIndex === 0) {
+        const newFirstTraceIdx = newStroke.nodes[1].traceIndex
+        newStroke.trace.splice(0, newFirstTraceIdx)
+        newStroke.nodes = newStroke.nodes.map((n) => ({
+          ...n,
+          traceIndex: n.traceIndex - newFirstTraceIdx,
+        }))
+      } else if (nodeIndex === stroke.nodes.length - 1) {
+        const newLastTraceIdx = newStroke.nodes[nodeIndex - 1].traceIndex
+        const deleteAfterCount = newStroke.trace.length - 1 - newLastTraceIdx
+        if (deleteAfterCount > 0) {
+          newStroke.trace.splice(newLastTraceIdx + 1, deleteAfterCount)
+        }
+      } else {
+        const prevTraceIdx = newStroke.nodes[nodeIndex - 1].traceIndex
+        const nextTraceIdx = newStroke.nodes[nodeIndex + 1].traceIndex
+        const deleteCount = nextTraceIdx - prevTraceIdx - 1
+        if (deleteCount > 0) {
+          newStroke.trace.splice(prevTraceIdx + 1, deleteCount)
+          for (let i = nodeIndex + 1; i < newStroke.nodes.length; i++) {
+            newStroke.nodes[i] = {
+              ...newStroke.nodes[i],
+              traceIndex: newStroke.nodes[i].traceIndex - deleteCount,
+            }
+          }
+        }
+      }
+
+      newStroke.nodes.splice(nodeIndex, 1)
+
+      const newStrokes = [...strokes]
+      newStrokes[strokeIdx] = newStroke
+      saveState(newStrokes)
+      setSelectedNode(null)
+    },
+    [strokes, saveState],
+  )
+
   const handleToggleTerminal = (id: string) => {
     setStops((prev) => prev.map((s) => (s.id === id ? { ...s, isTerminal: !s.isTerminal } : s)))
   }
@@ -288,11 +342,16 @@ export function EditorPage() {
       } else if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'z') {
         e.preventDefault()
         handleRedo()
+      } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        if (selectedNode) {
+          e.preventDefault()
+          handleDeleteNode(selectedNode.strokeId, selectedNode.nodeIndex)
+        }
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handleUndo, handleRedo])
+  }, [handleUndo, handleRedo, handleDeleteNode, selectedNode])
 
   const handleClearRoute = () => {
     if (window.confirm('¿Deseas borrar todo el trazo de la ruta?')) {
@@ -705,14 +764,25 @@ export function EditorPage() {
           stops={stops}
           onRouteCoordsSnapped={handleRouteCoordsSnapped}
           onNodeDragStart={handleNodeDragStart}
-          onLineClick={handleLineClickNodeInsert}
           onNodeDrag={handleNodeDrag}
           onNodeDragEnd={handleNodeDragEnd}
+          onLineClick={handleLineClickNodeInsert}
           onAddStop={handleAddStop}
           onDeleteStop={handleDeleteStop}
+          selectedNode={selectedNode}
+          onSelectNode={setSelectedNode}
           snapTrace={handleSnapTrace}
           isSnapping={isSnapping}
         />
+
+        {selectedNode && (
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-bay-900 border border-red-500/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-in pointer-events-none">
+            <span>
+              Nodo seleccionado. Pulsa <strong>Supr</strong> o <strong>Retroceso</strong> para
+              eliminarlo.
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )

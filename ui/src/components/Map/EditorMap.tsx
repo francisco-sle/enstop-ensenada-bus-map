@@ -34,6 +34,7 @@ interface EditorEventsHandlerProps {
   onDrawMove: (latlng: [number, number]) => void
   onDrawEnd: () => void
   onMapClick: (latlng: [number, number]) => void
+  onMapBackgroundClick?: () => void
 }
 
 function EditorEventsHandler({
@@ -42,6 +43,7 @@ function EditorEventsHandler({
   onDrawMove,
   onDrawEnd,
   onMapClick,
+  onMapBackgroundClick,
 }: EditorEventsHandlerProps) {
   const map = useMap()
   const isDrawingRef = useRef(false)
@@ -79,6 +81,8 @@ function EditorEventsHandler({
     click(e) {
       if (mode === 'add-stop') {
         onMapClick([e.latlng.lat, e.latlng.lng])
+      } else {
+        onMapBackgroundClick?.()
       }
     },
   })
@@ -120,6 +124,8 @@ interface EditorMapProps {
   onLineClick: (strokeId: string, traceInsertIdx: number, coord: [number, number]) => void
   onNodeDrag: (strokeId: string, nodeIndex: number, newCoord: [number, number]) => void
   onNodeDragEnd: () => void
+  selectedNode?: { strokeId: string; nodeIndex: number } | null
+  onSelectNode?: (node: { strokeId: string; nodeIndex: number } | null) => void
 }
 
 export function EditorMap({
@@ -135,6 +141,8 @@ export function EditorMap({
   onLineClick,
   onNodeDrag,
   onNodeDragEnd,
+  selectedNode,
+  onSelectNode,
 }: EditorMapProps) {
   const { center, zoom } = useMapStore()
   const [paintCoords, setPaintCoords] = useState<[number, number][]>([])
@@ -260,6 +268,7 @@ export function EditorMap({
           onDrawMove={handleDrawMove}
           onDrawEnd={handleDrawEnd}
           onMapClick={onAddStop}
+          onMapBackgroundClick={() => onSelectNode?.(null)}
         />
 
         <TileLayer
@@ -287,13 +296,20 @@ export function EditorMap({
           const isLastStroke = strokeIndex === strokes.length - 1
           return stroke.nodes.map((node, nodeIndex) => {
             const isTerminalNode = isLastStroke && nodeIndex === stroke.nodes.length - 1
+            const isSelected =
+              selectedNode?.strokeId === stroke.id && selectedNode?.nodeIndex === nodeIndex
+
             return (
               <Marker
                 key={`node-${stroke.id}-${nodeIndex}`}
                 position={node.coord}
-                icon={isTerminalNode ? activeNodeIcon : nodeIcon}
+                icon={isSelected ? activeNodeIcon : isTerminalNode ? activeNodeIcon : nodeIcon}
                 draggable={mode === 'draw-route'}
                 eventHandlers={{
+                  click: (e) => {
+                    L.DomEvent.stopPropagation(e.originalEvent)
+                    onSelectNode?.({ strokeId: stroke.id, nodeIndex })
+                  },
                   dragstart: onNodeDragStart,
                   drag: (e) =>
                     onNodeDrag(stroke.id, nodeIndex, [
