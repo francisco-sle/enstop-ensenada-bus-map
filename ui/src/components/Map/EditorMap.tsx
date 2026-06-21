@@ -110,11 +110,7 @@ interface EditorMapProps {
   snapTrace: (coords: [number, number][]) => Promise<SnappedRoute | null>
   isSnapping: boolean
   onNodeDragStart: () => void
-  onLineClick: (
-    strokeId: string,
-    traceInsertIdx: number,
-    coord: [number, number],
-  ) => void
+  onLineClick: (strokeId: string, traceInsertIdx: number, coord: [number, number]) => void
   onNodeDrag: (strokeId: string, nodeIndex: number, newCoord: [number, number]) => void
   onNodeDragEnd: () => void
 }

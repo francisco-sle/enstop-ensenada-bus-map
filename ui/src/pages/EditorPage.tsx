@@ -139,7 +139,7 @@ export function EditorPage() {
             }
           }
         }
-        
+
         for (let i = 0; i < stroke.nodes.length; i++) {
           if (stroke.nodes[i].traceIndex > traceInsertIdx) {
             nodeInsertIdx = i
