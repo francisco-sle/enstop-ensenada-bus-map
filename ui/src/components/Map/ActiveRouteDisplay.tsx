@@ -1,5 +1,4 @@
 import { Polyline } from 'react-leaflet'
-import { useSnappedPolyline } from '../../hooks/useSnappedPolyline'
 import { RouteTracker } from './RouteTracker'
 import type { RoutingResult } from '../../types'
 
@@ -19,20 +18,14 @@ export function ActiveRouteDisplay({ origin, destination, activeResult }: Active
     activeResult.destStop.geom.coordinates[0],
   ]
 
-  // Snap walk origin leg to streets
-  const { snappedCoords: walkOriginCoords } = useSnappedPolyline(
-    [[origin.lat, origin.lng], originStopCoords],
-    'foot',
-  )
+  // Walk origin leg (straight line fallback to save API costs)
+  const walkOriginCoords: [number, number][] = [[origin.lat, origin.lng], originStopCoords]
 
   // Use pre-snapped route coordinates directly for the bus segment
   const busCoords = activeResult.subPolylineCoords
 
-  // Snap walk destination leg to streets
-  const { snappedCoords: walkDestCoords } = useSnappedPolyline(
-    [destStopCoords, [destination.lat, destination.lng]],
-    'foot',
-  )
+  // Walk destination leg (straight line fallback to save API costs)
+  const walkDestCoords: [number, number][] = [destStopCoords, [destination.lat, destination.lng]]
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { length, distance, point, lineString } from '@turf/turf'
+import { length, distance, point, lineString, lineSlice } from '@turf/turf'
 import type { DBStop, RouteDetail, RoutingResult } from '../../types'
 
 // Constants
@@ -111,26 +111,37 @@ export function computeABRoute(
 
           if (goesForward) {
             // Forward slice: originIdx → destIdx (in order)
-            const lo = Math.min(originIdx, destIdx)
-            const hi = Math.max(originIdx, destIdx)
+            // Expand indices by 1 to guarantee the segment containing the stop is fully included
+            const lo = Math.max(0, Math.min(originIdx, destIdx) - 1)
+            const hi = Math.min(routeCoords.length - 1, Math.max(originIdx, destIdx) + 1)
             const sliced = routeCoords.slice(lo, hi + 1)
+
             // If the stop order is reversed relative to coord order, flip the slice
             const ordered = originIdx <= destIdx ? sliced : [...sliced].reverse()
-            busDistanceKm = length(
-              lineString(ordered.length >= 2 ? ordered : [ordered[0], ordered[0]]),
-              { units: 'kilometers' },
-            )
-            subCoords = ordered.map((c) => [c[1], c[0]] as [number, number])
+
+            if (ordered.length >= 2) {
+              const line = lineString(ordered)
+              // lineSlice perfectly trims the segment to start/end exactly at the bus stops
+              const trimmed = lineSlice(originStopPt, destStopPt, line)
+              busDistanceKm = length(trimmed, { units: 'kilometers' })
+              subCoords = trimmed.geometry.coordinates.map((c) => [c[1], c[0]] as [number, number])
+            }
           } else {
             // Circular backward: originIdx → end of line, then start → destIdx
-            const coords1 = routeCoords.slice(originIdx)
-            const coords2 = routeCoords.slice(0, destIdx + 1)
+            const lo1 = Math.max(0, originIdx - 1)
+            const coords1 = routeCoords.slice(lo1)
+
+            const hi2 = Math.min(routeCoords.length - 1, destIdx + 1)
+            const coords2 = routeCoords.slice(0, hi2 + 1)
+
             const allCoords = [...coords1, ...coords2]
-            busDistanceKm = length(
-              lineString(allCoords.length >= 2 ? allCoords : [allCoords[0], allCoords[0]]),
-              { units: 'kilometers' },
-            )
-            subCoords = allCoords.map((c) => [c[1], c[0]] as [number, number])
+
+            if (allCoords.length >= 2) {
+              const line = lineString(allCoords)
+              const trimmed = lineSlice(originStopPt, destStopPt, line)
+              busDistanceKm = length(trimmed, { units: 'kilometers' })
+              subCoords = trimmed.geometry.coordinates.map((c) => [c[1], c[0]] as [number, number])
+            }
           }
 
           if (subCoords.length < 2) {
