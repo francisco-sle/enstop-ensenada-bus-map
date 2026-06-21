@@ -190,6 +190,12 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <button
                 key={pillKey}
                 onClick={() => setMinimizedForResults(null)}
+                onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
+                onTouchEnd={(e) => {
+                  if (touchStartY === null) return
+                  if (touchStartY - e.changedTouches[0].clientY > 40) setMinimizedForResults(null)
+                  setTouchStartY(null)
+                }}
                 className="absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-xl px-4 py-3 z-1001 flex items-center justify-between animate-slide-up select-none cursor-pointer hover:bg-white/5 transition-colors"
               >
                 <span className="flex items-center gap-2 text-xs font-semibold text-white/70">
@@ -204,12 +210,12 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             ) : (
               /* Expanded drawer — plays exit animation before state switches to pill */
               <div
-                className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[60%] overflow-y-auto flex flex-col gap-3 select-none ${
-                  isCollapsing ? 'animate-slide-down-out' : 'animate-slide-up'
+                className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl pt-4 pb-0 px-4 z-1001 max-h-[60%] flex flex-col gap-3 select-none overflow-hidden ${
+                  isCollapsing ? 'animate-slide-down-fade' : 'animate-slide-up'
                 }`}
               >
                 <div
-                  className="flex flex-col items-center pb-2 cursor-grab active:cursor-grabbing border-b border-white/5"
+                  className="flex flex-col items-center pb-2 cursor-grab active:cursor-grabbing border-b border-white/5 shrink-0"
                   onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
                   onTouchEnd={(e) => {
                     if (touchStartY === null) return
@@ -231,7 +237,9 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                     </button>
                   </div>
                 </div>
-                <RouteResult />
+                <div className="overflow-y-auto flex-1 min-h-0 pb-4">
+                  <RouteResult />
+                </div>
               </div>
             ))}
 
