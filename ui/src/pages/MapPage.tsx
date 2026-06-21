@@ -145,12 +145,20 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               >
                 <Locate size={18} />
               </button>
-              {isLegendMinimized && (
-                <RouteToggleLegend
-                  routes={activeRoutes}
-                  isMinimizedProp={true}
-                  onMinimizeChange={setIsLegendMinimized}
-                />
+              {activeRoutes.length > 0 && (
+                <div
+                  className={`grid transition-all duration-300 ease-out ${
+                    isLegendMinimized ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                  }`}
+                >
+                  <div className="overflow-visible min-h-0">
+                    <RouteToggleLegend
+                      routes={activeRoutes}
+                      isMinimizedProp={true}
+                      onMinimizeChange={setIsLegendMinimized}
+                    />
+                  </div>
+                </div>
               )}
             </div>
           )}
@@ -167,13 +175,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
           {/* Floating Search Panel (Mobile only) */}
           {isMobile && (
-            <div
-              className={
-                isMinimized
-                  ? 'absolute top-4 left-4 right-4 z-1000 flex flex-col gap-3'
-                  : 'absolute inset-4 z-1005 bg-surface rounded-2xl border border-white/8 shadow-card flex flex-col p-4 overflow-y-auto animate-slide-down'
-              }
-            >
+            <div className="absolute inset-0 z-[1005] pointer-events-none flex flex-col overflow-hidden">
               <RoutePlanner stops={allStops} routes={activeRoutes} />
             </div>
           )}

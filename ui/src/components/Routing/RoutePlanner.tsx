@@ -40,7 +40,20 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
   const isMobile = useIsMobile()
 
   // Route computation side effect + validation message derivation
+  const [isCollapsing, setIsCollapsing] = useState(false)
   const { errorMsg } = useRouteComputation(stops, routes)
+
+  const toggleMinimize = (val: boolean) => {
+    if (val === true && !isMinimized && isMobile) {
+      setIsCollapsing(true)
+      setTimeout(() => {
+        setIsMinimized(true)
+        setIsCollapsing(false)
+      }, 250)
+    } else {
+      setIsMinimized(val)
+    }
+  }
 
   const handleSwap = () => {
     const tempOrigin = origin
@@ -53,10 +66,10 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
     const destLabel = destination?.label.replace(/Punto en Mapa.*/, 'Destino') || ''
 
     return (
-      <>
+      <div className="pointer-events-auto p-4 flex flex-col gap-3 w-full">
         <div
-          onClick={() => setIsMinimized(false)}
-          className="bg-surface rounded-xl border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-98 transition-transform duration-150 select-none"
+          onClick={() => toggleMinimize(false)}
+          className="bg-surface rounded-xl border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-98 transition-transform duration-150 select-none animate-slide-down"
         >
           <div className="flex min-w-0 flex-1 flex-col">
             {/* Origin field */}
@@ -131,94 +144,103 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
             <span>{errorMsg}</span>
           </div>
         )}
-      </>
+      </div>
     )
   }
 
   if (isMobile) {
     // Full-screen expanded planner for mobile
     return (
-      <div className="flex flex-col gap-0 overflow-y-auto flex-1">
-        {/* Mini-header: ENSTOP logo on left, borderless back button on right */}
-        <div className="flex items-center justify-between mb-4">
-          <h1
-            className="text-2xl font-normal tracking-wide text-white"
-            style={{ fontFamily: 'var(--font-logo)' }}
-          >
-            ENSTOP
-          </h1>
-          <button
-            type="button"
-            onClick={() => setIsMinimized(true)}
-            aria-label="Cerrar planificador"
-            className="p-1.5 rounded-lg cursor-pointer hover:bg-white/8 active:scale-95 transition-all text-white/50 hover:text-white"
-          >
-            <ArrowLeft size={18} />
-          </button>
-        </div>
+      <div className="pointer-events-auto p-4 flex flex-col flex-1 min-h-0 w-full">
+        <div
+          className={`bg-surface rounded-xl border border-white/8 p-4 shadow-card flex flex-col gap-0 overflow-y-auto w-full flex-1 will-change-transform ${isCollapsing ? 'animate-slide-down-fade' : 'animate-slide-up'}`}
+        >
+          <div className="flex flex-col flex-1">
+            {/* Mini-header: ENSTOP logo on left, borderless back button on right */}
+            <div className="flex items-center justify-between mb-4">
+              <h1
+                className="text-2xl font-normal tracking-wide text-white"
+                style={{ fontFamily: 'var(--font-logo)' }}
+              >
+                ENSTOP
+              </h1>
+              <button
+                type="button"
+                onClick={() => toggleMinimize(true)}
+                aria-label="Cerrar planificador"
+                className="p-1.5 rounded-lg cursor-pointer hover:bg-white/8 active:scale-95 transition-all text-white/50 hover:text-white"
+              >
+                <ArrowLeft size={18} />
+              </button>
+            </div>
 
-        <span className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 block">
-          ¿A dónde vas?
-        </span>
+            <span className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 block">
+              ¿A dónde vas?
+            </span>
 
-        {/* Full-width stacked inputs with swap button on the right */}
-        <div className="flex items-center gap-3">
-          <div className="flex-1 flex flex-col gap-2">
-            <LocationAutocomplete
-              role="origin"
-              value={origin}
-              stops={stops}
-              autoFocus={!origin}
-              inlineResults
-              onSelect={(val) => {
-                setOrigin(val)
-                if (val) setIsMinimized(true)
-              }}
-              onMapPickToggle={() => {
-                setMapClickMode(mapClickMode === 'origin' ? null : 'origin')
-                setIsMinimized(true)
-                setZoom(14)
-              }}
-              isMapPickActive={mapClickMode === 'origin'}
-            />
+            {/* Full-width stacked inputs with swap button on the right */}
+            <div className="flex items-center gap-3">
+              <div className="flex-1 flex flex-col gap-2">
+                <LocationAutocomplete
+                  role="origin"
+                  value={origin}
+                  stops={stops}
+                  inlineResults
+                  onSelect={(val) => {
+                    setOrigin(val)
+                    if (val) toggleMinimize(true)
+                  }}
+                  onMapPickToggle={() => {
+                    setMapClickMode(mapClickMode === 'origin' ? null : 'origin')
+                    toggleMinimize(true)
+                    setZoom(14)
+                  }}
+                  isMapPickActive={mapClickMode === 'origin'}
+                />
 
-            <LocationAutocomplete
-              role="destination"
-              value={destination}
-              stops={stops}
-              inlineResults
-              onSelect={(val) => {
-                setDestination(val)
-                if (val) setIsMinimized(true)
-              }}
-              onMapPickToggle={() => {
-                setMapClickMode(mapClickMode === 'destination' ? null : 'destination')
-                setIsMinimized(true)
-                setZoom(14)
-              }}
-              isMapPickActive={mapClickMode === 'destination'}
-            />
+                <LocationAutocomplete
+                  role="destination"
+                  value={destination}
+                  stops={stops}
+                  inlineResults
+                  onSelect={(val) => {
+                    setDestination(val)
+                    if (val) toggleMinimize(true)
+                  }}
+                  onMapPickToggle={() => {
+                    setMapClickMode(mapClickMode === 'destination' ? null : 'destination')
+                    toggleMinimize(true)
+                    setZoom(14)
+                  }}
+                  isMapPickActive={mapClickMode === 'destination'}
+                />
+              </div>
+
+              {/* Swap button */}
+              <div className="shrink-0 flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={handleSwap}
+                  aria-label="Intercambiar origen y destino"
+                  className="btn bg-transparent text-white/50 hover:text-white hover:bg-white/5 rounded-full w-10 h-10 min-h-0 p-0"
+                >
+                  <ArrowLeftRight size={16} className="rotate-90" />
+                </button>
+              </div>
+            </div>
+
+            {/* Clear action */}
+            {(origin || destination) && (
+              <button
+                type="button"
+                onClick={clearRouting}
+                className="btn btn-secondary w-full mt-3"
+              >
+                Limpiar todo
+              </button>
+            )}
           </div>
-
-          {/* Swap button */}
-          <div className="shrink-0 flex items-center justify-center">
-            <button
-              type="button"
-              onClick={handleSwap}
-              aria-label="Intercambiar origen y destino"
-              className="btn bg-transparent text-white/50 hover:text-white hover:bg-white/5 rounded-full w-10 h-10 min-h-0 p-0"
-            >
-              <ArrowLeftRight size={16} className="rotate-90" />
-            </button>
-          </div>
         </div>
-
-        {/* Clear action */}
-        {(origin || destination) && (
-          <button type="button" onClick={clearRouting} className="btn btn-secondary w-full mt-3">
-            Limpiar todo
-          </button>
-        )}
       </div>
     )
   }
