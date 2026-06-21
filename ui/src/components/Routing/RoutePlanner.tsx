@@ -185,6 +185,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
                   role="origin"
                   value={origin}
                   stops={stops}
+                  autoFocus={!origin}
                   inlineResults
                   onSelect={(val) => {
                     setOrigin(val)
@@ -202,6 +203,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
                   role="destination"
                   value={destination}
                   stops={stops}
+                  autoFocus={!!origin && !destination}
                   inlineResults
                   onSelect={(val) => {
                     setDestination(val)

@@ -60,6 +60,7 @@ export function LocationAutocomplete({
   const [isFocused, setIsFocused] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { setCenter, setZoom } = useMapStore()
 
   const { results: photonResults, isLoading: photonLoading } = usePhotonGeocoder(
@@ -86,6 +87,16 @@ export function LocationAutocomplete({
     document.addEventListener('mousedown', handleOutside)
     return () => document.removeEventListener('mousedown', handleOutside)
   }, [])
+
+  // Delayed autofocus to prevent animation glitches on mobile
+  useEffect(() => {
+    if (autoFocus) {
+      const timer = setTimeout(() => {
+        inputRef.current?.focus()
+      }, 350)
+      return () => clearTimeout(timer)
+    }
+  }, [autoFocus])
 
   const filteredStops = stops
     .filter(
@@ -196,9 +207,9 @@ export function LocationAutocomplete({
             )}
           </div>
           <input
+            ref={inputRef}
             id={`${role}-input`}
             type="text"
-            autoFocus={autoFocus}
             autoComplete="off"
             autoCorrect="off"
             spellCheck="false"
