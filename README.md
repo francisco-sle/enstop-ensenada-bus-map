@@ -26,7 +26,7 @@ ENStop is a full-stack geospatial web application that models Ensenada's public 
 - **Stop details** — Slide-up drawer listing all routes serving a selected stop.
 - **Fare lookup** — Live fare table per route, filtered by passenger type.
 - **Editor (`/studio`)** — Admin canvas for drawing and persisting new bus routes with OSRM road-snapping and RDP simplification.
-- **Offline/CI mode** — MSW mock layer activated by `VITE_USE_MOCKS=true`.
+- **Offline/CI mode** — MSW mock layer activated by build mode (`npm run dev:mock` / `npm run build:mock`).
 
 ---
 
@@ -214,7 +214,6 @@ The app is served at `http://localhost:5173` by default.
 |---|---|---|
 | `VITE_SUPABASE_URL` | ✅ Always | Supabase project URL (local: `http://localhost:54321`) |
 | `VITE_SUPABASE_ANON_KEY` | ✅ Always | Supabase anon public key |
-| `VITE_USE_MOCKS` | — | Set `true` to activate MSW mock handlers |
 | `VITE_TURNSTILE_SITE_KEY` | Production only | Cloudflare Turnstile site key. **Leave blank for local dev** — the app bypasses the challenge gate automatically. |
 
 ### Edge Function secrets (set via Supabase CLI)

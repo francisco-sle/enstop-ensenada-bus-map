@@ -144,7 +144,11 @@ export function computeABRoute(
             }
           }
 
-          if (subCoords.length < 2) {
+          if (
+            subCoords.length < 2 ||
+            (subCoords[0][0] === subCoords[subCoords.length - 1][0] &&
+              subCoords[0][1] === subCoords[subCoords.length - 1][1])
+          ) {
             continue
           }
 

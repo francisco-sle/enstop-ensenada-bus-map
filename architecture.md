@@ -41,7 +41,7 @@
   - `useRoutingStore`: Origin/destination pins (with labels), computed `RoutingResult[]`, `selectedResultIndex`, `mapClickMode` (`'origin' | 'destination' | null`), and panel minimize state.
 - **App Routing**: React Router DOM v6 — routes: `/map`, `/routes`, `/routes/:routeId`, `/about`, `/studio`.
 - **Testing**: Vitest (unit, incl. `routing.test.ts`), Playwright (e2e under `ui/e2e/`).
-- **Mocking**: MSW v2 — activated via `VITE_USE_MOCKS=true` (`npm run dev:mock` / `npm run build:mock`).
+- **Mocking**: MSW v2 — activated via `--mode mock` (`npm run dev:mock` / `npm run build:mock`).
 - **Icons**: `lucide-react`.
 - **Geocoding**: Photon API (via `usePhotonGeocoder`) for location autocomplete.
 - **Road Snapping**: OSRM public API (`router.project-osrm.org`) — Match API (primary) → Route API (fallback), used by `useOsrmRoute` in the Editor.

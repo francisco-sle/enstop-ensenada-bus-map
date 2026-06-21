@@ -13,7 +13,7 @@ async function prepareApp() {
     })
   }
   // Deregister any stale MSW service worker from a previous mock session.
-  // Prevents intercepted requests when VITE_USE_MOCKS is toggled off.
+  // Prevents intercepted requests when mock mode is disabled.
   if ('serviceWorker' in navigator) {
     const registrations = await navigator.serviceWorker.getRegistrations()
     await Promise.all(
