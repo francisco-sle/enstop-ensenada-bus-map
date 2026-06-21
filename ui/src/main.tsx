@@ -6,7 +6,7 @@ import './styles/index.css'
 import App from './App.tsx'
 
 async function prepareApp() {
-  if (import.meta.env.VITE_USE_MOCKS === 'true') {
+  if (import.meta.env.MODE === 'mock') {
     const { worker } = await import('./mocks/browser')
     return worker.start({
       onUnhandledRequest: 'bypass',
