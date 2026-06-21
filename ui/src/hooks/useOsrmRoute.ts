@@ -131,6 +131,11 @@ function pruneOvershoots(coords: [number, number][]): [number, number][] {
   return result
 }
 
+export interface SnappedRoute {
+  trace: [number, number][]
+  nodes: { coord: [number, number]; traceIndex: number }[]
+}
+
 export function useOsrmRoute() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -138,8 +143,8 @@ export function useOsrmRoute() {
   const snapCoordinates = async (
     coords: [number, number][],
     profile: 'driving' | 'foot' = 'driving',
-  ): Promise<[number, number][]> => {
-    if (coords.length < 2) return coords
+  ): Promise<SnappedRoute | null> => {
+    if (coords.length < 2) return null
     setLoading(true)
     setError(null)
 
@@ -180,6 +185,22 @@ export function useOsrmRoute() {
         })
         .join(';')
 
+      // Helper to compute node mapping to trace indices
+      const computeNodes = (trace: [number, number][]) => {
+        return queryCoordsArray.map((coord) => {
+          let bestIdx = 0
+          let minDist = Infinity
+          for (let i = 0; i < trace.length; i++) {
+            const d = getDistanceMeters(coord, trace[i])
+            if (d < minDist) {
+              minDist = d
+              bestIdx = i
+            }
+          }
+          return { coord: trace[bestIdx], traceIndex: bestIdx }
+        })
+      }
+
       // 1. Try Match API first (best for freehand traces)
       const matchUrl = `https://router.project-osrm.org/match/v1/${profile}/${queryCoords}?overview=full&geometries=geojson&tidy=true&radiuses=${radiuses}&bearings=${bearings}`
 
@@ -200,7 +221,7 @@ export function useOsrmRoute() {
             const snapped = best.geometry.coordinates.map(
               (c: [number, number]) => [c[1], c[0]] as [number, number],
             )
-            return snapped
+            return { trace: snapped, nodes: computeNodes(snapped) }
           }
         }
       } catch (err) {
@@ -219,7 +240,7 @@ export function useOsrmRoute() {
         const snapped = routeData.routes[0].geometry.coordinates.map(
           (c: [number, number]) => [c[1], c[0]] as [number, number],
         )
-        return snapped
+        return { trace: snapped, nodes: computeNodes(snapped) }
       } else {
         throw new Error(`OSRM returned code: ${routeData.code}`)
       }
@@ -227,7 +248,11 @@ export function useOsrmRoute() {
       const errorMessage = err instanceof Error ? err.message : String(err)
       console.warn('Failed to fetch snapped route from OSRM:', err)
       setError(errorMessage || 'Failed to snap route to streets')
-      return coords // Fallback to original coordinates on error
+      // Fallback to original coordinates on error
+      return {
+        trace: coords,
+        nodes: coords.map((c, i) => ({ coord: c, traceIndex: i })),
+      }
     } finally {
       setLoading(false)
     }
