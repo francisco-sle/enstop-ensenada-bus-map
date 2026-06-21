@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../types/supabase-generated'
 
-const isMock = import.meta.env.VITE_USE_MOCKS === 'true'
+const isMock = import.meta.env.MODE === 'mock'
 export const supabaseUrl = isMock
   ? typeof window !== 'undefined'
     ? window.location.origin
