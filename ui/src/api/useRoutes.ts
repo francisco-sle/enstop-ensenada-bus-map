@@ -54,10 +54,54 @@ export function useRoutes(turnstileToken: string | null) {
       ])
 
       const geomMap = new Map(geometry.map((g) => [g.route_id, g.geom]))
-      return metadata.map((route) => ({
-        ...route,
-        geom: geomMap.get(route.id) ?? null,
-      }))
+      return metadata.map((route) => {
+        const geom = geomMap.get(route.id) ?? null
+        const coords = geom?.coordinates as [number, number][] | undefined
+        const stops = route.route_stops
+          ? [...route.route_stops].sort((a, b) => a.sequence - b.sequence)
+          : []
+
+        // Compute topological alignment: assign coord_index to each stop sequentially
+        if (coords && stops.length > 0) {
+          let searchIdx = 0
+          for (const rs of stops) {
+            const stopLng = rs.stop.geom.coordinates[0]
+            const stopLat = rs.stop.geom.coordinates[1]
+
+            let minSq = Infinity
+            let bestIdx = searchIdx
+            let increases = 0
+
+            for (let i = searchIdx; i < coords.length; i++) {
+              const dx = coords[i][0] - stopLng
+              const dy = coords[i][1] - stopLat
+              const sq = dx * dx + dy * dy
+
+              if (sq < minSq) {
+                minSq = sq
+                bestIdx = i
+                increases = 0 // reset on new minimum
+              } else {
+                increases++
+              }
+
+              // Local minimum lock: if distance increases consistently, we've passed it.
+              if (increases > 30) {
+                break
+              }
+            }
+
+            rs.coord_index = bestIdx
+            searchIdx = bestIdx // Continue searching from this coordinate for the next stop
+          }
+        }
+
+        return {
+          ...route,
+          geom,
+          route_stops: stops, // attach the mutated and sorted array
+        }
+      })
     },
   })
 }

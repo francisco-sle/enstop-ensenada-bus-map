@@ -6,30 +6,6 @@ const BUS_SPEED_KMH = 20
 const WALK_SPEED_KMH = 5
 
 /**
- * Find the index of the route coordinate closest to the given [lng, lat] stop position.
- * This is more reliable than turf's lineSlice projection, which can snap to the wrong
- * leg of a circular route when both legs run through the same area.
- */
-function nearestCoordIndex(
-  routeCoords: [number, number][],
-  stopLng: number,
-  stopLat: number,
-): number {
-  let minDistSq = Infinity
-  let minIdx = 0
-  for (let i = 0; i < routeCoords.length; i++) {
-    const dx = routeCoords[i][0] - stopLng
-    const dy = routeCoords[i][1] - stopLat
-    const distSq = dx * dx + dy * dy
-    if (distSq < minDistSq) {
-      minDistSq = distSq
-      minIdx = i
-    }
-  }
-  return minIdx
-}
-
-/**
  * Computes up to 3 optimal A→B transit routes given nearby candidate stops and
  * pre-fetched route geometry. Handles both forward and circular (backward-wrap)
  * route directions.
@@ -100,11 +76,9 @@ export function computeABRoute(
         try {
           const routeCoords = route.geom.coordinates as [number, number][]
 
-          // Find the route coordinate index closest to each stop.
-          // Index-based slicing avoids lineSlice's nearest-on-line projection, which can
-          // incorrectly snap to the wrong leg on circular/bidirectional routes.
-          const originIdx = nearestCoordIndex(routeCoords, originStopLng, originStopLat)
-          const destIdx = nearestCoordIndex(routeCoords, destStopLng, destStopLat)
+          // We now use the sequence-aligned coordinate indices directly.
+          const originIdx = originRS.coord_index ?? 0
+          const destIdx = destRS.coord_index ?? 0
 
           let busDistanceKm = 0
           let subCoords: [number, number][] = []

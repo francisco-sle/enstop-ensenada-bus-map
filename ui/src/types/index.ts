@@ -15,6 +15,7 @@ export interface RouteStopWithStop {
   stop_id: number
   sequence: number
   stop: DBStop
+  coord_index?: number
 }
 
 export interface RouteWithCategory extends DBRoute {
