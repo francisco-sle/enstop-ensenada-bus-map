@@ -61,20 +61,18 @@ export function useRoutes(turnstileToken: string | null) {
           ? [...route.route_stops].sort((a, b) => a.sequence - b.sequence)
           : []
 
-        // Compute topological alignment: assign coord_index to each stop sequentially
+        // Compute topological alignment: assign coord_index to each stop
         if (coords && stops.length > 0) {
-          let searchIdx = 0
           const validStops = []
           for (const rs of stops) {
             const stopLng = rs.stop.geom.coordinates[0]
             const stopLat = rs.stop.geom.coordinates[1]
 
             let minSq = Infinity
-            let bestIdx = searchIdx
-            let increases = 0
+            let bestIdx = 0
 
-            for (let i = searchIdx; i < coords.length; i++) {
-              // Convert coordinate diffs to approximate meters (Ensenada lat ~31.8)
+            // Robust global nearest-neighbor search
+            for (let i = 0; i < coords.length; i++) {
               const dxMeters = (coords[i][0] - stopLng) * 94000
               const dyMeters = (coords[i][1] - stopLat) * 111000
               const sq = dxMeters * dxMeters + dyMeters * dyMeters
@@ -82,22 +80,15 @@ export function useRoutes(turnstileToken: string | null) {
               if (sq < minSq) {
                 minSq = sq
                 bestIdx = i
-                increases = 0 // reset on new minimum
-              } else {
-                increases++
-              }
-
-              // Local minimum lock: if distance increases consistently, we've passed it.
-              if (increases > 30) {
-                break
               }
             }
 
             const distanceMeters = Math.sqrt(minSq)
 
-            if (distanceMeters <= 40) {
+            // Relaxed threshold to 150m to accommodate hand-placed stops
+            // that might be a block away from the OSRM-snapped route geometry.
+            if (distanceMeters <= 150) {
               rs.coord_index = bestIdx
-              searchIdx = bestIdx // Continue searching from this coordinate for the next stop
               validStops.push(rs)
             } else {
               console.warn(
