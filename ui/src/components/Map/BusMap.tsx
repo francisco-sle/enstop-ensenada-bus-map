@@ -38,7 +38,8 @@ export function BusMap({
     setSelectedStopId,
     visibleRouteIds,
   } = useMapStore()
-  const { origin, destination, routingResults, selectedResultIndex } = useRoutingStore()
+  const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } =
+    useRoutingStore()
   const resolvedRouteId = focusedRouteId !== undefined ? focusedRouteId : globalSelectedRouteId
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
   const [currentZoom, setCurrentZoom] = useState(zoom)
@@ -110,6 +111,20 @@ export function BusMap({
             position={[origin.lat, origin.lng]}
             icon={routingPinIcon('A')}
             zIndexOffset={900}
+            draggable={true}
+            eventHandlers={{
+              dragstart: (e) => e.target.getElement()?.classList.add('is-dragging'),
+              dragend: (e) => {
+                e.target.getElement()?.classList.remove('is-dragging')
+                const position = e.target.getLatLng()
+                setOrigin({
+                  ...origin,
+                  lat: position.lat,
+                  lng: position.lng,
+                  label: 'Ubicación seleccionada',
+                })
+              },
+            }}
           />
         )}
         {showRouting && destination && (
@@ -117,6 +132,20 @@ export function BusMap({
             position={[destination.lat, destination.lng]}
             icon={routingPinIcon('B')}
             zIndexOffset={900}
+            draggable={true}
+            eventHandlers={{
+              dragstart: (e) => e.target.getElement()?.classList.add('is-dragging'),
+              dragend: (e) => {
+                e.target.getElement()?.classList.remove('is-dragging')
+                const position = e.target.getLatLng()
+                setDestination({
+                  ...destination,
+                  lat: position.lat,
+                  lng: position.lng,
+                  label: 'Ubicación seleccionada',
+                })
+              },
+            }}
           />
         )}
 

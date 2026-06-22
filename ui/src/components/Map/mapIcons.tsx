@@ -86,6 +86,7 @@ export function routingPinIcon(label: 'A' | 'B') {
 
   const pinHtml = renderToString(
     <div
+      className="routing-pin-inner"
       style={{
         position: 'relative',
         width: `${width}px`,
