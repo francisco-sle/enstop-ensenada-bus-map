@@ -32,7 +32,7 @@ export function RouteToggleLegend({
   onMinimizeChange,
   pushedUp,
 }: RouteToggleLegendProps) {
-  const { hiddenRouteIds, toggleRouteVisibility, selectedRouteId, setSelectedRouteId } =
+  const { visibleRouteIds, toggleRouteVisibility, setVisibleRouteIds, selectedRouteId } =
     useMapStore()
   const isMobile = useIsMobile()
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
@@ -57,19 +57,15 @@ export function RouteToggleLegend({
 
   if (routes.length === 0) return null
 
-  const allVisible = hiddenRouteIds.size === 0
-  const someHidden = hiddenRouteIds.size > 0 && hiddenRouteIds.size < routes.length
-  const visibleCount = routes.length - hiddenRouteIds.size
+  const allVisible = visibleRouteIds.size === routes.length && routes.length > 0
+  const someHidden = visibleRouteIds.size > 0 && visibleRouteIds.size < routes.length
+  const visibleCount = visibleRouteIds.size
 
   function toggleAll() {
     if (allVisible || someHidden) {
-      routes.forEach((r) => {
-        if (!hiddenRouteIds.has(r.id)) toggleRouteVisibility(r.id)
-      })
+      setVisibleRouteIds(new Set())
     } else {
-      routes.forEach((r) => {
-        if (hiddenRouteIds.has(r.id)) toggleRouteVisibility(r.id)
-      })
+      setVisibleRouteIds(new Set(routes.map((r) => r.id)))
     }
   }
 
@@ -89,7 +85,7 @@ export function RouteToggleLegend({
               key={r.id}
               className="w-2 h-2 rounded-full border border-white/15"
               style={{
-                backgroundColor: hiddenRouteIds.has(r.id)
+                backgroundColor: !visibleRouteIds.has(r.id)
                   ? '#555'
                   : r.category?.color_hex || '#3DBFA8',
               }}
@@ -98,7 +94,9 @@ export function RouteToggleLegend({
         </div>
         <span className="text-xs font-semibold text-white/70 whitespace-nowrap">
           {routes.length} rutas
-          {hiddenRouteIds.size > 0 && <span className="text-pacific-400"> ({visibleCount})</span>}
+          {visibleRouteIds.size < routes.length && (
+            <span className="text-pacific-400"> ({visibleCount})</span>
+          )}
         </span>
         <ChevronDown size={14} className="text-white/45 shrink-0" />
       </button>
@@ -140,7 +138,7 @@ export function RouteToggleLegend({
 
       <ul className="route-toggle-legend__list">
         {routes.map((route) => {
-          const isHidden = hiddenRouteIds.has(route.id)
+          const isHidden = !visibleRouteIds.has(route.id)
           const isSelected = selectedRouteId === route.id
           const color = route.category?.color_hex || '#3DBFA8'
 
@@ -156,53 +154,48 @@ export function RouteToggleLegend({
                 .trim()}
             >
               <button
-                className="route-toggle-legend__label-btn"
-                onClick={() => setSelectedRouteId(isSelected ? null : route.id)}
-                title={isSelected ? 'Deseleccionar ruta' : 'Seleccionar ruta'}
+                className="route-toggle-legend__label-btn w-full"
+                onClick={() => toggleRouteVisibility(route.id)}
+                title={isHidden ? 'Mostrar ruta' : 'Ocultar ruta'}
               >
                 <span
                   className="route-toggle-legend__swatch"
                   style={{ backgroundColor: isHidden ? '#555' : color }}
                 />
                 <span className="route-toggle-legend__name">{route.short_name || route.name}</span>
-              </button>
 
-              <button
-                className="route-toggle-legend__eye-btn"
-                onClick={() => toggleRouteVisibility(route.id)}
-                title={isHidden ? 'Mostrar ruta' : 'Ocultar ruta'}
-                aria-pressed={!isHidden}
-              >
-                {isHidden ? (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                    <line x1="1" y1="1" x2="23" y2="23" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                )}
+                <span className="ml-auto flex shrink-0 text-white/50">
+                  {isHidden ? (
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </span>
               </button>
             </li>
           )

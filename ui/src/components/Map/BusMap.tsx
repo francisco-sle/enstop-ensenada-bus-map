@@ -36,7 +36,7 @@ export function BusMap({
     selectedRouteId: globalSelectedRouteId,
     userLocation,
     setSelectedStopId,
-    hiddenRouteIds,
+    visibleRouteIds,
   } = useMapStore()
   const { origin, destination, routingResults, selectedResultIndex } = useRoutingStore()
   const resolvedRouteId = focusedRouteId !== undefined ? focusedRouteId : globalSelectedRouteId
@@ -61,7 +61,7 @@ export function BusMap({
     selectedRouteId: resolvedRouteId,
     activeResult,
     currentZoom,
-    hiddenRouteIds,
+    visibleRouteIds,
   })
 
   // Pre-build icons once per stopMarkers change — avoids calling renderToString inside JSX.
@@ -134,7 +134,7 @@ export function BusMap({
         {!activeResult &&
           activeRoutes.map((route) => {
             const isSelected = resolvedRouteId === route.id
-            const isHidden = hiddenRouteIds.has(route.id)
+            const isHidden = !visibleRouteIds.has(route.id)
             if (!showFullRoutes && !isSelected) return null
             if (isHidden) return null
             if (!route.geom) return null

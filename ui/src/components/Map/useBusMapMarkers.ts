@@ -8,7 +8,7 @@ interface BusMapMarkersOptions {
   selectedRouteId: number | null
   activeResult: RoutingResult | null
   currentZoom: number
-  hiddenRouteIds: Set<number>
+  visibleRouteIds: Set<number>
 }
 
 interface StopMarkerData {
@@ -60,7 +60,7 @@ function importanceThreshold(zoom: number): number {
  * @param options.selectedRouteId - ID of the currently highlighted route.
  * @param options.activeResult   - Active routing suggestion (origin/dest stops always shown).
  * @param options.currentZoom    - Current Leaflet zoom level.
- * @param options.hiddenRouteIds - Set of route IDs whose stops should be suppressed.
+ * @param options.visibleRouteIds - Set of route IDs whose stops should be shown.
  * @returns Array of `{ stop, color, isSelected }` ready to pass to `createStopIcon`.
  */
 export function useBusMapMarkers({
@@ -70,7 +70,7 @@ export function useBusMapMarkers({
   selectedRouteId,
   activeResult,
   currentZoom,
-  hiddenRouteIds,
+  visibleRouteIds,
 }: BusMapMarkersOptions): StopMarkerData[] {
   const currentRoute = selectedRouteId
     ? (activeRoutes.find((r) => r.id === selectedRouteId) ?? null)
@@ -97,7 +97,7 @@ export function useBusMapMarkers({
       // Compute which visible routes serve this stop
       const servingRoutes = activeRoutes.filter(
         (r) =>
-          !hiddenRouteIds.has(r.id) &&
+          visibleRouteIds.has(r.id) &&
           (routeStopsMap.get(r.id) ?? []).some((rs) => rs.stop_id === stop.id),
       )
 

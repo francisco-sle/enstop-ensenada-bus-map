@@ -550,7 +550,7 @@
     left: 20px;
     right: 20px;
     bottom: 20px;
-    max-height: calc(100dvh - 180px); /* leave room for top panel + attr */
+    max-height: 40vh; /* Changed to limit height and keep map visible */
     animation: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) !important;
     transition:
       bottom 0.25s cubic-bezier(0.32, 0.72, 0, 1),
