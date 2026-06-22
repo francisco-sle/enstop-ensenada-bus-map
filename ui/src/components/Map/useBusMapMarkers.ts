@@ -107,6 +107,9 @@ export function useBusMapMarkers({
       )
       if (allServingRoutes.length > 0 && servingRoutes.length === 0) return false
 
+      // Also suppress orphan stops (stops that aren't assigned to ANY route in the database)
+      if (allServingRoutes.length === 0) return false
+
       // Weighted LoD — use visible route count for scoring
       const score = stopImportance(stop, servingRoutes.length)
       return score >= threshold
