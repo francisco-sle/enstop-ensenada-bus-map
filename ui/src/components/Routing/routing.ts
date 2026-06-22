@@ -61,6 +61,15 @@ export function computeABRoute(
         const destRS = routeStops.find((rs) => rs.stop_id === destStop.id)
 
         // Route must serve both stops
+        // -----------------------------------------------------------------------------------
+        // AGENT NOTE (Routing Logic):
+        // The algorithm relies purely on the DB `route_stops` associations, NOT spatial proximity.
+        // If a bus stop appears physically closer on the map but is skipped here, it is because:
+        // 1. It is not assigned to this specific route in the database.
+        // 2. It belongs to the return trip (e.g., opposite side of the road, wrong direction).
+        // 3. It was filtered out by the 40m defensive distance check during data loading.
+        // This is intentional and prevents routing users to inaccessible stops.
+        // -----------------------------------------------------------------------------------
         if (!originRS || !destRS) continue
 
         // Validate sequence direction:

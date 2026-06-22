@@ -57,13 +57,14 @@ export function useRoutes(turnstileToken: string | null) {
       return metadata.map((route) => {
         const geom = geomMap.get(route.id) ?? null
         const coords = geom?.coordinates as [number, number][] | undefined
-        const stops = route.route_stops
+        let stops = route.route_stops
           ? [...route.route_stops].sort((a, b) => a.sequence - b.sequence)
           : []
 
         // Compute topological alignment: assign coord_index to each stop sequentially
         if (coords && stops.length > 0) {
           let searchIdx = 0
+          const validStops = []
           for (const rs of stops) {
             const stopLng = rs.stop.geom.coordinates[0]
             const stopLat = rs.stop.geom.coordinates[1]
@@ -73,9 +74,10 @@ export function useRoutes(turnstileToken: string | null) {
             let increases = 0
 
             for (let i = searchIdx; i < coords.length; i++) {
-              const dx = coords[i][0] - stopLng
-              const dy = coords[i][1] - stopLat
-              const sq = dx * dx + dy * dy
+              // Convert coordinate diffs to approximate meters (Ensenada lat ~31.8)
+              const dxMeters = (coords[i][0] - stopLng) * 94000
+              const dyMeters = (coords[i][1] - stopLat) * 111000
+              const sq = dxMeters * dxMeters + dyMeters * dyMeters
 
               if (sq < minSq) {
                 minSq = sq
@@ -91,9 +93,19 @@ export function useRoutes(turnstileToken: string | null) {
               }
             }
 
-            rs.coord_index = bestIdx
-            searchIdx = bestIdx // Continue searching from this coordinate for the next stop
+            const distanceMeters = Math.sqrt(minSq)
+
+            if (distanceMeters <= 40) {
+              rs.coord_index = bestIdx
+              searchIdx = bestIdx // Continue searching from this coordinate for the next stop
+              validStops.push(rs)
+            } else {
+              console.warn(
+                `Stop ${rs.stop.name} is too far from route ${route.name} (${Math.round(distanceMeters)}m). Ignoring.`,
+              )
+            }
           }
+          stops = validStops
         }
 
         return {
