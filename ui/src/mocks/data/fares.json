@@ -3,72 +3,90 @@
     "id": 1,
     "route_id": 1,
     "passenger_type": "normal",
-    "fare_mxn": 13.0,
-    "effective_from": "2024-01-01",
-    "notes": "Tarifa general de microbús 2024",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "fare_mxn": 15.5,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa general de microbús 2025",
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 2,
     "route_id": 1,
-    "passenger_type": "student_government",
-    "fare_mxn": 7.0,
-    "effective_from": "2024-01-01",
-    "notes": "Tarifa estudiante con credencial de gobierno",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "passenger_type": "student",
+    "fare_mxn": 5.85,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa de estudiante",
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 3,
     "route_id": 1,
-    "passenger_type": "student_highschool",
-    "fare_mxn": 10.0,
-    "effective_from": "2024-01-01",
-    "notes": "Tarifa estudiante preparatoria/universidad privada",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "passenger_type": "senior",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para tercera edad",
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 4,
     "route_id": 1,
     "passenger_type": "disability",
-    "fare_mxn": 7.0,
-    "effective_from": "2024-01-01",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
     "notes": "Tarifa preferencial para personas con discapacidad",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 5,
-    "route_id": 2,
-    "passenger_type": "normal",
-    "fare_mxn": 13.0,
-    "effective_from": "2024-01-01",
-    "notes": "Tarifa general de microbús 2024",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "route_id": 1,
+    "passenger_type": "disability_free",
+    "fare_mxn": 0.0,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa gratuita para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 6,
     "route_id": 2,
-    "passenger_type": "student_government",
-    "fare_mxn": 7.0,
-    "effective_from": "2024-01-01",
-    "notes": "Tarifa estudiante con credencial de gobierno",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "passenger_type": "normal",
+    "fare_mxn": 15.5,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa general de microbús 2025",
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 7,
     "route_id": 2,
-    "passenger_type": "student_highschool",
-    "fare_mxn": 10.0,
-    "effective_from": "2024-01-01",
-    "notes": "Tarifa estudiante preparatoria/universidad privada",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "passenger_type": "student",
+    "fare_mxn": 5.85,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa de estudiante",
+    "updated_at": "2026-06-22T00:00:00Z"
   },
   {
     "id": 8,
     "route_id": 2,
+    "passenger_type": "senior",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para tercera edad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 9,
+    "route_id": 2,
     "passenger_type": "disability",
-    "fare_mxn": 7.0,
-    "effective_from": "2024-01-01",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
     "notes": "Tarifa preferencial para personas con discapacidad",
-    "updated_at": "2026-06-01T00:00:00Z"
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 10,
+    "route_id": 2,
+    "passenger_type": "disability_free",
+    "fare_mxn": 0.0,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa gratuita para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
   }
 ]

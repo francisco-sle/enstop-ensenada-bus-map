@@ -151,15 +151,24 @@ async function run() {
 
   // Construct seed.sql content
   const seedContent = `-- Clean slate
-TRUNCATE categories, routes, stops, route_stops, fare_rules RESTART IDENTITY CASCADE;
+TRUNCATE categories, brands, routes, stops, route_stops, fare_rules RESTART IDENTITY CASCADE;
 
 -- Insert categories
 INSERT INTO categories (id, name, color_hex) VALUES
 (1, 'Centro–Chapultepec', '#3DBFA8');
 
+-- Insert brands
+INSERT INTO brands (id, name, color_hex, units_operating) VALUES
+(1, 'Rojo y Blanco', '#ef4444', 343),
+(2, 'Amarillo y Blanco', '#eab308', 260),
+(3, 'Transportes El Vigía', '#3b82f6', 139),
+(4, 'Transportes Brisa', '#f97316', 87),
+(5, 'Transportes Flecha Verde', '#22c55e', 45),
+(6, 'Transportes Nativos', '#6b7280', 25);
+
 -- Insert routes
-INSERT INTO routes (id, name, short_name, category_id, description, geom, direction, is_active) VALUES
-(1, 'R1 — Centro–Chapultepec', 'R1', 1, 'Ruta troncal de Centro a Chapultepec por Av. Reforma', 
+INSERT INTO routes (id, name, short_name, category_id, brand_id, description, geom, direction, is_active) VALUES
+(1, 'Rojo y Blanco — Centro–Chapultepec', 'R1', 1, 1, 'Ruta troncal de Centro a Chapultepec por Av. Reforma', 
   ST_GeomFromText('${routeLineStringWKT}', 4326),
   'circular', true);
 
@@ -173,10 +182,11 @@ ${snappedStops.map((s) => `(1, ${s.id}, ${s.id})`).join(',\n')};
 
 -- Insert fare_rules
 INSERT INTO fare_rules (route_id, passenger_type, fare_mxn, effective_from, notes) VALUES
-(1, 'normal', 13.00, '2024-01-01', 'Tarifa general de microbús 2024'),
-(1, 'student_government', 7.00, '2024-01-01', 'Tarifa estudiante con credencial de gobierno'),
-(1, 'student_highschool', 10.00, '2024-01-01', 'Tarifa estudiante preparatoria/universidad privada'),
-(1, 'disability', 7.00, '2024-01-01', 'Tarifa preferencial para personas con discapacidad');
+(1, 'normal', 15.50, '2025-01-01', 'Tarifa general de microbús 2025'),
+(1, 'student', 5.85, '2025-01-01', 'Tarifa estudiante'),
+(1, 'disability', 7.75, '2025-01-01', 'Tarifa preferencial para personas con discapacidad (50% descuento)'),
+(1, 'senior', 7.75, '2025-01-01', 'Tarifa tercera edad (50% descuento)'),
+(1, 'disability_free', 0.00, '2025-01-01', 'Tarifa gratuita para algunas personas con discapacidad');
 `
 
   fs.writeFileSync(seedPath, seedContent, 'utf8')

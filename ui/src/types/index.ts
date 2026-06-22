@@ -5,6 +5,7 @@ export type DBStop = Database['public']['Tables']['stops']['Row']
 export type DBCategory = Database['public']['Tables']['categories']['Row']
 export type DBRouteStop = Database['public']['Tables']['route_stops']['Row']
 export type DBFareRule = Database['public']['Tables']['fare_rules']['Row']
+export type DBBrand = Database['public']['Tables']['brands']['Row']
 
 export type RouteCategory = DBCategory
 
@@ -18,13 +19,14 @@ export interface RouteStopWithStop {
 
 export interface RouteWithCategory extends DBRoute {
   category: RouteCategory | null
+  brand?: DBBrand | null
 }
 
 export interface RouteDetail extends RouteWithCategory {
   route_stops: RouteStopWithStop[]
 }
 
-export type PassengerType = 'normal' | 'student_government' | 'student_highschool' | 'disability'
+export type PassengerType = 'normal' | 'student' | 'disability' | 'senior' | 'disability_free'
 
 export interface RoutingResult {
   routeId: number

@@ -18,11 +18,12 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
   }
 
   // Pre-defined ordered list of passenger types for nice translation and rendering
-  const passengerTypesMap = {
+  const passengerTypesMap: Record<string, { label: string; icon: string }> = {
     normal: { label: 'General / Normal', icon: '👤' },
-    student_highschool: { label: 'Estudiante (Prepa/Uni)', icon: '🎒' },
-    student_government: { label: 'Estudiante (Gobierno)', icon: '🏷️' },
+    student: { label: 'Estudiante', icon: '🎒' },
+    senior: { label: 'Tercera Edad', icon: '🧓' },
     disability: { label: 'Discapacidad / Preferencial', icon: '♿' },
+    disability_free: { label: 'Discapacidad (Gratuito)', icon: '♿' },
   }
 
   return (

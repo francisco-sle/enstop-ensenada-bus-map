@@ -22,25 +22,25 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       route_id: route.id,
       passenger_type: 'normal' as const,
       fare_mxn: FARES.NORMAL,
-      effective_from: '2024-01-01',
+      effective_from: '2025-01-01',
       notes: '',
       updated_at: '',
     },
     {
       id: 2,
       route_id: route.id,
-      passenger_type: 'student_government' as const,
-      fare_mxn: FARES.STUDENT_GOVERNMENT,
-      effective_from: '2024-01-01',
+      passenger_type: 'student' as const,
+      fare_mxn: FARES.STUDENT,
+      effective_from: '2025-01-01',
       notes: '',
       updated_at: '',
     },
     {
       id: 3,
       route_id: route.id,
-      passenger_type: 'student_highschool' as const,
-      fare_mxn: FARES.STUDENT_HIGHSCHOOL,
-      effective_from: '2024-01-01',
+      passenger_type: 'senior' as const,
+      fare_mxn: FARES.SENIOR,
+      effective_from: '2025-01-01',
       notes: '',
       updated_at: '',
     },
@@ -49,7 +49,16 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
       route_id: route.id,
       passenger_type: 'disability' as const,
       fare_mxn: FARES.DISABILITY,
-      effective_from: '2024-01-01',
+      effective_from: '2025-01-01',
+      notes: '',
+      updated_at: '',
+    },
+    {
+      id: 5,
+      route_id: route.id,
+      passenger_type: 'disability_free' as const,
+      fare_mxn: FARES.DISABILITY_FREE,
+      effective_from: '2025-01-01',
       notes: '',
       updated_at: '',
     },
@@ -75,14 +84,21 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
         </button>
         <div className="flex items-center gap-2 overflow-hidden">
           <span
-            style={{ backgroundColor: route.category?.color_hex || '#3DBFA8' }}
+            style={{
+              backgroundColor: route.brand?.color_hex || route.category?.color_hex || '#3DBFA8',
+            }}
             className="text-bay-950 font-extrabold text-[10px] px-2 py-0.5 rounded-sm shrink-0"
           >
             {route.short_name}
           </span>
-          <h2 className="text-sm font-bold text-white truncate">
-            {route.name.split('—')[1] || route.name}
-          </h2>
+          <div className="flex flex-col justify-center truncate">
+            <h2 className="text-sm font-bold text-white truncate">
+              {route.name.split('—')[1]?.trim() || route.name}
+            </h2>
+            {route.brand && (
+              <p className="text-[11px] text-white/50 truncate">{route.brand.name}</p>
+            )}
+          </div>
         </div>
       </div>
 

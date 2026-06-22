@@ -39,6 +39,7 @@ const mockRoute: RouteDetail = {
   name: 'R1 — Centro–Chapultepec',
   short_name: 'R1',
   category_id: 1,
+  brand_id: 1,
   description: 'Reforma Troncal',
   direction: 'circular',
   is_active: true,
@@ -47,6 +48,13 @@ const mockRoute: RouteDetail = {
     id: 1,
     name: 'Centro–Chapultepec',
     color_hex: '#3DBFA8',
+  },
+  brand: {
+    id: 1,
+    name: 'Test Brand',
+    color_hex: '#000000',
+    units_operating: 0,
+    created_at: '',
   },
   geom: {
     type: 'LineString',

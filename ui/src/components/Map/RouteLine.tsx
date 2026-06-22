@@ -16,7 +16,7 @@ export function RouteLine({ route, isSelected, isGhosted }: RouteLineProps) {
     )
   }, [route.geom.coordinates])
 
-  const color = route.category?.color_hex || '#3DBFA8'
+  const color = route.brand?.color_hex || route.category?.color_hex || '#3DBFA8'
 
   // Visual weight/opacity per focus state
   const weight = isSelected ? 6 : isGhosted ? 2 : 3

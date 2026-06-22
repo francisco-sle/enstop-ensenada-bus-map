@@ -30,7 +30,7 @@ async function fetchRoutesMetadata(): Promise<RouteDetail[]> {
   const { data, error } = await supabase
     .from('routes')
     .select(
-      'id, name, short_name, direction, is_active, category:categories(*), route_stops(*, stop:stops(*))',
+      'id, name, short_name, direction, is_active, category:categories(*), brand:brands(*), route_stops(*, stop:stops(*))',
     )
     .eq('is_active', true)
 

@@ -16,6 +16,16 @@ const mockCategories: Record<number, { id: number; name: string; color_hex: stri
   },
 }
 
+// Brand mock
+const mockBrands: Record<number, { id: number; name: string; color_hex: string }> = {
+  1: { id: 1, name: 'Rojo y Blanco', color_hex: '#ef4444' },
+  2: { id: 2, name: 'Amarillo y Blanco', color_hex: '#eab308' },
+  3: { id: 3, name: 'Transportes El Vigía', color_hex: '#3b82f6' },
+  4: { id: 4, name: 'Transportes Brisa', color_hex: '#f97316' },
+  5: { id: 5, name: 'Transportes Flecha Verde', color_hex: '#22c55e' },
+  6: { id: 6, name: 'Transportes Nativos', color_hex: '#6b7280' },
+}
+
 // Map stops for each route
 function getRouteStops(routeId: number) {
   const stopIds =
@@ -60,6 +70,8 @@ export const routesHandlers = [
         const routeDetail = {
           ...route,
           category: mockCategories[route.category_id || 1] || null,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          brand: mockBrands[(route as any).brand_id || 1] || null,
           route_stops: getRouteStops(route.id),
         }
 
@@ -80,6 +92,8 @@ export const routesHandlers = [
     const routesList = routesData.map((route) => ({
       ...route,
       category: mockCategories[route.category_id || 1] || null,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      brand: mockBrands[(route as any).brand_id || 1] || null,
       route_stops: getRouteStops(route.id),
     }))
 

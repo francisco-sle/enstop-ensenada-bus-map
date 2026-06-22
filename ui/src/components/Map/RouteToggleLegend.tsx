@@ -38,6 +38,7 @@ export function RouteToggleLegend({
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
   const [isMinimizedInternal, setIsMinimizedInternal] = useState(isMobile)
   const [isCollapsing, setIsCollapsing] = useState(false)
+  const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null)
 
   const isMinimized = isMinimizedProp !== undefined ? isMinimizedProp : isMinimizedInternal
   const setIsMinimized = (val: boolean) => {
@@ -57,16 +58,25 @@ export function RouteToggleLegend({
 
   if (routes.length === 0) return null
 
-  const allVisible = visibleRouteIds.size === routes.length && routes.length > 0
-  const someHidden = visibleRouteIds.size > 0 && visibleRouteIds.size < routes.length
+  const brands = Array.from(
+    new Map(routes.filter((r) => r.brand).map((r) => [r.brand!.id, r.brand!])).values(),
+  )
+
+  const filteredRoutes = selectedBrandId
+    ? routes.filter((r) => r.brand?.id === selectedBrandId)
+    : routes
+
+  const anyFilteredVisible = filteredRoutes.some((r) => visibleRouteIds.has(r.id))
   const visibleCount = visibleRouteIds.size
 
   function toggleAll() {
-    if (allVisible || someHidden) {
-      setVisibleRouteIds(new Set())
+    const next = new Set(visibleRouteIds)
+    if (anyFilteredVisible) {
+      filteredRoutes.forEach((r) => next.delete(r.id))
     } else {
-      setVisibleRouteIds(new Set(routes.map((r) => r.id)))
+      filteredRoutes.forEach((r) => next.add(r.id))
     }
+    setVisibleRouteIds(next)
   }
 
   // ── Collapsed pill (mobile only) ──────────────────────────────────────────
@@ -87,7 +97,7 @@ export function RouteToggleLegend({
               style={{
                 backgroundColor: !visibleRouteIds.has(r.id)
                   ? '#555'
-                  : r.category?.color_hex || '#3DBFA8',
+                  : r.brand?.color_hex || r.category?.color_hex || '#3DBFA8',
               }}
             />
           ))}
@@ -108,39 +118,73 @@ export function RouteToggleLegend({
     <div
       className={`route-toggle-legend${isMobile ? ' route-toggle-legend--mobile-expanded' : ''}${isCollapsing ? ' route-toggle-legend--collapsing' : ''}${pushedUp ? ' route-toggle-legend--pushed-up' : ''}`}
     >
-      <div className="route-toggle-legend__header">
-        <span className="route-toggle-legend__title">Rutas</span>
-        <div className="route-toggle-legend__header-actions">
-          <button
-            className="route-toggle-legend__all-btn"
-            onClick={toggleAll}
-            title={allVisible || someHidden ? 'Ocultar todas' : 'Mostrar todas'}
-          >
-            {allVisible || someHidden ? 'Ocultar' : 'Mostrar'}
-          </button>
-          {isMobile && (
+      <div className="route-toggle-legend__header flex-col items-stretch gap-3 pb-3">
+        <div className="flex items-center justify-between w-full">
+          <span className="route-toggle-legend__title">Rutas</span>
+          <div className="route-toggle-legend__header-actions">
             <button
-              className="route-toggle-legend__collapse-btn"
-              onClick={() => {
-                setIsCollapsing(true)
-                setTimeout(() => {
-                  setIsMinimized(true)
-                  setIsCollapsing(false)
-                }, 250)
-              }}
-              aria-label="Minimizar panel de rutas"
+              className="route-toggle-legend__all-btn"
+              onClick={toggleAll}
+              title={anyFilteredVisible ? 'Ocultar listadas' : 'Mostrar listadas'}
             >
-              <ChevronDown size={14} />
+              {anyFilteredVisible ? 'Ocultar' : 'Mostrar'}
             </button>
-          )}
+            {isMobile && (
+              <button
+                className="route-toggle-legend__collapse-btn"
+                onClick={() => {
+                  setIsCollapsing(true)
+                  setTimeout(() => {
+                    setIsMinimized(true)
+                    setIsCollapsing(false)
+                  }, 250)
+                }}
+                aria-label="Minimizar panel de rutas"
+              >
+                <ChevronDown size={14} />
+              </button>
+            )}
+          </div>
         </div>
+
+        {brands.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+            <button
+              onClick={() => setSelectedBrandId(null)}
+              className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                selectedBrandId === null
+                  ? 'bg-white text-bay-950 border-white'
+                  : 'bg-surface border-white/10 text-white/70 hover:bg-surface-elevated hover:text-white'
+              }`}
+            >
+              Todas
+            </button>
+            {brands.map((brand) => (
+              <button
+                key={brand.id}
+                onClick={() => setSelectedBrandId(brand.id)}
+                className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors flex items-center gap-1.5 ${
+                  selectedBrandId === brand.id
+                    ? 'bg-white text-bay-950 border-white'
+                    : 'bg-surface border-white/10 text-white/70 hover:bg-surface-elevated hover:text-white'
+                }`}
+              >
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: brand.color_hex }}
+                />
+                {brand.name}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <ul className="route-toggle-legend__list">
-        {routes.map((route) => {
+        {filteredRoutes.map((route) => {
           const isHidden = !visibleRouteIds.has(route.id)
           const isSelected = selectedRouteId === route.id
-          const color = route.category?.color_hex || '#3DBFA8'
+          const color = route.brand?.color_hex || route.category?.color_hex || '#3DBFA8'
 
           return (
             <li

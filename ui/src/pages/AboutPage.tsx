@@ -34,9 +34,10 @@ export function AboutPage() {
           </h3>
           <ul className="text-xs text-white/80 leading-relaxed list-disc list-inside flex flex-col gap-2.5">
             <li>
-              <strong className="text-white">Tarifas:</strong> El costo normal es de $13.00 MXN.
-              Estudiantes y personas con discapacidad pagan tarifa preferencial de $7.00 MXN al
-              mostrar su credencial correspondiente.
+              <strong className="text-white">Tarifas:</strong> El costo normal es de $15.50 MXN.
+              Personas con discapacidad y de la tercera edad pagan tarifa preferencial de $7.75 MXN
+              (50% de descuento) y estudiantes $5.85 MXN al mostrar su credencial correspondiente.
+              Algunas personas con discapacidad tienen acceso gratuito.
             </li>
             <li>
               <strong className="text-white">Paradas:</strong> Aunque los microbuses a veces se

@@ -10,6 +10,30 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      brands: {
+        Row: {
+          id: number
+          name: string
+          color_hex: string
+          units_operating: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          color_hex: string
+          units_operating?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          color_hex?: string
+          units_operating?: number | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           id: number
@@ -34,6 +58,7 @@ export interface Database {
           name: string
           short_name: string
           category_id: number | null
+          brand_id: number | null
           description: string | null
           geom: any // GeoJSON Geometry (LineString)
           direction: 'inbound' | 'outbound' | 'circular' | null
@@ -45,6 +70,7 @@ export interface Database {
           name: string
           short_name: string
           category_id?: number | null
+          brand_id?: number | null
           description?: string | null
           geom: any
           direction?: 'inbound' | 'outbound' | 'circular' | null
@@ -56,6 +82,7 @@ export interface Database {
           name?: string
           short_name?: string
           category_id?: number | null
+          brand_id?: number | null
           description?: string | null
           geom?: any
           direction?: 'inbound' | 'outbound' | 'circular' | null
@@ -63,6 +90,13 @@ export interface Database {
           created_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "routes_brand_id_fkey"
+            columns: ["brand_id"]
+            isOneToOne: false
+            referencedRelation: "brands"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "routes_category_id_fkey"
             columns: ["category_id"]
@@ -142,7 +176,7 @@ export interface Database {
         Row: {
           id: number
           route_id: number
-          passenger_type: 'normal' | 'student_government' | 'student_highschool' | 'disability'
+          passenger_type: 'normal' | 'student' | 'disability' | 'senior' | 'disability_free'
           fare_mxn: number
           effective_from: string
           notes: string | null
@@ -151,7 +185,7 @@ export interface Database {
         Insert: {
           id?: number
           route_id: number
-          passenger_type: 'normal' | 'student_government' | 'student_highschool' | 'disability'
+          passenger_type: 'normal' | 'student' | 'disability' | 'senior' | 'disability_free'
           fare_mxn: number
           effective_from?: string
           notes?: string | null
@@ -160,7 +194,7 @@ export interface Database {
         Update: {
           id?: number
           route_id?: number
-          passenger_type?: 'normal' | 'student_government' | 'student_highschool' | 'disability'
+          passenger_type?: 'normal' | 'student' | 'disability' | 'senior' | 'disability_free'
           fare_mxn?: number
           effective_from?: string
           notes?: string | null
