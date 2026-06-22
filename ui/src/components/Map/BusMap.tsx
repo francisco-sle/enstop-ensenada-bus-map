@@ -7,7 +7,7 @@ import { MapContextMenu } from './MapContextMenu'
 import { ActiveRouteDisplay } from './ActiveRouteDisplay'
 import { RouteLine } from './RouteLine'
 import { MapController, MapEventsHandler } from './mapControls'
-import { createStopIcon, userLocationIcon, routingPinIcon } from './mapIcons'
+import { createStopIcon, userLocationIcon, routingPinIconA, routingPinIconB } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
 import type { DBStop, RouteDetail } from '../../types'
 import { mapStyles } from './mapConfig'
@@ -109,7 +109,7 @@ export function BusMap({
         {showRouting && origin && (
           <Marker
             position={[origin.lat, origin.lng]}
-            icon={routingPinIcon('A')}
+            icon={routingPinIconA}
             zIndexOffset={900}
             draggable={true}
             eventHandlers={{
@@ -142,7 +142,7 @@ export function BusMap({
         {showRouting && destination && (
           <Marker
             position={[destination.lat, destination.lng]}
-            icon={routingPinIcon('B')}
+            icon={routingPinIconB}
             zIndexOffset={900}
             draggable={true}
             eventHandlers={{

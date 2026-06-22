@@ -63,7 +63,7 @@ export const userLocationIcon = L.divIcon({
   iconAnchor: [11, 11],
 })
 
-export function routingPinIcon(label: 'A' | 'B') {
+function createRoutingPinIcon(label: 'A' | 'B') {
   const bgColor = label === 'A' ? 'var(--color-accent-cerulean)' : 'var(--color-accent-warm)'
   const width = 28
   const height = width * 1.3
@@ -120,3 +120,6 @@ export function routingPinIcon(label: 'A' | 'B') {
     iconAnchor: [width / 2, height],
   })
 }
+
+export const routingPinIconA = createRoutingPinIcon('A')
+export const routingPinIconB = createRoutingPinIcon('B')
