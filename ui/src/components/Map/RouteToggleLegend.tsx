@@ -79,6 +79,16 @@ export function RouteToggleLegend({
     setVisibleRouteIds(next)
   }
 
+  function handleBrandSelect(brandId: number | null) {
+    setSelectedBrandId(brandId)
+    const nextIds = new Set(
+      brandId === null
+        ? routes.map((r) => r.id)
+        : routes.filter((r) => r.brand?.id === brandId).map((r) => r.id),
+    )
+    setVisibleRouteIds(nextIds)
+  }
+
   // ── Collapsed pill (mobile only) ──────────────────────────────────────────
   if (isMobile && isMinimized) {
     return (
@@ -148,9 +158,9 @@ export function RouteToggleLegend({
         </div>
 
         {brands.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+          <div className="flex flex-wrap gap-2 pb-1 -mx-1 px-1">
             <button
-              onClick={() => setSelectedBrandId(null)}
+              onClick={() => handleBrandSelect(null)}
               className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
                 selectedBrandId === null
                   ? 'bg-white text-bay-950 border-white'
@@ -162,7 +172,7 @@ export function RouteToggleLegend({
             {brands.map((brand) => (
               <button
                 key={brand.id}
-                onClick={() => setSelectedBrandId(brand.id)}
+                onClick={() => handleBrandSelect(brand.id)}
                 className={`shrink-0 px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors flex items-center gap-1.5 ${
                   selectedBrandId === brand.id
                     ? 'bg-white text-bay-950 border-white'
