@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import { useState, useMemo } from 'react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
@@ -113,9 +113,13 @@ export function BusMap({
             zIndexOffset={900}
             draggable={true}
             eventHandlers={{
-              dragstart: (e) => e.target.getElement()?.classList.add('is-dragging'),
+              dragstart: (e) => {
+                e.target.getElement()?.classList.add('is-dragging')
+                e.target.closeTooltip()
+              },
               dragend: (e) => {
-                e.target.getElement()?.classList.remove('is-dragging')
+                const el = e.target.getElement()
+                setTimeout(() => el?.classList.remove('is-dragging'), 150)
                 const position = e.target.getLatLng()
                 setOrigin({
                   ...origin,
@@ -125,7 +129,15 @@ export function BusMap({
                 })
               },
             }}
-          />
+          >
+            <Tooltip
+              direction="top"
+              offset={[0, -20]}
+              className="!bg-bay-900 !border-pacific-500/30 !text-white !shadow-xl !px-3 !py-1.5 !rounded-full !text-xs !font-medium"
+            >
+              Arrastrar para mover
+            </Tooltip>
+          </Marker>
         )}
         {showRouting && destination && (
           <Marker
@@ -134,9 +146,13 @@ export function BusMap({
             zIndexOffset={900}
             draggable={true}
             eventHandlers={{
-              dragstart: (e) => e.target.getElement()?.classList.add('is-dragging'),
+              dragstart: (e) => {
+                e.target.getElement()?.classList.add('is-dragging')
+                e.target.closeTooltip()
+              },
               dragend: (e) => {
-                e.target.getElement()?.classList.remove('is-dragging')
+                const el = e.target.getElement()
+                setTimeout(() => el?.classList.remove('is-dragging'), 150)
                 const position = e.target.getLatLng()
                 setDestination({
                   ...destination,
@@ -146,7 +162,15 @@ export function BusMap({
                 })
               },
             }}
-          />
+          >
+            <Tooltip
+              direction="top"
+              offset={[0, -20]}
+              className="!bg-bay-900 !border-pacific-500/30 !text-white !shadow-xl !px-3 !py-1.5 !rounded-full !text-xs !font-medium"
+            >
+              Arrastrar para mover
+            </Tooltip>
+          </Marker>
         )}
 
         {/* Active Routing Path */}

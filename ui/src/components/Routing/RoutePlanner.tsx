@@ -229,13 +229,14 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
             {/* Clear action */}
             {(origin || destination) && (
-              <button
-                type="button"
-                onClick={clearRouting}
-                className="btn btn-secondary w-full mt-3"
-              >
-                Limpiar todo
-              </button>
+              <div className="flex flex-col gap-3 mt-3">
+                <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
+                  Limpiar todo
+                </button>
+                <span className="text-[11px] text-white/40 text-center font-medium">
+                  💡 Tip: Puedes arrastrar los pines en el mapa
+                </span>
+              </div>
             )}
           </div>
         </div>
@@ -311,10 +312,13 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
         {/* Clear action */}
         {(origin || destination) && (
-          <div className="flex gap-2">
-            <button type="button" onClick={clearRouting} className="btn btn-secondary flex-1">
+          <div className="flex flex-col gap-2">
+            <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
               Limpiar
             </button>
+            <span className="text-xs text-white/40 text-center font-medium mt-1">
+              💡 Tip: Puedes arrastrar los pines en el mapa
+            </span>
           </div>
         )}
       </div>
