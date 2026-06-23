@@ -69,7 +69,7 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
         top: coords?.y ?? position.y,
         opacity: coords ? 1 : 0,
       }}
-      className="absolute z-1001 flex flex-col min-w-[150px] bg-surface rounded-xl overflow-hidden border border-white/8 shadow-card select-none animate-fade-up transition-opacity duration-75 py-1"
+      className="absolute z-1001 flex flex-col min-w-[150px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up transition-opacity duration-75 py-1"
     >
       <button
         onClick={handleSetOrigin}

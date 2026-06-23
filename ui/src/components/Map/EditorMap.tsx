@@ -356,7 +356,7 @@ export function EditorMap({
       {/* Loading Snapping Overlay */}
       {isSnapping && (
         <div className="absolute inset-0 bg-earth/40 backdrop-blur-[2px] flex items-center justify-center z-1001 pointer-events-none select-none">
-          <div className="bg-surface border border-white/8 rounded-xl p-4 flex items-center gap-3 shadow-card animate-pulse">
+          <div className="bg-surface border border-white/8 rounded-lg p-4 flex items-center gap-3 shadow-card animate-pulse">
             <div className="w-5 h-5 rounded-full border-2 border-pacific border-t-transparent animate-spin" />
             <span className="text-xs font-semibold text-white">Ajustando ruta a las calles...</span>
           </div>

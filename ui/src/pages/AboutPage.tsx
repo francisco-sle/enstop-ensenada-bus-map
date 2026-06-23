@@ -13,7 +13,7 @@ export function AboutPage() {
       {/* Guide Cards */}
       <div className="flex flex-col gap-3">
         {/* Project Info */}
-        <div className="bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-2">
+        <div className="bg-surface rounded-lg border border-white/8 p-4 flex flex-col gap-2">
           <h3 className="text-sm font-bold flex items-center gap-2 text-pacific-400">
             <Bus size={18} />
             <span>El Proyecto ENStop</span>
@@ -27,7 +27,7 @@ export function AboutPage() {
         </div>
 
         {/* How to use */}
-        <div className="bg-surface rounded-xl border border-white/8 p-4 flex flex-col gap-2">
+        <div className="bg-surface rounded-lg border border-white/8 p-4 flex flex-col gap-2">
           <h3 className="text-sm font-bold flex items-center gap-2 text-sol-400">
             <HelpCircle size={18} />
             <span>¿Cómo viajar en microbús?</span>
@@ -52,7 +52,7 @@ export function AboutPage() {
         </div>
 
         {/* Disclaimer */}
-        <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl flex gap-3 items-start">
+        <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-lg flex gap-3 items-start">
           <AlertCircle size={20} className="text-amber-400 shrink-0 mt-0.5" />
           <div>
             <h3 className="text-xs font-bold text-amber-300">Aviso Importante</h3>

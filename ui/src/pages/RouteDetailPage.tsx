@@ -132,7 +132,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
                 <div
                   key={rs.id}
                   onClick={() => handleStopClick(rs.stop)}
-                  className="bg-surface border border-white/8 rounded-xl p-3 cursor-pointer hover:bg-surface-elevated hover:border-white/12 transition-all flex items-center justify-between group active:scale-[0.99]"
+                  className="bg-surface border border-white/8 rounded-lg p-3 cursor-pointer hover:bg-surface-elevated hover:border-white/12 transition-all flex items-center justify-between group active:scale-[0.99]"
                 >
                   <div className="flex gap-3 items-center overflow-hidden">
                     <span className="bg-bay-700/50 text-white/50 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 group-hover:bg-pacific-400 group-hover:text-bay-950 transition-colors">

@@ -70,7 +70,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
       <div className="pointer-events-auto p-4 flex flex-col gap-3 w-full">
         <div
           onClick={() => toggleMinimize(false)}
-          className="bg-surface rounded-xl border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-98 transition-transform duration-150 select-none animate-slide-down"
+          className="bg-surface rounded-lg border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-98 transition-transform duration-150 select-none animate-slide-down"
         >
           <div className="flex min-w-0 flex-1 flex-col">
             {/* Origin field */}
@@ -154,7 +154,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
     return (
       <div className="pointer-events-auto p-4 flex flex-col flex-1 min-h-0 w-full">
         <div
-          className={`bg-surface rounded-xl border border-white/8 p-4 shadow-card flex flex-col gap-0 overflow-y-auto w-full flex-1 will-change-transform ${isCollapsing ? 'animate-slide-down-fade' : 'animate-slide-up'}`}
+          className={`bg-surface rounded-lg border border-white/8 p-4 shadow-card flex flex-col gap-0 overflow-y-auto w-full flex-1 will-change-transform ${isCollapsing ? 'animate-slide-down-fade' : 'animate-slide-up'}`}
         >
           <div className="flex flex-col flex-1">
             {/* Mini-header: ENSTOP logo on left, borderless back button on right */}
@@ -246,7 +246,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
   // Desktop view
   return (
-    <div className="bg-surface rounded-xl border border-white/8 p-3 md:p-4 flex flex-col gap-2 md:gap-3 shadow-card select-none">
+    <div className="bg-surface rounded-lg border border-white/8 p-3 md:p-4 flex flex-col gap-2 md:gap-3 shadow-card select-none">
       <div className="flex flex-col gap-2 md:gap-3">
         {/* Origin and Destination with Swap on Right */}
         <div className="flex items-center gap-3">

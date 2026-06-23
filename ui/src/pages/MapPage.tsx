@@ -132,7 +132,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
       {/* Map View Area */}
       <div className="flex-1 h-full w-full relative min-h-0 md:p-2 md:pl-0 lg:p-2.5 lg:pl-0">
-        <div className="w-full h-full relative md:rounded-xl lg:rounded-2xl overflow-hidden md:border md:border-white/10 md:shadow-card">
+        <div className="w-full h-full relative md:rounded-lg lg:rounded-lg overflow-hidden md:border md:border-white/10 md:shadow-card">
           {/* Map Background */}
           <div className="absolute inset-0 z-0">
             <BusMap activeRoutes={activeRoutes} allStops={allStops} showFullRoutes={true} />
@@ -175,7 +175,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <button
                 onClick={handleLocateUser}
                 aria-label="Encontrar mi ubicación actual"
-                className="bg-surface border border-white/8 w-11 h-11 rounded-xl flex items-center justify-center shadow-card hover:bg-surface-elevated active:scale-95 transition-all text-pacific-400 cursor-pointer"
+                className="bg-surface border border-white/8 w-11 h-11 rounded-lg flex items-center justify-center shadow-card hover:bg-surface-elevated active:scale-95 transition-all text-pacific-400 cursor-pointer"
               >
                 <Locate size={18} />
               </button>
@@ -230,7 +230,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                   if (touchStartY - e.changedTouches[0].clientY > 40) setMinimizedForResults(null)
                   setTouchStartY(null)
                 }}
-                className="absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-xl px-4 py-3 z-1001 flex items-center justify-between animate-slide-up select-none cursor-pointer hover:bg-white/5 transition-colors"
+                className="absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-lg px-4 py-3 z-1001 flex items-center justify-between animate-slide-up select-none cursor-pointer hover:bg-white/5 transition-colors"
               >
                 <span className="flex items-center gap-2 text-xs font-semibold text-white/70">
                   <span>🚌</span>
@@ -244,7 +244,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             ) : (
               /* Expanded drawer — plays exit animation before state switches to pill */
               <div
-                className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl pt-4 pb-0 px-4 z-1001 max-h-[60%] flex flex-col gap-3 select-none overflow-hidden ${
+                className={`absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-lg pt-4 pb-0 px-4 z-1001 max-h-[60%] flex flex-col gap-3 select-none overflow-hidden ${
                   isCollapsing ? 'animate-slide-down-fade' : 'animate-slide-up'
                 }`}
               >

@@ -27,7 +27,7 @@ export function FareTable({ fares, isLoading }: FareTableProps) {
   }
 
   return (
-    <div className="bg-surface-elevated rounded-xl border border-white/8 overflow-hidden mt-2 select-none">
+    <div className="bg-surface-elevated rounded-lg border border-white/8 overflow-hidden mt-2 select-none">
       <table className="w-full border-collapse text-left">
         <thead>
           <tr className="border-b border-white/8 text-[10px] uppercase font-bold text-white/50">

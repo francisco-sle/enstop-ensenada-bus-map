@@ -62,10 +62,10 @@ export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: 
     <div
       className={
         isInline
-          ? 'map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up mt-2'
+          ? 'map-overlay-card rounded-lg p-4 flex flex-col gap-3 select-none animate-fade-up mt-2'
           : variant === 'floating'
-            ? 'map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up shadow-card bg-surface w-full'
-            : 'absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none'
+            ? 'map-overlay-card rounded-lg p-4 flex flex-col gap-3 select-none animate-fade-up shadow-card bg-surface w-full'
+            : 'absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-lg p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none'
       }
     >
       {/* Header */}

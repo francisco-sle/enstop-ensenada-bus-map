@@ -571,7 +571,7 @@ export function EditorPage() {
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => setMode('view')}
-              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'view'
                   ? 'bg-pacific/10 border-pacific text-pacific'
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
@@ -583,7 +583,7 @@ export function EditorPage() {
 
             <button
               onClick={() => setMode('draw-route')}
-              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'draw-route'
                   ? 'bg-pacific/10 border-pacific text-pacific'
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
@@ -595,7 +595,7 @@ export function EditorPage() {
 
             <button
               onClick={() => setMode('add-stop')}
-              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
                 mode === 'add-stop'
                   ? 'bg-pacific/10 border-pacific text-pacific'
                   : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
@@ -607,7 +607,7 @@ export function EditorPage() {
           </div>
 
           {mode === 'draw-route' && (
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 flex gap-2.5 items-start mt-1">
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex gap-2.5 items-start mt-1">
               <Info size={16} className="text-amber-400 shrink-0 mt-0.5" />
               <p className="text-[10px] leading-relaxed text-white/80">
                 <strong>Click Derecho (mantén presionado)</strong> y arrastra el cursor por el mapa
@@ -618,7 +618,7 @@ export function EditorPage() {
           )}
 
           {mode === 'add-stop' && (
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-3 flex gap-2.5 items-start mt-1">
+            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex gap-2.5 items-start mt-1">
               <Info size={16} className="text-amber-400 shrink-0 mt-0.5" />
               <p className="text-[10px] leading-relaxed text-white/80">
                 Haz click en cualquier punto del mapa para colocar una parada de microbús. Podrás
@@ -668,7 +668,7 @@ export function EditorPage() {
           </div>
 
           {stops.length === 0 ? (
-            <div className="flex-1 flex flex-col items-center justify-center gap-2 border border-dashed border-white/8 rounded-xl p-6 text-center text-white/45">
+            <div className="flex-1 flex flex-col items-center justify-center gap-2 border border-dashed border-white/8 rounded-lg p-6 text-center text-white/45">
               <MapPin size={24} className="text-white/30" />
               <p className="text-[11px]">
                 No hay paradas en esta ruta. Activa "Añadir Parada" y haz click en el mapa.
@@ -679,7 +679,7 @@ export function EditorPage() {
               {stops.map((stop, index) => (
                 <div
                   key={stop.id}
-                  className="bg-surface-elevated border border-white/8 rounded-xl p-3 flex flex-col gap-2 group hover:border-white/12 transition-all"
+                  className="bg-surface-elevated border border-white/8 rounded-lg p-3 flex flex-col gap-2 group hover:border-white/12 transition-all"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[10px] bg-pacific/15 text-pacific font-bold px-1.5 py-0.5 rounded">

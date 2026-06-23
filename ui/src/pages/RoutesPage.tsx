@@ -65,14 +65,14 @@ export function RoutesPage({ routes }: RoutesPageProps) {
           <Link
             key={route.id}
             to={`/routes/${route.id}`}
-            className="bg-surface rounded-xl border border-white/8 flex items-center justify-between hover:bg-surface-elevated hover:border-white/12 transition-all duration-200 group active:scale-[0.99] cursor-pointer overflow-hidden h-20"
+            className="bg-surface rounded-lg border border-white/8 flex items-center justify-between hover:bg-surface-elevated hover:border-white/12 transition-all duration-200 group active:scale-[0.99] cursor-pointer overflow-hidden h-20"
           >
             <div className="flex gap-4 items-center overflow-hidden flex-1 pl-4 py-4 pr-3">
               <div
                 style={{
                   backgroundColor: route.brand?.color_hex || route.category?.color_hex || '#3DBFA8',
                 }}
-                className="shrink-0 text-bay-950 w-12 h-12 rounded-xl flex items-center justify-center font-extrabold text-lg shadow-md group-hover:scale-105 transition-transform"
+                className="shrink-0 text-bay-950 w-12 h-12 rounded-lg flex items-center justify-center font-extrabold text-lg shadow-md group-hover:scale-105 transition-transform"
               >
                 {route.short_name}
               </div>
