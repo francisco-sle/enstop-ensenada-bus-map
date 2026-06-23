@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ArrowLeftRight, ChevronDown, ArrowLeft, MapPin, Navigation } from 'lucide-react'
+import { ArrowLeftRight, ChevronDown, ArrowLeft, MapPin, Navigation, Map } from 'lucide-react'
 import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
 import { useRouteComputation } from './useRouteComputation'
@@ -35,6 +35,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
     setMapClickMode,
     setIsMinimized,
     clearRouting,
+    routingResults,
   } = useRoutingStore()
 
   const { setZoom } = useMapStore()
@@ -238,6 +239,18 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
                 </span>
               </div>
             )}
+
+            {/* Empty State / Hint Message */}
+            <div className="flex-1 flex flex-col items-center justify-center text-center px-6 select-none animate-fade-up pb-4 mt-6 min-h-[150px]">
+              <Map size={48} className="text-white opacity-[0.15] mb-4" strokeWidth={1.5} />
+              <p className="text-sm text-white/30 font-medium leading-relaxed">
+                {routingResults.length > 0
+                  ? 'Cierra este panel para ver tus rutas en el mapa.'
+                  : origin && destination
+                    ? 'No se encontraron rutas para estos puntos.'
+                    : 'Ingresa origen y destino para ver opciones de ruta.'}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -246,7 +259,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
   // Desktop view
   return (
-    <div className="bg-surface rounded-lg border border-white/8 p-3 md:p-4 flex flex-col gap-2 md:gap-3 shadow-card select-none">
+    <div className="bg-surface rounded-lg border border-white/8 p-3 md:p-4 flex flex-col gap-2 md:gap-3 shadow-card select-none animate-fade-up">
       <div className="flex flex-col gap-2 md:gap-3">
         {/* Origin and Destination with Swap on Right */}
         <div className="flex items-center gap-3">

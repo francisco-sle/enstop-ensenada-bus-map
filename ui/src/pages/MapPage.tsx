@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
-import { Locate, X, Info } from 'lucide-react'
+import { Locate, X, Info, Map } from 'lucide-react'
 import { BusMap } from '../components/Map/BusMap'
 import { RoutePlanner } from '../components/Routing/RoutePlanner'
 import { RouteResult } from '../components/Routing/RouteResult'
@@ -109,7 +109,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
           </div>
           <RoutePlanner stops={allStops} routes={activeRoutes} />
 
-          {routingResults.length > 0 && (
+          {routingResults.length > 0 ? (
             <div className="mt-2 flex flex-col gap-3 flex-1 min-h-0">
               <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider shrink-0">
                 Opciones de Ruta
@@ -118,13 +118,22 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                 <RouteResult />
               </div>
               <div className="mt-auto shrink-0 pt-2 pb-1">
-                <div className="flex gap-2 items-start bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
-                  <Info size={14} className="shrink-0 mt-0.5" />
+                <div className="flex gap-2 items-center justify-center bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
+                  <Info size={14} className="shrink-0" />
                   <span className="leading-tight">
                     Tiempos estimados. El tráfico y servicio pueden variar.
                   </span>
                 </div>
               </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center px-6 select-none animate-fade-up pb-10">
+              <Map size={48} className="text-white opacity-[0.15] mb-4" strokeWidth={1.5} />
+              <p className="text-sm text-white/30 font-medium leading-relaxed">
+                {origin && destination
+                  ? 'No se encontraron rutas para estos puntos.'
+                  : 'Ingresa origen y destino para ver opciones de ruta.'}
+              </p>
             </div>
           )}
         </div>
@@ -274,8 +283,8 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                 <div className="overflow-y-auto flex-1 min-h-0 pb-4 flex flex-col">
                   <RouteResult />
                   <div className="mt-auto shrink-0 pt-4">
-                    <div className="flex gap-2 items-start bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
-                      <Info size={14} className="shrink-0 mt-0.5" />
+                    <div className="flex gap-2 items-center justify-center bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
+                      <Info size={14} className="shrink-0" />
                       <span className="leading-tight">
                         Tiempos estimados. El tráfico y servicio pueden variar.
                       </span>

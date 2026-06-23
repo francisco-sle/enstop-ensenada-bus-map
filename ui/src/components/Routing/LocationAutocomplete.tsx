@@ -61,11 +61,22 @@ export function LocationAutocomplete({
   const [showDropdown, setShowDropdown] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const prevValueRef = useRef(value)
   const { setCenter, setZoom } = useMapStore()
 
   const { results: photonResults, isLoading: photonLoading } = usePhotonGeocoder(
     isFocused ? input : '',
   )
+
+  // Sync internal input state when value is changed externally (e.g. Limpiar or Swap buttons)
+  useEffect(() => {
+    if (prevValueRef.current !== null && value === null) {
+      setInput('')
+    } else if (value !== null && value.label !== prevValueRef.current?.label) {
+      setInput(value.label)
+    }
+    prevValueRef.current = value
+  }, [value])
 
   // Show committed label when blurred; if no value committed yet, keep whatever the user typed
   const displayValue = isFocused ? input : (value?.label ?? input)
@@ -226,11 +237,14 @@ export function LocationAutocomplete({
               setInput(value?.label ?? input)
               setShowDropdown(true)
             }}
-            className="w-full bg-bay-700/50 border border-white/8 rounded-lg py-2.5 pl-9 pr-8 text-sm text-white placeholder-white/25 focus:outline-hidden focus:border-pacific-400/50"
+            className={`w-full rounded-lg py-2.5 pl-9 pr-8 text-sm text-white placeholder-white/25 focus:outline-hidden transition-all duration-200 border-2 bg-bay-700/50 border-white/5 hover:border-white/10 focus:bg-surface-elevated ${
+              isOrigin ? 'focus:border-pacific-400' : 'focus:border-sol-400'
+            }`}
           />
           {displayValue && (
             <button
               type="button"
+              onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 onSelect(null)
                 setInput('')
