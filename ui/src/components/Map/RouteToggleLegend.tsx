@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useMapStore } from '../../store/mapStore'
+import { useRoutingStore } from '../../store/routingStore'
 import type { RouteDetail } from '../../types'
 
 interface RouteToggleLegendProps {
@@ -34,11 +35,35 @@ export function RouteToggleLegend({
 }: RouteToggleLegendProps) {
   const { visibleRouteIds, toggleRouteVisibility, setVisibleRouteIds, selectedRouteId } =
     useMapStore()
+  const { routingResults, selectedResultIndex, origin, destination } = useRoutingStore()
   const isMobile = useIsMobile()
   const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
   const [isMinimizedInternal, setIsMinimizedInternal] = useState(isMobile)
   const [isCollapsing, setIsCollapsing] = useState(false)
   const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null)
+
+  const prevRoutingActive = useRef(false)
+
+  // Sync visibility with selected recommended route
+  useEffect(() => {
+    if (routingResults.length > 0 && selectedResultIndex !== null) {
+      const result = routingResults[selectedResultIndex]
+      setSelectedBrandId(null)
+      setVisibleRouteIds(new Set([result.routeId]))
+    }
+  }, [routingResults, selectedResultIndex, setVisibleRouteIds])
+
+  // Reset when origin/destination fields are cleared
+  useEffect(() => {
+    const isRoutingActive = origin !== null || destination !== null || routingResults.length > 0
+    if (isRoutingActive) {
+      prevRoutingActive.current = true
+    } else if (prevRoutingActive.current) {
+      setSelectedBrandId(null)
+      setVisibleRouteIds(new Set())
+      prevRoutingActive.current = false
+    }
+  }, [origin, destination, routingResults.length, setVisibleRouteIds])
 
   const isMinimized = isMinimizedProp !== undefined ? isMinimizedProp : isMinimizedInternal
   const setIsMinimized = (val: boolean) => {
@@ -81,12 +106,6 @@ export function RouteToggleLegend({
 
   function handleBrandSelect(brandId: number | null) {
     setSelectedBrandId(brandId)
-    const nextIds = new Set(
-      brandId === null
-        ? routes.map((r) => r.id)
-        : routes.filter((r) => r.brand?.id === brandId).map((r) => r.id),
-    )
-    setVisibleRouteIds(nextIds)
   }
 
   // ── Collapsed pill ──────────────────────────────────────────
