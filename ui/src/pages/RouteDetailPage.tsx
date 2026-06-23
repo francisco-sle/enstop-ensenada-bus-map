@@ -171,6 +171,7 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
               showFullRoutes={false}
               showRouting={false}
               focusedRouteId={route.id}
+              ignoreVisibility={true}
             />
           </div>
         </div>

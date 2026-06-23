@@ -20,6 +20,7 @@ interface BusMapProps {
   showFullRoutes?: boolean
   showRouting?: boolean
   focusedRouteId?: number | null
+  ignoreVisibility?: boolean
 }
 
 export function BusMap({
@@ -28,6 +29,7 @@ export function BusMap({
   showFullRoutes = true,
   showRouting = true,
   focusedRouteId,
+  ignoreVisibility = false,
 }: BusMapProps) {
   const {
     center,
@@ -36,8 +38,15 @@ export function BusMap({
     selectedRouteId: globalSelectedRouteId,
     userLocation,
     setSelectedStopId,
-    visibleRouteIds,
+    visibleRouteIds: globalVisibleRouteIds,
   } = useMapStore()
+
+  const visibleRouteIds = useMemo(() => {
+    if (ignoreVisibility) {
+      return new Set(activeRoutes.map((r) => r.id))
+    }
+    return globalVisibleRouteIds
+  }, [ignoreVisibility, globalVisibleRouteIds, activeRoutes])
   const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } =
     useRoutingStore()
   const resolvedRouteId = focusedRouteId !== undefined ? focusedRouteId : globalSelectedRouteId

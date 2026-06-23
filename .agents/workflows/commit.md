@@ -17,3 +17,7 @@ description: Commits the current workspace changes with a meaningful and concise
    - **Action:** Synthesize a clear, concise, and meaningful commit message. The message should describe *what* changed and *why*, rather than just restating the diff.
    - **Action:** Execute `git commit -m "<message>"`.
    - **Constraint:** **DO NOT PUSH**. You must stop after the commit is successfully created.
+
+4. **Phase 4: Completion**
+   - **Action:** Output a short, concise message confirming the commit is complete.
+   - **Constraint:** **DO NOT** ask for further instructions, do not ask if the user wants to push, and **DO NOT** pause for user input. Terminate the workflow immediately after the confirmation message.
