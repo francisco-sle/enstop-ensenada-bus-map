@@ -82,7 +82,7 @@ export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: 
         <button
           onClick={onClose}
           aria-label="Cerrar detalles de parada"
-          className="text-white/50 hover:text-white p-1 transition-colors"
+          className="text-white/50 hover:text-white p-1 transition-colors cursor-pointer"
         >
           <X size={24} />
         </button>

@@ -249,7 +249,7 @@ export function LocationAutocomplete({
                 onSelect(null)
                 setInput('')
               }}
-              className="absolute right-2 top-0 bottom-0 flex items-center text-white/35 hover:text-white/60"
+              className="absolute right-2 top-0 bottom-0 flex items-center text-white/35 hover:text-white/60 cursor-pointer"
             >
               <X size={14} />
             </button>
