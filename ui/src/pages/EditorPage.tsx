@@ -1,20 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import {
-  ArrowLeft,
-  Paintbrush,
-  MapPin,
-  Eye,
-  Undo2,
-  Trash2,
-  Download,
-  Upload,
-  Info,
-  Layers,
-  Settings,
-} from 'lucide-react'
+import { ArrowLeft, MapPin, Trash2, Download, Upload, Save, Settings } from 'lucide-react'
 import { EditorMap } from '../components/Map/EditorMap'
 import { useOsrmRoute } from '../hooks/useOsrmRoute'
+import { useStudioSaves, type StudioSaveData } from '../hooks/useStudioSaves'
+import { SavesManager } from '../components/Studio/SavesManager'
+import { StudioToolbar, type StudioMode } from '../components/Studio/StudioToolbar'
 
 export interface DrawStroke {
   id: string
@@ -22,7 +13,7 @@ export interface DrawStroke {
   trace: [number, number][]
 }
 
-interface PlacedStop {
+export interface PlacedStop {
   id: string
   name: string
   lat: number
@@ -35,7 +26,7 @@ export function EditorPage() {
   const { snapCoordinates, loading: isSnapping } = useOsrmRoute()
 
   // State
-  const [mode, setMode] = useState<'draw-route' | 'add-stop' | 'view'>('draw-route')
+  const [mode, setMode] = useState<StudioMode>('draw-route')
   const [strokes, setStrokes] = useState<DrawStroke[]>([])
   const [history, setHistory] = useState<DrawStroke[][]>([])
   const [future, setFuture] = useState<DrawStroke[][]>([])
@@ -43,6 +34,7 @@ export function EditorPage() {
   const [selectedNode, setSelectedNode] = useState<{ strokeId: string; nodeIndex: number } | null>(
     null,
   )
+  const [isSavesManagerOpen, setIsSavesManagerOpen] = useState(false)
 
   const dragStartStrokesRef = useRef<DrawStroke[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -59,6 +51,69 @@ export function EditorPage() {
     const snapped = await snapCoordinates(coords, 'driving')
     return snapped
   }
+
+  // --- Autosave & Save Management ---
+  const { saves, createSave, deleteSave } = useStudioSaves()
+  const autosaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Memoize current state for saving
+  const getCurrentState = useCallback(
+    (): StudioSaveData => ({
+      strokes,
+      stops,
+      routeName,
+      routeShortName,
+      routeDirection,
+      routeColor,
+    }),
+    [strokes, stops, routeName, routeShortName, routeDirection, routeColor],
+  )
+
+  // Trigger autosave on changes (debounced)
+  useEffect(() => {
+    // Don't auto-save if completely empty to avoid polluting saves with blank slates
+    if (strokes.length === 0 && stops.length === 0 && routeName === 'Nueva Ruta') return
+
+    if (autosaveTimeoutRef.current) {
+      clearTimeout(autosaveTimeoutRef.current)
+    }
+
+    autosaveTimeoutRef.current = setTimeout(() => {
+      createSave(getCurrentState(), 'autosave')
+    }, 5000)
+
+    return () => {
+      if (autosaveTimeoutRef.current) {
+        clearTimeout(autosaveTimeoutRef.current)
+      }
+    }
+  }, [
+    strokes,
+    stops,
+    routeName,
+    routeShortName,
+    routeDirection,
+    routeColor,
+    createSave,
+    getCurrentState,
+  ])
+
+  const handleRestoreSave = useCallback((data: StudioSaveData) => {
+    setStrokes(data.strokes)
+    setStops(data.stops)
+    setRouteName(data.routeName)
+    setRouteShortName(data.routeShortName)
+    setRouteDirection(data.routeDirection)
+    setRouteColor(data.routeColor)
+    setHistory([])
+    setFuture([])
+  }, [])
+
+  const handleCreateManualSave = useCallback(() => {
+    createSave(getCurrentState(), 'manual')
+    alert('Guardado manual creado con éxito.')
+  }, [createSave, getCurrentState])
+  // -----------------------------------
 
   const saveState = useCallback(
     (newStrokes: DrawStroke[]) => {
@@ -491,9 +546,19 @@ export function EditorPage() {
           >
             <ArrowLeft size={18} />
           </button>
-          <div>
-            <h2 className="text-sm font-bold text-white font-display">Diseñador de Rutas</h2>
-            <p className="text-2xs text-white/55">Crea trazados de ruta y paradas desde cero</p>
+          <div className="flex-1 flex justify-between items-center">
+            <div>
+              <h2 className="text-sm font-bold text-white font-display">Diseñador de Rutas</h2>
+              <p className="text-2xs text-white/55">Crea trazados de ruta y paradas desde cero</p>
+            </div>
+            <button
+              onClick={() => setIsSavesManagerOpen(true)}
+              className="p-2 rounded-lg bg-white/5 hover:bg-pacific/10 border border-white/10 hover:border-pacific/30 text-white/80 hover:text-pacific-400 transition-colors flex items-center gap-1.5 ml-2 shrink-0"
+              title="Gestionar Guardados"
+            >
+              <Save size={14} />
+              <span className="text-[10px] font-bold uppercase hidden md:inline">Guardados</span>
+            </button>
           </div>
         </div>
 
@@ -558,96 +623,6 @@ export function EditorPage() {
                 />
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Drawing Controls */}
-        <div className="p-4 flex flex-col gap-3 border-b border-white/8">
-          <div className="flex items-center gap-2 text-pacific-400 font-semibold text-xs uppercase tracking-wider">
-            <Layers size={14} />
-            <span>Herramientas de Dibujo</span>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => setMode('view')}
-              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
-                mode === 'view'
-                  ? 'bg-pacific/10 border-pacific text-pacific'
-                  : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
-              }`}
-            >
-              <Eye size={16} />
-              <span>Navegar</span>
-            </button>
-
-            <button
-              onClick={() => setMode('draw-route')}
-              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
-                mode === 'draw-route'
-                  ? 'bg-pacific/10 border-pacific text-pacific'
-                  : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
-              }`}
-            >
-              <Paintbrush size={16} />
-              <span>Pintar Ruta</span>
-            </button>
-
-            <button
-              onClick={() => setMode('add-stop')}
-              className={`flex flex-col items-center justify-center gap-1.5 p-2.5 rounded-lg border text-xs font-semibold transition-all cursor-pointer ${
-                mode === 'add-stop'
-                  ? 'bg-pacific/10 border-pacific text-pacific'
-                  : 'bg-white/5 border-white/8 text-white/70 hover:bg-white/8'
-              }`}
-            >
-              <MapPin size={16} />
-              <span>Añadir Parada</span>
-            </button>
-          </div>
-
-          {mode === 'draw-route' && (
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex gap-2.5 items-start mt-1">
-              <Info size={16} className="text-amber-400 shrink-0 mt-0.5" />
-              <p className="text-[10px] leading-relaxed text-white/80">
-                <strong>Click Derecho (mantén presionado)</strong> y arrastra el cursor por el mapa
-                para pintar el recorrido. Al soltar, el trazo se ajustará a las calles transitables.
-                Puedes mover el mapa con click izquierdo.
-              </p>
-            </div>
-          )}
-
-          {mode === 'add-stop' && (
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex gap-2.5 items-start mt-1">
-              <Info size={16} className="text-amber-400 shrink-0 mt-0.5" />
-              <p className="text-[10px] leading-relaxed text-white/80">
-                Haz click en cualquier punto del mapa para colocar una parada de microbús. Podrás
-                cambiarle el nombre y ordenarla en el listado.
-              </p>
-            </div>
-          )}
-
-          {/* Action Operations */}
-          <div className="flex gap-2 mt-2">
-            <button
-              onClick={handleUndo}
-              disabled={history.length === 0}
-              className="btn btn-secondary flex-1 py-2 min-h-0 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
-              title="Deshacer (Ctrl+Z)"
-            >
-              <Undo2 size={14} />
-              <span>Deshacer</span>
-            </button>
-
-            <button
-              onClick={handleClearRoute}
-              disabled={strokes.length === 0}
-              className="btn btn-secondary flex-1 py-2 min-h-0 text-xs text-red-400 hover:text-red-300 disabled:opacity-40 disabled:cursor-not-allowed"
-              title="Borrar ruta entera"
-            >
-              <Trash2 size={14} />
-              <span>Borrar Ruta</span>
-            </button>
           </div>
         </div>
 
@@ -783,7 +758,27 @@ export function EditorPage() {
             </span>
           </div>
         )}
+
+        <StudioToolbar
+          mode={mode}
+          setMode={setMode}
+          onUndo={handleUndo}
+          canUndo={history.length > 0}
+          onRedo={handleRedo}
+          canRedo={future.length > 0}
+          onClearRoute={handleClearRoute}
+          canClearRoute={strokes.length > 0}
+        />
       </div>
+
+      <SavesManager
+        isOpen={isSavesManagerOpen}
+        onClose={() => setIsSavesManagerOpen(false)}
+        saves={saves}
+        onRestore={handleRestoreSave}
+        onDelete={deleteSave}
+        onCreateManual={handleCreateManualSave}
+      />
     </div>
   )
 }
