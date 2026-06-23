@@ -1,12 +1,39 @@
+<div align="center">
+
 # ENStop — Ensenada Bus Map 🚌
 
-> An interactive, real-time transit map for the city of Ensenada, Baja California. ENStop lets riders explore bus routes, plan origin-to-destination trips, view stop details, and look up current fares — all from a fast, map-first interface.
+[![React](https://img.shields.io/badge/React-19-blue.svg?logo=react&logoColor=white)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6.x-blue.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.x-38B2AC.svg?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E.svg?logo=supabase&logoColor=white)](https://supabase.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
+
+**An interactive, real-time transit map for the city of Ensenada, Baja California.**
+
+[Explore Features](#why-enstop) • [Architecture](#architecture-overview) • [Contributing](#contributing)
+
+</div>
+
+## Why ENStop?
+
+ENStop is a full-stack geospatial progressive web application (PWA) that models Ensenada's public bus network as structured data.
+
+- **Fast & Interactive Map** — OSM base tiles with color-coded route polylines and stop markers.
+- **Client-Side Route Planner** — Origin/destination trip planning with a powerful in-browser routing algorithm. Deep-links via `?from=lat,lng&to=lat,lng` URL params with fully isolated state across pages.
+- **Offline & PWA Ready** — Uses Workbox for robust runtime caching of map basemap tiles and static assets. Always available, even with poor connectivity.
+- **Studio Editor (`/studio`)** — Admin canvas for drawing and persisting new bus routes with OSRM road-snapping, RDP simplification, and **autosave functionality**.
+- **Comprehensive Details** — Slide-up drawer listing all routes serving a selected stop, plus live fare tables filtered by passenger type.
+- **Data-Decoupled Security** — Route geometry flows through a Cloudflare Turnstile-gated Supabase Edge Function that runs PostGIS topology simplification to prevent data scraping.
+
+> [!TIP]
+> ENStop is continuously improving! Recent updates include Studio Autosave, strict route state isolation between views, new PWA caching strategies, and comprehensive legal pages.
 
 ---
 
 ## Table of Contents
 
-- [Project Description](#project-description)
+- [Why ENStop?](#why-enstop)
 - [Architecture Overview](#architecture-overview)
 - [Tech Stack](#tech-stack)
 - [Local Development Setup](#local-development-setup)
@@ -14,19 +41,6 @@
 - [Editor Setup](#editor-setup-vs-code)
 - [Contributing](#contributing)
 - [Troubleshooting](#troubleshooting)
-
----
-
-## Project Description
-
-ENStop is a full-stack geospatial web application that models Ensenada's public bus network as structured data. The core features include:
-
-- **Interactive map** — OSM base tiles with color-coded route polylines and stop markers.
-- **Route planner** — Origin/destination trip planning with a client-side routing algorithm (stop cross-join → sequence validation → geometry slicing → Turf distance scoring). Deep-links via `?from=lat,lng&to=lat,lng` URL params.
-- **Stop details** — Slide-up drawer listing all routes serving a selected stop.
-- **Fare lookup** — Live fare table per route, filtered by passenger type.
-- **Editor (`/studio`)** — Admin canvas for drawing and persisting new bus routes with OSRM road-snapping and RDP simplification.
-- **Offline/CI mode** — MSW mock layer activated by build mode (`npm run dev:mock` / `npm run build:mock`).
 
 ---
 
