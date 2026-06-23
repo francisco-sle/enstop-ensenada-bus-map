@@ -26,7 +26,7 @@ export const useMapStore = create<MapState>((set) => ({
   visibleRouteIds: new Set<number>(),
   setCenter: (center) => set({ center }),
   setZoom: (zoom) => set({ zoom }),
-  setSelectedStopId: (selectedStopId) => set({ selectedStopId }),
+  setSelectedStopId: (selectedStopId) => set({ selectedStopId, selectedRouteId: null }),
   setSelectedRouteId: (selectedRouteId) => set({ selectedRouteId }),
   setUserLocation: (userLocation) => set({ userLocation }),
   toggleRouteVisibility: (id) =>

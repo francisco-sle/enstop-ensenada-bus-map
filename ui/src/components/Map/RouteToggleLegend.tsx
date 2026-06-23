@@ -95,7 +95,9 @@ export function RouteToggleLegend({
       <button
         type="button"
         onClick={() => setIsMinimized(false)}
-        className="h-11 bg-surface border border-white/8 rounded-xl shadow-card flex items-center gap-2 px-3 hover:bg-surface-elevated active:scale-95 transition-transform duration-150 select-none cursor-pointer"
+        className={`h-11 bg-surface border border-white/8 rounded-xl shadow-card flex items-center gap-2 px-3 hover:bg-surface-elevated active:scale-95 transition-transform duration-150 select-none cursor-pointer ${
+          !isMobile ? 'absolute bottom-12 right-3 z-[1000] animate-fade-in' : ''
+        }`}
         aria-label="Expandir rutas"
       >
         {/* Swatches preview */}

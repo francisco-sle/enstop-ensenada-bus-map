@@ -94,6 +94,16 @@
       transform: translateY(0);
     }
   }
+  @keyframes fade-down-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
   @keyframes slide-up {
     from {
       transform: translate3d(0, 100%, 0);
@@ -540,6 +550,10 @@
 }
 .route-toggle-legend__collapse-btn:active {
   transform: scale(0.85);
+}
+
+.route-toggle-legend--collapsing {
+  animation: fade-down-out 0.2s ease-out forwards !important;
 }
 
 /* Mobile expanded — fills vertical space above the attribution bar */

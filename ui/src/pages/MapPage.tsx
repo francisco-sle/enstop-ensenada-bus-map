@@ -29,7 +29,8 @@ interface MapPageProps {
 
 export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   const { selectedStopId, setSelectedStopId, setUserLocation, setCenter, setZoom } = useMapStore()
-  const { routingResults, isMinimized, origin, destination } = useRoutingStore()
+  const { routingResults, selectedResultIndex, isMinimized, origin, destination } =
+    useRoutingStore()
   const isMobile = useIsMobile()
   const [isLegendMinimized, setIsLegendMinimized] = useState(true)
   // `minimizedForResults` is the specific results array reference the user hid.
@@ -48,19 +49,22 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
   const prevOrigin = useRef(origin)
   const prevDest = useRef(destination)
+  const prevResultIndex = useRef(selectedResultIndex)
 
   useEffect(() => {
     const originChanged = origin !== prevOrigin.current
     const destChanged = destination !== prevDest.current
+    const resultIndexChanged = selectedResultIndex !== prevResultIndex.current
 
-    if (originChanged || destChanged) {
+    if (originChanged || destChanged || resultIndexChanged) {
       if (selectedStopId) {
         setSelectedStopId(null)
       }
       prevOrigin.current = origin
       prevDest.current = destination
+      prevResultIndex.current = selectedResultIndex
     }
-  }, [origin, destination, selectedStopId, setSelectedStopId])
+  }, [origin, destination, selectedResultIndex, selectedStopId, setSelectedStopId])
 
   const handleLocateUser = useCallback(() => {
     navigator.geolocation.getCurrentPosition(
@@ -136,7 +140,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
           )}
 
           {/* Route Toggle Legend (Desktop only) */}
-          {!isMobile && <RouteToggleLegend routes={activeRoutes} isMinimizedProp={false} />}
+          {!isMobile && <RouteToggleLegend routes={activeRoutes} />}
 
           {/* Floating Stop Detail Drawer (Desktop only) */}
           {!isMobile && selectedStop && (
@@ -144,6 +148,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <StopDrawer
                 key={selectedStop.id}
                 stop={selectedStop}
+                activeRoutes={activeRoutes}
                 onClose={() => setSelectedStopId(null)}
                 variant="floating"
               />
@@ -267,6 +272,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             <StopDrawer
               key={selectedStop.id}
               stop={selectedStop}
+              activeRoutes={activeRoutes}
               onClose={() => setSelectedStopId(null)}
               variant="drawer"
             />

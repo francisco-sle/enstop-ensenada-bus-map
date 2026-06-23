@@ -2,19 +2,24 @@ import { X, MapPin, Accessibility, Check, Navigation, Radio } from 'lucide-react
 import { useState } from 'react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
-import { useRoutesForStop } from '../../api/useRoutesForStop'
-import type { DBStop } from '../../types'
+import type { DBStop, RouteDetail } from '../../types'
 
 interface StopDrawerProps {
   stop: DBStop | undefined
+  activeRoutes: RouteDetail[]
   onClose: () => void
   variant?: 'drawer' | 'inline' | 'floating'
 }
 
-export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProps) {
+export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: StopDrawerProps) {
   const { setOrigin, setDestination } = useRoutingStore()
-  const { setSelectedRouteId, setSelectedStopId } = useMapStore()
-  const { data: routes, isLoading: loadingRoutes } = useRoutesForStop(stop?.id || null)
+  const { selectedRouteId, setSelectedRouteId, setSelectedStopId } = useMapStore()
+
+  // Derive routes serving this stop from activeRoutes
+  const routes = stop
+    ? activeRoutes.filter((r) => (r.route_stops ?? []).some((rs) => rs.stop_id === stop.id))
+    : []
+  const loadingRoutes = false
 
   const [isCheckedIn, setIsCheckedIn] = useState(false)
 
@@ -108,10 +113,20 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
             {routes.map((route) => (
               <button
                 key={route.id}
-                onClick={() => setSelectedRouteId(route.id)}
-                className="bg-bay-700/40 border border-white/8 rounded-full px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold text-white hover:bg-bay-700/80 active:scale-95 transition-all"
+                onClick={() => setSelectedRouteId(selectedRouteId === route.id ? null : route.id)}
+                className={`border rounded-full px-3 py-1.5 flex items-center gap-1.5 text-xs font-bold text-white transition-all ${
+                  selectedRouteId === route.id
+                    ? 'bg-bay-700/80 border-pacific-400 shadow-sm'
+                    : 'bg-bay-700/40 border-white/8 hover:bg-bay-700/60 active:scale-95'
+                }`}
               >
-                <span className="w-2 h-2 rounded-full bg-pacific-400"></span>
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor:
+                      route.brand?.color_hex || route.category?.color_hex || '#3DBFA8',
+                  }}
+                ></span>
                 {route.short_name}
               </button>
             ))}
