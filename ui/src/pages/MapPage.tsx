@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
-import { Locate, X } from 'lucide-react'
+import { Locate, X, Info } from 'lucide-react'
 import { BusMap } from '../components/Map/BusMap'
 import { RoutePlanner } from '../components/Routing/RoutePlanner'
 import { RouteResult } from '../components/Routing/RouteResult'
@@ -110,11 +110,21 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
           <RoutePlanner stops={allStops} routes={activeRoutes} />
 
           {routingResults.length > 0 && (
-            <div className="mt-2 flex flex-col gap-3">
-              <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider">
+            <div className="mt-2 flex flex-col gap-3 flex-1 min-h-0">
+              <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider shrink-0">
                 Opciones de Ruta
               </h3>
-              <RouteResult />
+              <div className="overflow-y-auto min-h-0">
+                <RouteResult />
+              </div>
+              <div className="mt-auto shrink-0 pt-2 pb-1">
+                <div className="flex gap-2 items-start bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
+                  <Info size={14} className="shrink-0 mt-0.5" />
+                  <span className="leading-tight">
+                    Tiempos estimados. El tráfico y servicio pueden variar.
+                  </span>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -261,8 +271,16 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                     </button>
                   </div>
                 </div>
-                <div className="overflow-y-auto flex-1 min-h-0 pb-4">
+                <div className="overflow-y-auto flex-1 min-h-0 pb-4 flex flex-col">
                   <RouteResult />
+                  <div className="mt-auto shrink-0 pt-4">
+                    <div className="flex gap-2 items-start bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
+                      <Info size={14} className="shrink-0 mt-0.5" />
+                      <span className="leading-tight">
+                        Tiempos estimados. El tráfico y servicio pueden variar.
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

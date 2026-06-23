@@ -1,5 +1,5 @@
 import { useRoutingStore } from '../../store/routingStore'
-import { Info, MapPin, Bus, Clock } from 'lucide-react'
+import { Bus, Clock } from 'lucide-react'
 
 export function RouteResult() {
   const { routingResults, selectedResultIndex, setSelectedResultIndex } = useRoutingStore()
@@ -29,71 +29,53 @@ export function RouteResult() {
               }`}
             >
               {/* Badge & Time Summary */}
-              <div className="flex justify-between items-center select-none pb-1">
-                <div className="flex flex-col overflow-hidden mr-1 gap-0.5">
+              <div className="flex justify-between items-center select-none pb-0.5">
+                <div className="flex flex-col overflow-hidden mr-3 gap-1">
                   <div className="flex items-center gap-2">
-                    <Bus size={20} style={{ color: result.routeColor }} className="shrink-0" />
-                    <span className="text-xs font-bold text-white/95 truncate">
-                      {result.routeShortName} • {result.routeName.split('—')[1] || result.routeName}
+                    <span
+                      className="px-2 py-[3px] rounded text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] border border-white/20 font-black text-[11px] leading-none shrink-0"
+                      style={{ backgroundColor: result.routeColor }}
+                    >
+                      {result.routeShortName}
+                    </span>
+                    <span className="text-sm font-bold text-white/95 truncate">
+                      {result.routeName.split('—')[1] || result.routeName}
                     </span>
                   </div>
                   {result.routeBrandName && (
-                    <span className="text-[10px] text-white/50 truncate font-medium pl-[28px]">
+                    <span className="text-[10px] text-white/40 truncate font-medium">
                       {result.routeBrandName}
                     </span>
                   )}
                 </div>
-                <div className="shrink-0 flex items-baseline self-start">
-                  <span className="text-lg font-extrabold text-pacific-400">~{busMin}</span>
-                  <span className="text-[10px] text-white/40 ml-0.5">min</span>
+                <div className="shrink-0 flex items-baseline">
+                  <span className="text-base font-bold text-white/80">~{busMin}</span>
+                  <span className="text-[10px] text-white/40 ml-0.5 font-medium">min</span>
                 </div>
               </div>
 
               {/* Step-by-Step Directions */}
               {isSelected && (
-                <div className="flex flex-col text-xs pt-2 border-t border-white/6 animate-fade-up">
-                  {/* Origin */}
-                  <div className="flex gap-2.5 items-start">
-                    <div className="flex flex-col items-center self-stretch w-4">
-                      <MapPin size={14} className="text-pacific-400 mt-0.5" />
-                      <div className="w-0.5 bg-white/10 flex-1 my-1 min-h-[14px]"></div>
+                <div className="flex flex-col text-xs mt-1.5 bg-black/20 rounded-lg p-3 border border-white/5 shadow-inner animate-fade-up">
+                  <div className="flex gap-2">
+                    <div className="flex flex-col items-center w-4 shrink-0">
+                      <div className="w-3 h-3 rounded-full bg-white z-10 shrink-0 mt-[2px]"></div>
+                      <div
+                        className="w-1 flex-1 my-[-3px] rounded-full"
+                        style={{ backgroundColor: result.routeColor }}
+                      ></div>
+                      <div className="w-3 h-3 rounded-full bg-pacific-400 z-10 shrink-0 mb-[2px]"></div>
                     </div>
-                    <div>
-                      <span className="text-white/90">
-                        Sube en{' '}
-                        <strong className="text-white font-bold">{result.originStop.name}</strong>
+                    <div className="flex flex-col flex-1">
+                      <span className="text-white/95 font-medium leading-tight">
+                        {result.originStop.name}
                       </span>
-                    </div>
-                  </div>
-
-                  {/* Bus segment */}
-                  <div className="flex gap-2.5 items-start">
-                    <div className="flex flex-col items-center self-stretch w-4">
-                      <Bus size={14} style={{ color: result.routeColor }} className="mt-0.5" />
-                      <div className="w-0.5 bg-white/10 flex-1 my-1 min-h-[14px]"></div>
-                    </div>
-                    <div>
-                      <span className="text-white/90">
-                        Viaja en microbús{' '}
-                        <strong style={{ color: result.routeColor }}>
-                          {result.routeShortName}
-                        </strong>
-                      </span>
-                      <span className="text-[10px] text-white/40 block">
-                        ~{busMin} min de recorrido
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Destination */}
-                  <div className="flex gap-2.5 items-start">
-                    <div className="w-4 flex justify-center">
-                      <MapPin size={14} className="text-sol-400 mt-0.5" />
-                    </div>
-                    <div>
-                      <span className="text-white/90">
-                        Baja en{' '}
-                        <strong className="text-white font-bold">{result.destStop.name}</strong>
+                      <div className="flex items-center gap-1.5 my-3 py-0.5 text-[9px] uppercase tracking-wider text-white/50 font-bold">
+                        <Bus size={10} style={{ color: result.routeColor }} />
+                        <span>~{busMin} min de viaje</span>
+                      </div>
+                      <span className="text-white/95 font-medium leading-tight">
+                        {result.destStop.name}
                       </span>
                     </div>
                   </div>
@@ -102,15 +84,6 @@ export function RouteResult() {
             </div>
           )
         })}
-      </div>
-
-      {/* Disclaimer */}
-      <div className="flex gap-2 items-center bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-lg text-[10px] text-amber-300 select-none">
-        <Info size={14} className="shrink-0" />
-        <span>
-          Tiempos estimados de recorrido. El tráfico y el servicio real de las unidades de
-          transporte público de Ensenada pueden variar.
-        </span>
       </div>
     </div>
   )
