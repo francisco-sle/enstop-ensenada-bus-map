@@ -1,9 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
+import { registerSW } from 'virtual:pwa-register'
 import 'leaflet/dist/leaflet.css'
 import './styles/index.css'
 import App from './App.tsx'
+
+registerSW({ immediate: true })
 
 async function prepareApp() {
   if (import.meta.env.VITE_USE_MOCKS === 'true') {
