@@ -149,6 +149,7 @@ export function computeABRoute(
             routeName: route.name,
             routeShortName: route.short_name,
             routeColor: route.brand?.color_hex || route.category?.color_hex || '#3DBFA8',
+            routeBrandName: route.brand?.name,
             originStop,
             destStop,
             busDistanceKm,

@@ -34,6 +34,7 @@ export interface RoutingResult {
   routeName: string
   routeShortName: string
   routeColor: string
+  routeBrandName?: string
   originStop: DBStop
   destStop: DBStop
   busDistanceKm: number
