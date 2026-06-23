@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
@@ -42,28 +42,25 @@ export function RouteToggleLegend({
   const [isCollapsing, setIsCollapsing] = useState(false)
   const [selectedBrandId, setSelectedBrandId] = useState<number | null>(null)
 
-  const prevRoutingActive = useRef(false)
+  const isRoutingActive = origin !== null || destination !== null || routingResults.length > 0
+  const [prevRoutingActive, setPrevRoutingActive] = useState(isRoutingActive)
 
-  // Sync visibility with selected recommended route
-  useEffect(() => {
-    if (routingResults.length > 0 && selectedResultIndex !== null) {
-      const result = routingResults[selectedResultIndex]
+  // Derive state during render instead of useEffect (React recommended pattern to avoid cascading renders)
+  if (isRoutingActive !== prevRoutingActive) {
+    setPrevRoutingActive(isRoutingActive)
+    if (selectedBrandId !== null) {
       setSelectedBrandId(null)
-      setVisibleRouteIds(new Set([result.routeId]))
     }
-  }, [routingResults, selectedResultIndex, setVisibleRouteIds])
+  }
 
-  // Reset when origin/destination fields are cleared
-  useEffect(() => {
-    const isRoutingActive = origin !== null || destination !== null || routingResults.length > 0
-    if (isRoutingActive) {
-      prevRoutingActive.current = true
-    } else if (prevRoutingActive.current) {
+  if (routingResults.length > 0 && selectedResultIndex !== null) {
+    // If we just selected a result, force selectedBrandId to null
+    // We can't easily track prevSelectedResultIndex without another state/ref,
+    // but doing it here if it's not null is safe because it will immediately trigger a re-render and then be null.
+    if (selectedBrandId !== null) {
       setSelectedBrandId(null)
-      setVisibleRouteIds(new Set())
-      prevRoutingActive.current = false
     }
-  }, [origin, destination, routingResults.length, setVisibleRouteIds])
+  }
 
   const isMinimized = isMinimizedProp !== undefined ? isMinimizedProp : isMinimizedInternal
   const setIsMinimized = (val: boolean) => {

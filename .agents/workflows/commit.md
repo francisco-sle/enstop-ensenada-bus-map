@@ -15,6 +15,7 @@ description: Commits the current workspace changes with a meaningful and concise
 
 3. **Phase 3: Generate and Execute Commit**
    - **Action:** Synthesize a clear, concise, and meaningful commit message. The message should describe *what* changed and *why*, rather than just restating the diff.
+   - **Constraint:** The commit message should focus on the technical details and intent of the code changes. You may use the chat history to understand the context of the diff, but DO NOT include conversational meta-details (e.g., "The user asked me to...", "As requested in chat"). Write the message purely from the perspective of the codebase.
    - **Action:** Execute `git commit -m "<message>"`.
    - **Constraint:** **DO NOT PUSH**. You must stop after the commit is successfully created.
 
