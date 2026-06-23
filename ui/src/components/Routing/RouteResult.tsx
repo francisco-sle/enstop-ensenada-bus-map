@@ -22,7 +22,7 @@ export function RouteResult() {
             <div
               key={index}
               onClick={() => setSelectedResultIndex(index)}
-              className={`p-3 rounded-lg cursor-pointer transition-all duration-200 border-2 flex flex-col gap-2 ${
+              className={`p-3 rounded-lg cursor-pointer transition-all duration-200 border-2 flex flex-col ${
                 isSelected
                   ? 'bg-surface-elevated border-pacific-400'
                   : 'bg-bay-900 border-white/5 hover:bg-bay-800 hover:border-white/10'
@@ -57,9 +57,7 @@ export function RouteResult() {
               {/* Step-by-Step Directions */}
               <div
                 className={`grid transition-all duration-300 ease-in-out ${
-                  isSelected
-                    ? 'grid-rows-[1fr] opacity-100 mt-1.5'
-                    : 'grid-rows-[0fr] opacity-0 mt-0'
+                  isSelected ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0 mt-0'
                 }`}
               >
                 <div className="overflow-hidden">

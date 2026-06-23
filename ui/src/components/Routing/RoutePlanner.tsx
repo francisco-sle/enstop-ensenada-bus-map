@@ -273,8 +273,8 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
   // Desktop view
   return (
-    <div className="bg-surface rounded-lg border border-white/8 p-3 md:p-4 flex flex-col gap-2 md:gap-3 shadow-card select-none animate-fade-up">
-      <div className="flex flex-col gap-2 md:gap-3">
+    <div className="bg-surface rounded-lg border border-white/8 p-3 md:p-4 flex flex-col shadow-card select-none animate-fade-up">
+      <div className="flex flex-col">
         {/* Origin and Destination with Swap on Right */}
         <div className="flex items-center gap-3">
           <div className="flex-1 flex flex-col gap-2 md:gap-3">
@@ -340,7 +340,9 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
         {/* Clear action */}
         <div
           className={`grid transition-all duration-300 ease-in-out ${
-            origin || destination ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+            origin || destination
+              ? 'grid-rows-[1fr] opacity-100 mt-2 md:mt-3'
+              : 'grid-rows-[0fr] opacity-0 mt-0'
           }`}
         >
           <div className="overflow-hidden">
