@@ -179,7 +179,7 @@ export function LocationAutocomplete({
               className="w-full text-left px-3 py-2.5 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
             >
               <Navigation size={10} className="text-white/40 shrink-0" />
-              <span className="truncate">{result.label}</span>
+              <span className="text-white/90 text-left">{result.label}</span>
             </button>
           ))}
         </>

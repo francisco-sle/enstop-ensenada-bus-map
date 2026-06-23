@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { ArrowLeftRight, ChevronDown, ArrowLeft, MapPin, Navigation, Map } from 'lucide-react'
+import { ArrowLeftRight, ChevronDown, ArrowLeft, MapPin, Navigation, Map, X } from 'lucide-react'
 import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
 import { useRouteComputation } from './useRouteComputation'
@@ -109,17 +109,30 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
           <div className="flex items-center gap-1 shrink-0 ml-2">
             {(origin || destination) && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleSwap()
-                }}
-                className="btn btn-secondary p-1 min-h-0 w-8 h-8 flex items-center justify-center rounded-md text-white/50 hover:text-white"
-                title="Intercambiar origen y destino"
-              >
-                <ArrowLeftRight size={14} className="rotate-90" />
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    clearRouting()
+                  }}
+                  className="btn btn-secondary p-1 min-h-0 w-8 h-8 flex items-center justify-center rounded-md text-white/50 hover:text-white"
+                  title="Limpiar ruta"
+                >
+                  <X size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleSwap()
+                  }}
+                  className="btn btn-secondary p-1 min-h-0 w-8 h-8 flex items-center justify-center rounded-md text-white/50 hover:text-white"
+                  title="Intercambiar origen y destino"
+                >
+                  <ArrowLeftRight size={14} className="rotate-90" />
+                </button>
+              </>
             )}
             <div className="p-1 rounded-md text-white/45 hover:text-white transition-colors">
               <ChevronDown size={18} />
@@ -184,7 +197,6 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
                   value={origin}
                   stops={stops}
                   autoFocus={!origin}
-                  inlineResults
                   onSelect={(val) => {
                     setOrigin(val)
                     if (val) toggleMinimize(true)
@@ -202,7 +214,6 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
                   value={destination}
                   stops={stops}
                   autoFocus={!!origin && !destination}
-                  inlineResults
                   onSelect={(val) => {
                     setDestination(val)
                     if (val) toggleMinimize(true)
