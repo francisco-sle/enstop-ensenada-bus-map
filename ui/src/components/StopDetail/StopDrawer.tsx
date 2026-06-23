@@ -8,7 +8,7 @@ import type { DBStop } from '../../types'
 interface StopDrawerProps {
   stop: DBStop | undefined
   onClose: () => void
-  variant?: 'drawer' | 'inline'
+  variant?: 'drawer' | 'inline' | 'floating'
 }
 
 export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProps) {
@@ -58,7 +58,9 @@ export function StopDrawer({ stop, onClose, variant = 'drawer' }: StopDrawerProp
       className={
         isInline
           ? 'map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up mt-2'
-          : 'absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none'
+          : variant === 'floating'
+            ? 'map-overlay-card rounded-xl p-4 flex flex-col gap-3 select-none animate-fade-up shadow-card bg-surface w-full'
+            : 'absolute bottom-0 left-0 right-0 map-overlay-card rounded-t-2xl p-4 z-1001 max-h-[70%] overflow-y-auto flex flex-col gap-3 animate-slide-up select-none'
       }
     >
       {/* Header */}

@@ -89,8 +89,8 @@ export function RouteToggleLegend({
     setVisibleRouteIds(nextIds)
   }
 
-  // ── Collapsed pill (mobile only) ──────────────────────────────────────────
-  if (isMobile && isMinimized) {
+  // ── Collapsed pill ──────────────────────────────────────────
+  if (isMinimized) {
     return (
       <button
         type="button"
@@ -139,21 +139,19 @@ export function RouteToggleLegend({
             >
               {anyFilteredVisible ? 'Ocultar' : 'Mostrar'}
             </button>
-            {isMobile && (
-              <button
-                className="route-toggle-legend__collapse-btn"
-                onClick={() => {
-                  setIsCollapsing(true)
-                  setTimeout(() => {
-                    setIsMinimized(true)
-                    setIsCollapsing(false)
-                  }, 250)
-                }}
-                aria-label="Minimizar panel de rutas"
-              >
-                <ChevronDown size={14} />
-              </button>
-            )}
+            <button
+              className="route-toggle-legend__collapse-btn"
+              onClick={() => {
+                setIsCollapsing(true)
+                setTimeout(() => {
+                  setIsMinimized(true)
+                  setIsCollapsing(false)
+                }, 250)
+              }}
+              aria-label="Minimizar panel de rutas"
+            >
+              <ChevronDown size={14} />
+            </button>
           </div>
         </div>
 

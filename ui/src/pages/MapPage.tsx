@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from 'react'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import { Locate, X } from 'lucide-react'
 import { BusMap } from '../components/Map/BusMap'
 import { RoutePlanner } from '../components/Routing/RoutePlanner'
@@ -29,7 +29,7 @@ interface MapPageProps {
 
 export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   const { selectedStopId, setSelectedStopId, setUserLocation, setCenter, setZoom } = useMapStore()
-  const { routingResults, isMinimized } = useRoutingStore()
+  const { routingResults, isMinimized, origin, destination } = useRoutingStore()
   const isMobile = useIsMobile()
   const [isLegendMinimized, setIsLegendMinimized] = useState(true)
   // `minimizedForResults` is the specific results array reference the user hid.
@@ -45,6 +45,22 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
   useUrlStoreSync()
 
   const selectedStop = allStops.find((s) => s.id === selectedStopId)
+
+  const prevOrigin = useRef(origin)
+  const prevDest = useRef(destination)
+
+  useEffect(() => {
+    const originChanged = origin !== prevOrigin.current
+    const destChanged = destination !== prevDest.current
+
+    if (originChanged || destChanged) {
+      if (selectedStopId) {
+        setSelectedStopId(null)
+      }
+      prevOrigin.current = origin
+      prevDest.current = destination
+    }
+  }, [origin, destination, selectedStopId, setSelectedStopId])
 
   const handleLocateUser = useCallback(() => {
     navigator.geolocation.getCurrentPosition(
@@ -97,21 +113,12 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <RouteResult />
             </div>
           )}
-
-          {selectedStop && (
-            <StopDrawer
-              key={selectedStop.id}
-              stop={selectedStop}
-              onClose={() => setSelectedStopId(null)}
-              variant="inline"
-            />
-          )}
         </div>
       )}
 
       {/* Map View Area */}
       <div className="flex-1 h-full w-full relative min-h-0 md:p-2 md:pl-0 lg:p-2.5 lg:pl-0">
-        <div className="w-full h-full relative md:rounded-[24px] lg:rounded-[32px] overflow-hidden md:border md:border-white/10 md:shadow-card">
+        <div className="w-full h-full relative md:rounded-xl lg:rounded-2xl overflow-hidden md:border md:border-white/10 md:shadow-card">
           {/* Map Background */}
           <div className="absolute inset-0 z-0">
             <BusMap activeRoutes={activeRoutes} allStops={allStops} showFullRoutes={true} />
@@ -130,6 +137,18 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
 
           {/* Route Toggle Legend (Desktop only) */}
           {!isMobile && <RouteToggleLegend routes={activeRoutes} isMinimizedProp={false} />}
+
+          {/* Floating Stop Detail Drawer (Desktop only) */}
+          {!isMobile && selectedStop && (
+            <div className="absolute top-5 left-5 z-1000 w-[320px]">
+              <StopDrawer
+                key={selectedStop.id}
+                stop={selectedStop}
+                onClose={() => setSelectedStopId(null)}
+                variant="floating"
+              />
+            </div>
+          )}
 
           {/* Mobile Stacked Controls (Bottom Right) */}
           {isMobile && (

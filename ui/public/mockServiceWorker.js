@@ -347,5 +347,3 @@ async function serializeRequest(request) {
     keepalive: request.keepalive,
   }
 }
-
-// Force update: bust stale cache that breaks Leaflet tiles on main domain
