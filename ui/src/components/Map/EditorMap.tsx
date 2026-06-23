@@ -1,6 +1,6 @@
 import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, Fragment } from 'react'
 import { createStopIcon } from './mapIcons'
 import { useMapStore } from '../../store/mapStore'
 import type { DrawStroke } from '../../pages/EditorPage'
@@ -280,16 +280,28 @@ export function EditorMap({
 
         {/* Existing Snapped Route Lines */}
         {strokes.map((stroke) => (
-          <Polyline
-            key={`poly-${stroke.id}`}
-            positions={stroke.trace}
-            color="var(--color-accent-cerulean)"
-            weight={5}
-            opacity={0.85}
-            eventHandlers={{
-              dblclick: (e) => handleLineClick(stroke.id, e),
-            }}
-          />
+          <Fragment key={`poly-group-${stroke.id}`}>
+            {/* Base solid line */}
+            <Polyline
+              positions={stroke.trace}
+              color="var(--color-accent-cerulean)"
+              weight={6}
+              opacity={0.85}
+              eventHandlers={{
+                dblclick: (e) => handleLineClick(stroke.id, e),
+              }}
+            />
+            {/* Inner dashed flow line */}
+            <Polyline
+              positions={stroke.trace}
+              color="#ffffff"
+              weight={2}
+              opacity={0.7}
+              dashArray="8 12"
+              className="animate-route-flow pointer-events-none"
+              interactive={false}
+            />
+          </Fragment>
         ))}
 
         {/* Draggable Nodes for the Snapped Traces */}

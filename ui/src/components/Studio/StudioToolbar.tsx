@@ -1,4 +1,4 @@
-import { Eye, Paintbrush, MapPin, Undo2, Redo2, Trash2 } from 'lucide-react'
+import { Eye, Paintbrush, MapPin, Undo2, Redo2, Trash2, ArrowRightLeft } from 'lucide-react'
 
 export type StudioMode = 'view' | 'draw-route' | 'add-stop'
 
@@ -11,6 +11,8 @@ interface StudioToolbarProps {
   canRedo: boolean
   onClearRoute: () => void
   canClearRoute: boolean
+  onInvertRoute: () => void
+  canInvertRoute: boolean
 }
 
 export function StudioToolbar({
@@ -22,6 +24,8 @@ export function StudioToolbar({
   canRedo,
   onClearRoute,
   canClearRoute,
+  onInvertRoute,
+  canInvertRoute,
 }: StudioToolbarProps) {
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[2000] flex flex-col items-center gap-2 animate-slide-up">
@@ -103,6 +107,15 @@ export function StudioToolbar({
           </button>
 
           <div className="w-[1px] h-6 bg-white/10 mx-1"></div>
+
+          <button
+            onClick={onInvertRoute}
+            disabled={!canInvertRoute}
+            className="p-2.5 rounded-xl text-pacific-400 hover:text-pacific-300 hover:bg-pacific-400/10 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
+            title="Invertir Dirección"
+          >
+            <ArrowRightLeft size={16} />
+          </button>
 
           <button
             onClick={onClearRoute}

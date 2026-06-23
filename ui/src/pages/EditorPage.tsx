@@ -385,6 +385,27 @@ export function EditorPage() {
     }
   }, [future, strokes])
 
+  const handleInvertRoute = useCallback(() => {
+    if (strokes.length === 0) return
+    setHistory((h) => [...h, strokes])
+    setFuture([])
+
+    const newStrokes = [...strokes].reverse().map((stroke) => {
+      const reversedTrace = [...stroke.trace].reverse()
+      const traceLen = reversedTrace.length
+      return {
+        ...stroke,
+        trace: reversedTrace,
+        nodes: [...stroke.nodes].reverse().map((node) => ({
+          ...node,
+          traceIndex: traceLen - 1 - node.traceIndex,
+        })),
+      }
+    })
+
+    setStrokes(newStrokes)
+  }, [strokes])
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -768,6 +789,8 @@ export function EditorPage() {
           canRedo={future.length > 0}
           onClearRoute={handleClearRoute}
           canClearRoute={strokes.length > 0}
+          onInvertRoute={handleInvertRoute}
+          canInvertRoute={strokes.length > 0}
         />
       </div>
 
