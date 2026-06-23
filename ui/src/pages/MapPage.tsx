@@ -101,7 +101,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
     <div className="w-full h-full flex flex-col md:flex-row overflow-hidden relative bg-bay-950">
       {/* Sidebar Panel (Desktop only) */}
       {!isMobile && (
-        <div className="w-[380px] lg:w-[420px] shrink-0 bg-bay-950 flex flex-col gap-4 p-4 overflow-y-auto z-10 select-none">
+        <div className="w-[380px] lg:w-[420px] shrink-0 bg-bay-950 flex flex-col gap-4 p-4 overflow-y-scroll z-10 select-none">
           <div className="flex flex-col gap-1">
             <h2 className="text-sm font-bold text-white">Planificador de Rutas</h2>
             <p className="text-xs text-white/55">
@@ -115,7 +115,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider shrink-0">
                 Opciones de Ruta
               </h3>
-              <div className="overflow-y-auto min-h-0">
+              <div className="overflow-y-scroll min-h-0 pb-2">
                 <RouteResult />
               </div>
               <div className="mt-auto shrink-0 pt-2 pb-1">

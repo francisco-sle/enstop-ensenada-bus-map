@@ -7,7 +7,7 @@ export function RouteResult() {
   if (routingResults.length === 0) return null
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 animate-fade-up">
       <h3 className="text-sm font-semibold flex items-center gap-1.5 text-pacific-400 select-none">
         <Clock size={16} />
         <span>Rutas Recomendadas:</span>
@@ -55,32 +55,40 @@ export function RouteResult() {
               </div>
 
               {/* Step-by-Step Directions */}
-              {isSelected && (
-                <div className="flex flex-col text-xs mt-1.5 bg-black/20 rounded-lg p-3 border border-white/5 shadow-inner animate-fade-up">
-                  <div className="flex gap-2">
-                    <div className="flex flex-col items-center w-4 shrink-0">
-                      <div className="w-3 h-3 rounded-full bg-white z-10 shrink-0 mt-[2px]"></div>
-                      <div
-                        className="w-1 flex-1 my-[-3px] rounded-full"
-                        style={{ backgroundColor: result.routeColor }}
-                      ></div>
-                      <div className="w-3 h-3 rounded-full bg-pacific-400 z-10 shrink-0 mb-[2px]"></div>
-                    </div>
-                    <div className="flex flex-col flex-1">
-                      <span className="text-white/95 font-medium leading-tight">
-                        {result.originStop.name}
-                      </span>
-                      <div className="flex items-center gap-1.5 my-3 py-0.5 text-[9px] uppercase tracking-wider text-white/50 font-bold">
-                        <Bus size={10} style={{ color: result.routeColor }} />
-                        <span>~{busMin} min de viaje</span>
+              <div
+                className={`grid transition-all duration-300 ease-in-out ${
+                  isSelected
+                    ? 'grid-rows-[1fr] opacity-100 mt-1.5'
+                    : 'grid-rows-[0fr] opacity-0 mt-0'
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="flex flex-col text-xs bg-black/20 rounded-lg p-3 border border-white/5 shadow-inner">
+                    <div className="flex gap-2">
+                      <div className="flex flex-col items-center w-4 shrink-0">
+                        <div className="w-3 h-3 rounded-full bg-white z-10 shrink-0 mt-[2px]"></div>
+                        <div
+                          className="w-1 flex-1 my-[-3px] rounded-full"
+                          style={{ backgroundColor: result.routeColor }}
+                        ></div>
+                        <div className="w-3 h-3 rounded-full bg-pacific-400 z-10 shrink-0 mb-[2px]"></div>
                       </div>
-                      <span className="text-white/95 font-medium leading-tight">
-                        {result.destStop.name}
-                      </span>
+                      <div className="flex flex-col flex-1">
+                        <span className="text-white/95 font-medium leading-tight">
+                          {result.originStop.name}
+                        </span>
+                        <div className="flex items-center gap-1.5 my-3 py-0.5 text-[9px] uppercase tracking-wider text-white/50 font-bold">
+                          <Bus size={10} style={{ color: result.routeColor }} />
+                          <span>~{busMin} min de viaje</span>
+                        </div>
+                        <span className="text-white/95 font-medium leading-tight">
+                          {result.destStop.name}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           )
         })}

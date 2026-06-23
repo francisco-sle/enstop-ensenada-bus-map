@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { X, ShieldCheck, Scale, FileText } from 'lucide-react'
 
 type ModalType = 'terms' | 'privacy' | 'license' | null
@@ -43,6 +44,13 @@ function LegalModal({
   type: 'terms' | 'privacy' | 'license'
   onClose: () => void
 }) {
+  const [isClosing, setIsClosing] = useState(false)
+
+  const handleClose = () => {
+    setIsClosing(true)
+    setTimeout(onClose, 200)
+  }
+
   const content = {
     terms: {
       title: 'Términos de Servicio',
@@ -240,13 +248,13 @@ function LegalModal({
     },
   }[type]
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-bay-950/80 backdrop-blur-sm animate-fade-up select-text"
-      onClick={onClose}
+      className={`fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-bay-950/80 backdrop-blur-sm select-text transition-opacity duration-200 ease-in-out ${isClosing ? 'opacity-0' : 'animate-fade-up'}`}
+      onClick={handleClose}
     >
       <div
-        className="bg-surface border border-white/10 rounded-xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden animate-fade-up"
+        className={`bg-surface border border-white/10 rounded-xl shadow-2xl w-full max-w-md max-h-[85vh] flex flex-col overflow-hidden transition-all duration-200 ease-in-out ${isClosing ? 'opacity-0 scale-95 translate-y-4' : 'animate-fade-up'}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 border-b border-white/5 shrink-0 bg-surface-elevated">
@@ -255,7 +263,7 @@ function LegalModal({
             <h2 className="text-base font-bold text-white">{content.title}</h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X size={18} />
@@ -264,6 +272,7 @@ function LegalModal({
 
         <div className="p-5 overflow-y-auto min-h-0 flex-1">{content.body}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

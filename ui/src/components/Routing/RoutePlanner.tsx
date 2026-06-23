@@ -230,16 +230,24 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
             </div>
 
             {/* Clear action */}
-            {(origin || destination) && (
-              <div className="flex flex-col gap-3 mt-3">
-                <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
-                  Limpiar todo
-                </button>
-                <span className="text-[11px] text-white/40 text-center font-medium">
-                  💡 Tip: Puedes arrastrar los pines en el mapa
-                </span>
+            <div
+              className={`grid transition-all duration-300 ease-in-out ${
+                origin || destination
+                  ? 'grid-rows-[1fr] opacity-100 mt-3'
+                  : 'grid-rows-[0fr] opacity-0 mt-0'
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="flex flex-col gap-3">
+                  <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
+                    Limpiar todo
+                  </button>
+                  <span className="text-[11px] text-white/40 text-center font-medium">
+                    💡 Tip: Puedes arrastrar los pines en el mapa
+                  </span>
+                </div>
               </div>
-            )}
+            </div>
 
             {/* Empty State / Hint Message */}
             <div className="flex-1 flex flex-col items-center justify-center text-center px-6 select-none animate-fade-up pb-4 mt-6 min-h-[150px]">
@@ -310,7 +318,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
         {/* Map-pick hint (Toast) */}
         {mapClickMode && (
-          <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[1003] bg-bay-900 border border-pacific-500/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-up pointer-events-none">
+          <div className="fixed top-20 left-1/2 md:left-[calc(50%+190px)] lg:left-[calc(50%+210px)] -translate-x-1/2 z-[1003] bg-bay-900 border border-pacific-500/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-up pointer-events-none">
             <span className="animate-pulse">📍</span>
             <span>
               Haz clic derecho (o mantén presionado) para definir el{' '}
@@ -323,23 +331,29 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
         {/* Validation error (Toast) */}
         {errorMsg && (
-          <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[1003] bg-bay-900 border border-[#E05050]/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-up pointer-events-none">
+          <div className="fixed top-20 left-1/2 md:left-[calc(50%+190px)] lg:left-[calc(50%+210px)] -translate-x-1/2 z-[1003] bg-bay-900 border border-[#E05050]/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-up pointer-events-none">
             <span>⚠️</span>
             <span>{errorMsg}</span>
           </div>
         )}
 
         {/* Clear action */}
-        {(origin || destination) && (
-          <div className="flex flex-col gap-2">
-            <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
-              Limpiar
-            </button>
-            <span className="text-xs text-white/40 text-center font-medium mt-1">
-              💡 Tip: Puedes arrastrar los pines en el mapa
-            </span>
+        <div
+          className={`grid transition-all duration-300 ease-in-out ${
+            origin || destination ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="flex flex-col gap-2">
+              <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
+                Limpiar
+              </button>
+              <span className="text-xs text-white/40 text-center font-medium mt-1">
+                💡 Tip: Puedes arrastrar los pines en el mapa
+              </span>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
