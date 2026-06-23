@@ -5,6 +5,7 @@ import { RoutePlanner } from '../components/Routing/RoutePlanner'
 import { RouteResult } from '../components/Routing/RouteResult'
 import { RouteToggleLegend } from '../components/Map/RouteToggleLegend'
 import { StopDrawer } from '../components/StopDetail/StopDrawer'
+import { LegalLinks } from '../components/Legal/LegalModals'
 import { useMapStore } from '../store/mapStore'
 import { useRoutingStore } from '../store/routingStore'
 import { useUrlStoreSync } from '../hooks/useUrlStoreSync'
@@ -136,6 +137,11 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               </p>
             </div>
           )}
+
+          {/* Legal Links for Desktop Sidebar */}
+          <div className="shrink-0 flex justify-center pt-2">
+            <LegalLinks />
+          </div>
         </div>
       )}
 

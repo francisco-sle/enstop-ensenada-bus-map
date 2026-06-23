@@ -4,6 +4,7 @@ import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
 import { useRouteComputation } from './useRouteComputation'
 import { LocationAutocomplete } from './LocationAutocomplete'
+import { LegalLinks } from '../Legal/LegalModals'
 import type { DBStop, RouteDetail } from '../../types'
 import { Logo } from '../Logo'
 
@@ -250,6 +251,11 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
                     ? 'No se encontraron rutas para estos puntos.'
                     : 'Ingresa origen y destino para ver opciones de ruta.'}
               </p>
+            </div>
+
+            {/* Legal Links (Mobile) */}
+            <div className="shrink-0 flex justify-center pt-4 pb-2 border-t border-white/5 mt-auto">
+              <LegalLinks />
             </div>
           </div>
         </div>
