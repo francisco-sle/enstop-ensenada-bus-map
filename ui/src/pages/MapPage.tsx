@@ -146,7 +146,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
       )}
 
       {/* Map View Area */}
-      <div className="flex-1 h-full w-full relative min-h-0 md:p-2 md:pl-0 lg:p-2.5 lg:pl-0">
+      <div className="flex-1 h-full w-full relative min-h-0 md:p-2 md:pl-0 lg:p-2 lg:pl-0">
         <div className="w-full h-full relative md:rounded-lg lg:rounded-lg overflow-hidden md:border md:border-white/10 md:shadow-card">
           {/* Map Background */}
           <div className="absolute inset-0 z-0">
