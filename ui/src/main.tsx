@@ -6,8 +6,6 @@ import 'leaflet/dist/leaflet.css'
 import './styles/index.css'
 import App from './App.tsx'
 
-registerSW({ immediate: true })
-
 async function prepareApp() {
   if (import.meta.env.VITE_USE_MOCKS === 'true') {
     const { worker } = await import('./mocks/browser')
@@ -15,6 +13,17 @@ async function prepareApp() {
       onUnhandledRequest: 'bypass',
     })
   }
+
+  // Register the PWA service worker only if we are not mocking
+  // This prevents scope conflict with MSW
+  const updateSW = registerSW({
+    onNeedRefresh() {
+      if (confirm('A new version of the map is available. Reload to update?')) {
+        updateSW(true)
+      }
+    },
+  })
+
   // Deregister any stale MSW service worker from a previous mock session.
   // Prevents intercepted requests when VITE_USE_MOCKS is toggled off.
   if ('serviceWorker' in navigator) {
