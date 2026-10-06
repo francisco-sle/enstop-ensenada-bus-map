@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import { ArrowLeft, MapPin, Accessibility } from 'lucide-react'
 import { BusMap } from '../components/Map/BusMap'
 import { FareTable } from '../components/RouteDetail/FareTable'
@@ -71,109 +72,121 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
     setSelectedStopId(stop.id)
   }
 
+  const color = route.brand?.color_hex || route.category?.color_hex || '#3DBFA8'
+  const sectionTitle = 'text-[11px] font-bold uppercase tracking-wider text-ink-faint px-1 mb-2'
+
   return (
-    <div className="flex flex-col h-full overflow-hidden select-none animate-fade-up bg-bay-950">
-      {/* Header */}
-      <div className="px-4 py-3 bg-surface border-b border-white/8 flex items-center gap-3 shrink-0">
+    <div className="route-detail h-full flex flex-col md:flex-row md:gap-4 md:p-4 md:pt-2 overflow-hidden select-none">
+      {/* Map Preview */}
+      <div className="relative h-[40%] md:h-auto md:order-2 md:flex-1 shrink-0 md:rounded-4xl overflow-hidden md:shadow-float animate-enter">
+        <BusMap
+          activeRoutes={[route]}
+          allStops={stops}
+          showFullRoutes={false}
+          showRouting={false}
+          focusedRouteId={route.id}
+          ignoreVisibility={true}
+        />
         <button
           onClick={onBack}
           aria-label="Volver a lista de rutas"
-          className="text-white/70 hover:text-white min-w-11 min-h-11 flex items-center justify-center hover:bg-white/5 rounded-lg transition-colors cursor-pointer"
+          className="md:hidden fab w-11 h-11 absolute left-3 z-1000"
+          style={{ top: 'calc(12px + env(safe-area-inset-top, 0px))' }}
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={19} />
         </button>
-        <div className="flex items-center gap-2 overflow-hidden">
-          <span
-            style={{
-              backgroundColor: route.brand?.color_hex || route.category?.color_hex || '#3DBFA8',
-            }}
-            className="text-bay-950 font-extrabold text-[10px] px-2 py-0.5 rounded-sm shrink-0"
-          >
-            {route.short_name}
-          </span>
-          <div className="flex flex-col justify-center truncate">
-            <h2 className="text-sm font-bold text-white truncate">
-              {route.name.split('—')[1]?.trim() || route.name}
-            </h2>
-            {route.brand && (
-              <p className="text-[11px] text-white/50 truncate">{route.brand.name}</p>
-            )}
-          </div>
-        </div>
       </div>
 
-      {/* Main Content Split Area */}
-      <div className="flex-1 grid grid-cols-1 grid-rows-[240px_1fr] md:grid-cols-[380px_1fr] lg:grid-cols-[420px_1fr] md:grid-rows-1 overflow-hidden bg-bay-950">
-        {/* Details (Stops list & Fare Table) */}
-        <div className="order-2 md:order-1 overflow-y-auto p-4 flex flex-col gap-4 bg-bay-950">
+      {/* Details — on mobile a sheet that overlaps the map */}
+      <div className="md:order-1 md:w-[400px] flex-1 md:flex-none min-h-0 overflow-y-auto relative z-10 -mt-7 md:mt-0 bg-canvas rounded-t-4xl md:rounded-none md:bg-transparent px-4 pt-5 md:pt-1 pb-dock">
+        <div className="flex flex-col gap-6 pb-6">
+          {/* Header */}
+          <div className="flex items-center gap-3 animate-enter">
+            <button
+              onClick={onBack}
+              aria-label="Volver a lista de rutas"
+              className="hidden md:flex fab w-11 h-11 shrink-0"
+            >
+              <ArrowLeft size={19} />
+            </button>
+            <span
+              style={{ backgroundColor: color }}
+              className="w-12 h-12 rounded-2xl text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-soft [text-shadow:0_1px_1px_rgb(0_0_0/0.3)]"
+            >
+              {route.short_name}
+            </span>
+            <div className="flex flex-col min-w-0">
+              <h2 className="text-xl font-extrabold tracking-tight text-ink truncate">
+                {route.name.split('—')[1]?.trim() || route.name}
+              </h2>
+              {route.brand && (
+                <p className="text-xs text-ink-faint font-medium truncate">{route.brand.name}</p>
+              )}
+            </div>
+          </div>
+
           {/* Description */}
           {route.description && (
-            <div className="flex flex-col gap-1">
-              <h3 className="text-xs font-semibold text-white/50">Descripción</h3>
-              <p className="text-sm text-white/80 leading-relaxed bg-bay-700/20 border border-white/4 rounded-lg p-3">
-                {route.description}
-              </p>
-            </div>
+            <p className="text-sm text-ink-soft leading-relaxed px-1 -mt-2 animate-enter">
+              {route.description}
+            </p>
           )}
 
           {/* Fares */}
-          <div className="flex flex-col gap-1">
-            <h3 className="text-xs font-semibold text-white/50">Estructura Tarifaria</h3>
+          <section className="animate-enter">
+            <h3 className={sectionTitle}>Tarifas</h3>
             <FareTable fares={dummyFares} isLoading={false} />
-          </div>
+          </section>
 
-          {/* Stops Sequence */}
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xs font-semibold text-white/50">
-              Secuencia de Paradas ({stops.length})
-            </h3>
-            <div className="flex flex-col gap-2">
-              {routeStops.map((rs) => (
-                <div
+          {/* Stops Sequence — timeline */}
+          <section className="animate-enter">
+            <h3 className={sectionTitle}>Paradas ({stops.length})</h3>
+            <ol className="relative bg-paper rounded-3xl shadow-soft p-1.5 m-0 list-none">
+              {/* Route spine */}
+              <span
+                aria-hidden
+                className="absolute left-[27px] top-6 bottom-6 w-[3px] rounded-full opacity-30"
+                style={{ backgroundColor: color }}
+              />
+              {routeStops.map((rs, i) => (
+                <li
                   key={rs.id}
-                  onClick={() => handleStopClick(rs.stop)}
-                  className="bg-surface border border-white/8 rounded-lg p-3 cursor-pointer hover:bg-surface-elevated hover:border-white/12 transition-all flex items-center justify-between group active:scale-[0.99]"
+                  className="relative animate-enter stagger"
+                  style={{ '--i': i } as CSSProperties}
                 >
-                  <div className="flex gap-3 items-center overflow-hidden">
-                    <span className="bg-bay-700/50 text-white/50 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 group-hover:bg-pacific-400 group-hover:text-bay-950 transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => handleStopClick(rs.stop)}
+                    className="group w-full flex items-center gap-3 px-2.5 py-2.5 rounded-2xl text-left cursor-pointer hover:bg-mist transition-colors"
+                  >
+                    <span
+                      className="relative z-10 w-6 h-6 rounded-full bg-paper border-[3px] flex items-center justify-center text-[9px] font-extrabold text-ink-soft shrink-0 transition-transform duration-300 group-hover:scale-110"
+                      style={{ borderColor: color, transitionTimingFunction: 'var(--ease-spring)' }}
+                    >
                       {rs.sequence}
                     </span>
-                    <div className="truncate">
-                      <span className="text-sm font-semibold text-white/90 group-hover:text-pacific-400 transition-colors block truncate">
+                    <span className="flex flex-col min-w-0 flex-1">
+                      <span className="text-sm font-semibold text-ink truncate">
                         {rs.stop.name}
                       </span>
                       {rs.stop.common_name && (
-                        <span className="text-muted text-[10px] block mt-0.5 truncate">
+                        <span className="text-ink-faint text-[11px] truncate">
                           {rs.stop.common_name}
                         </span>
                       )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {rs.stop.accessible && <Accessibility size={14} className="text-pacific-400" />}
+                    </span>
+                    {rs.stop.accessible && (
+                      <Accessibility size={14} className="text-pacific-500 shrink-0" />
+                    )}
                     <MapPin
-                      size={16}
-                      className="text-white/30 group-hover:text-pacific-400 transition-colors"
+                      size={15}
+                      className="text-ink-faint/60 group-hover:text-pacific-500 transition-colors shrink-0"
                     />
-                  </div>
-                </div>
+                  </button>
+                </li>
               ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Map Preview */}
-        <div className="order-1 md:order-2 relative bg-bay-950 h-full min-h-0 md:p-2 md:pl-0 lg:p-2.5 lg:pl-0">
-          <div className="w-full h-full relative md:rounded-[24px] lg:rounded-[32px] overflow-hidden md:border md:border-white/10 md:shadow-card border-b border-white/8 md:border-b-0">
-            <BusMap
-              activeRoutes={[route]}
-              allStops={stops}
-              showFullRoutes={false}
-              showRouting={false}
-              focusedRouteId={route.id}
-              ignoreVisibility={true}
-            />
-          </div>
+            </ol>
+          </section>
         </div>
       </div>
     </div>

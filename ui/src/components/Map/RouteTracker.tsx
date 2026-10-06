@@ -24,20 +24,24 @@ export function RouteTracker({ coords, color }: RouteTrackerProps) {
     if (coords.length < 2) return
 
     const polyline = L.polyline(coords)
-    const arrowColor = darkenColor(color, 35)
+    // Open chevrons in a deeper shade of the route color stay legible on
+    // both dark and light brand colors (e.g. yellow).
+    const arrowColor = darkenColor(color, 45)
 
     const decorator = L.polylineDecorator(polyline, {
       patterns: [
         {
-          offset: '50px',
-          repeat: '100px',
+          offset: '40px',
+          repeat: '80px',
           symbol: L.Symbol.arrowHead({
-            pixelSize: 10,
+            pixelSize: 7,
+            polygon: false,
             pathOptions: {
               color: arrowColor,
-              fillColor: arrowColor,
-              fillOpacity: 1,
-              weight: 1.5,
+              opacity: 0.9,
+              weight: 2.5,
+              lineCap: 'round',
+              lineJoin: 'round',
               stroke: true,
             },
           }),

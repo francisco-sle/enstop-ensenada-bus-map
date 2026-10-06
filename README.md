@@ -19,7 +19,7 @@
 
 ENStop is a full-stack geospatial progressive web application (PWA) that models Ensenada's public bus network as structured data.
 
-- **Fast & Interactive Map** — OSM base tiles with color-coded route polylines and stop markers.
+- **Fast & Interactive Map** — OpenFreeMap vector basemap (OpenStreetMap data) with color-coded route polylines and stop markers.
 - **Client-Side Route Planner** — Origin/destination trip planning with a powerful in-browser routing algorithm. Deep-links via `?from=lat,lng&to=lat,lng` URL params with fully isolated state across pages.
 - **Offline & PWA Ready** — Uses Workbox for robust runtime caching of map basemap tiles and static assets. Always available, even with poor connectivity.
 - **Studio Editor (`/studio`)** — Admin canvas for drawing and persisting new bus routes with OSRM road-snapping, RDP simplification, and **autosave functionality**.

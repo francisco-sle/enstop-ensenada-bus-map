@@ -1,5 +1,5 @@
 import { useRef, useLayoutEffect, useState } from 'react'
-import { MapPin, Navigation } from 'lucide-react'
+import { MapPin } from 'lucide-react'
 import { useRoutingStore } from '../../store/routingStore'
 
 export interface ContextMenuPosition {
@@ -61,28 +61,28 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
     onClose()
   }
 
+  const itemClass =
+    'flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold text-ink hover:bg-mist rounded-xl text-left w-full cursor-pointer transition-colors'
+
   return (
     <div
       ref={menuRef}
       style={{
         left: coords?.x ?? position.x,
         top: coords?.y ?? position.y,
-        opacity: coords ? 1 : 0,
+        visibility: coords ? 'visible' : 'hidden',
       }}
-      className="absolute z-1001 flex flex-col min-w-[150px] bg-surface rounded-lg overflow-hidden border border-white/8 shadow-card select-none animate-fade-up transition-opacity duration-75 py-1"
+      className="glass absolute z-1001 flex flex-col min-w-[180px] rounded-3xl p-1.5 select-none origin-top-left animate-scale-in"
     >
-      <button
-        onClick={handleSetOrigin}
-        className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-bold text-pacific-400 hover:bg-white/5 border-b border-white/6 text-left w-full cursor-pointer transition-colors"
-      >
-        <MapPin size={14} />
+      <span className="px-3 pt-1.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-ink-faint">
+        Usar este punto como
+      </span>
+      <button onClick={handleSetOrigin} className={itemClass}>
+        <span className="w-3 h-3 rounded-full border-[3px] border-pacific-500" />
         <span>Origen</span>
       </button>
-      <button
-        onClick={handleSetDestination}
-        className="flex items-center gap-2.5 px-4 py-2 text-[13px] font-bold text-sol-400 hover:bg-white/5 text-left w-full cursor-pointer transition-colors"
-      >
-        <Navigation size={14} />
+      <button onClick={handleSetDestination} className={itemClass}>
+        <MapPin size={14} strokeWidth={2.5} className="text-sol-600" />
         <span>Destino</span>
       </button>
     </div>

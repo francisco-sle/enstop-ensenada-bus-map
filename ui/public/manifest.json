@@ -4,8 +4,8 @@
   "description": "Encuentra las rutas de microbus en Ensenada, BC",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0D2137",
-  "theme_color": "#0D2137",
+  "background_color": "#F4F6F8",
+  "theme_color": "#F4F6F8",
   "lang": "es",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },

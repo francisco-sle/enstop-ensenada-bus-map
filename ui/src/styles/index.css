@@ -7,17 +7,17 @@
 
 @theme {
   /* System Brand Tokens */
-  --color-brand-primary: oklch(0.68 0.16 228);
+  --color-brand-primary: oklch(0.6 0.15 232);
   --color-brand-secondary: oklch(0.78 0.16 82);
-  --color-surface-bg: oklch(0.21 0.06 244);
-  --color-surface-elevated: oklch(0.26 0.06 244);
 
+  --color-pacific-50: oklch(0.97 0.02 228);
   --color-pacific-100: oklch(0.93 0.06 228);
   --color-pacific-200: oklch(0.85 0.1 228);
   --color-pacific-300: oklch(0.78 0.12 228);
   --color-pacific-400: oklch(0.68 0.16 228);
-  --color-pacific-500: oklch(0.55 0.18 228);
-  --color-pacific-600: oklch(0.42 0.17 228);
+  --color-pacific-500: oklch(0.6 0.15 232);
+  --color-pacific-600: oklch(0.5 0.14 236);
+  --color-pacific-700: oklch(0.42 0.12 240);
   --color-pacific: oklch(0.68 0.16 228);
 
   --color-sol-50: oklch(0.97 0.03 82);
@@ -32,6 +32,24 @@
   --color-sol-900: oklch(0.22 0.08 82);
   --color-sol: oklch(0.78 0.16 82);
 
+  /* ── Light "airy" UI palette (public screens) ─────────────────────── */
+  /* Page canvas behind floating panels — a cool, barely-tinted mist */
+  --color-canvas: oklch(0.972 0.007 230);
+  /* Card / panel surface */
+  --color-paper: oklch(1 0 0);
+  /* Quiet fill for inputs, chips and hover states */
+  --color-mist: oklch(0.955 0.009 232);
+  --color-mist-strong: oklch(0.925 0.012 232);
+  /* Hairlines */
+  --color-line: oklch(0.915 0.01 235);
+  /* Text */
+  --color-ink: oklch(0.27 0.03 248);
+  --color-ink-soft: oklch(0.46 0.025 248);
+  --color-ink-faint: oklch(0.64 0.02 248);
+  --color-danger: oklch(0.6 0.19 25);
+  --color-success: oklch(0.64 0.14 158);
+
+  /* ── Legacy dark palette (Studio editor) ──────────────────────────── */
   --color-bay-500: oklch(0.48 0.07 244);
   --color-bay-600: oklch(0.4 0.07 244);
   --color-bay-700: oklch(0.32 0.06 244);
@@ -40,13 +58,14 @@
   --color-bay-950: oklch(0.14 0.05 244);
   --color-bay: oklch(0.21 0.06 244);
 
+  --color-surface-bg: oklch(0.21 0.06 244);
   --color-surface: oklch(0.21 0.06 244);
   --color-surface-elevated: oklch(0.26 0.06 244);
 
   --color-border: rgba(255, 255, 255, 0.08);
 
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-display: Outfit, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', Inter, system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-logo: 'Madimi One', system-ui, sans-serif;
 
   --text-2xs: 0.625rem;
@@ -54,25 +73,179 @@
 
   --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
   --shadow-glow: 0 0 20px oklch(0.68 0.16 228 / 0.3);
+  /* Layered, low-contrast shadows for light floating surfaces */
+  --shadow-soft: 0 1px 2px oklch(0.3 0.04 248 / 0.05), 0 6px 16px -4px oklch(0.3 0.04 248 / 0.09);
+  --shadow-float:
+    0 1px 3px oklch(0.3 0.04 248 / 0.05), 0 12px 32px -8px oklch(0.3 0.04 248 / 0.16),
+    0 32px 64px -24px oklch(0.3 0.04 248 / 0.12);
+  --shadow-lift: 0 2px 4px oklch(0.3 0.04 248 / 0.05), 0 18px 40px -10px oklch(0.3 0.04 248 / 0.2);
 
   --radius-2xl: 1rem;
   --radius-3xl: 1.5rem;
+  --radius-4xl: 1.75rem;
 
+  /* ── Motion ───────────────────────────────────────────────────────── */
+  /* Smooth deceleration for most UI movement */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Accelerating exit — things leave faster than they arrive */
+  --ease-in-soft: cubic-bezier(0.5, 0, 0.75, 0);
+  /* Damped springs (ζ≈0.72 / ζ≈0.55) sampled into linear() */
+  --ease-spring: linear(
+    0,
+    0.045,
+    0.153,
+    0.292,
+    0.438,
+    0.576,
+    0.698,
+    0.8,
+    0.88,
+    0.941,
+    0.983,
+    1.012,
+    1.028,
+    1.036,
+    1.038,
+    1.036,
+    1.032,
+    1.027,
+    1.021,
+    1.016,
+    1.011,
+    1.007,
+    1.004,
+    1.002,
+    1.001,
+    1 62.5%,
+    1
+  );
+  --ease-bounce: linear(
+    0,
+    0.054,
+    0.185,
+    0.357,
+    0.538,
+    0.708,
+    0.853,
+    0.967,
+    1.047,
+    1.097,
+    1.122,
+    1.126,
+    1.116,
+    1.098,
+    1.075,
+    1.053,
+    1.032,
+    1.015,
+    1.001,
+    0.992,
+    0.987,
+    0.984,
+    0.984,
+    0.986,
+    0.988,
+    0.991,
+    0.994,
+    0.997,
+    0.999,
+    1 72.5%,
+    1
+  );
+
+  /* Enter / exit pairs. Exit durations stay ≤ 220ms so the JS unmount
+     timers (250ms) always outlast them. */
+  --animate-enter: enter 420ms var(--ease-out-soft) both;
+  --animate-exit: exit 200ms var(--ease-in-soft) forwards;
+  --animate-scale-in: scale-in 260ms var(--ease-spring) both;
+  --animate-sheet-in: sheet-in 560ms var(--ease-spring) both;
+  --animate-sheet-out: sheet-out 220ms var(--ease-in-soft) forwards;
+  --animate-unfold: unfold 480ms var(--ease-spring) both;
+  --animate-fold: fold 200ms var(--ease-in-soft) forwards;
+  --animate-toast-in: toast-in 460ms var(--ease-spring) both;
+  --animate-pop: pop 460ms var(--ease-bounce) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  /* Legacy (Studio + shared) */
   --animate-pulse-ring: pulse-ring 1.4s ease-out infinite;
   --animate-fade-up: fade-up 0.25s ease-out;
   --animate-fade-in: fade-in 0.2s ease-out;
   --animate-slide-up: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   --animate-slide-down: slide-down 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   --animate-slide-down-fade: slide-down-fade 0.25s cubic-bezier(0.32, 0.72, 0, 1) forwards;
-  --animate-drop-from-pill: drop-from-pill 0.5s cubic-bezier(0.32, 0.72, 0, 1);
   --animate-route-flow: dash-flow 3s linear infinite;
+
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0) scale(0.985);
+    }
+  }
+  @keyframes exit {
+    to {
+      opacity: 0;
+      transform: translate3d(0, 6px, 0) scale(0.985);
+    }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+  }
+  @keyframes sheet-in {
+    from {
+      opacity: 0.4;
+      transform: translate3d(0, calc(100% + 24px), 0);
+    }
+  }
+  @keyframes sheet-out {
+    to {
+      opacity: 0;
+      transform: translate3d(0, calc(100% + 24px), 0);
+    }
+  }
+  @keyframes unfold {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -12px, 0) scale(0.96);
+    }
+  }
+  @keyframes fold {
+    to {
+      opacity: 0;
+      transform: translate3d(0, -8px, 0) scale(0.97);
+    }
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -14px, 0) scale(0.94);
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    30% {
+      opacity: 1;
+    }
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 150% 0;
+    }
+    to {
+      background-position: -50% 0;
+    }
+  }
 
   @keyframes dash-flow {
     to {
       stroke-dashoffset: -40;
     }
   }
-
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -101,16 +274,6 @@
       transform: translateY(0);
     }
   }
-  @keyframes fade-down-out {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-  }
   @keyframes slide-up {
     from {
       transform: translate3d(0, 100%, 0);
@@ -137,26 +300,12 @@
       opacity: 0;
     }
   }
-
-  @keyframes drop-from-pill {
-    from {
-      transform: translateY(2.5rem);
-      transform-origin: top center;
-    }
-    to {
-      transform: translateY(0);
-      transform-origin: top center;
-    }
-  }
 }
 
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
 */
 @layer base {
   *,
@@ -164,10 +313,11 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-line, currentcolor);
   }
 }
 
+/* ── Shared component utilities ─────────────────────────────────────── */
 @utility btn {
   @apply inline-flex flex-row items-center justify-center rounded-lg px-4 min-h-11
          text-sm font-semibold transition-all duration-150 cursor-pointer
@@ -177,25 +327,58 @@
   @apply bg-brand-primary text-white border-none
          hover:bg-brand-primary/90 active:scale-95;
 }
+/* Dark-surface secondary button (Studio) */
 @utility btn-secondary {
   @apply bg-white/5 text-white/80 border-none
          hover:bg-white/10 active:scale-95;
 }
+/* Light-surface secondary button */
+@utility btn-soft {
+  @apply bg-mist text-ink border-none
+         hover:bg-mist-strong active:scale-[0.97];
+}
 @utility divider {
-  @apply border-t border-solid border-surface-elevated/20 w-full;
+  @apply border-t border-solid border-line w-full;
 }
 @utility text-muted {
-  @apply text-white/55;
+  @apply text-ink-soft;
 }
 @utility skeleton {
-  @apply animate-pulse bg-white/10 rounded-lg;
+  background: linear-gradient(
+    90deg,
+    var(--color-mist) 0%,
+    var(--color-paper) 50%,
+    var(--color-mist) 100%
+  );
+  background-size: 200% 100%;
+  @apply animate-shimmer rounded-2xl;
 }
 @utility map-overlay-card {
   @apply bg-surface border border-white/8 shadow-card;
 }
-
-.view-transition-planner {
-  view-transition-name: route-planner;
+/* Frosted floating panel — the base material of every map overlay */
+@utility glass {
+  background-color: oklch(1 0 0 / 0.86);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
+  backdrop-filter: blur(18px) saturate(1.6);
+  box-shadow:
+    var(--shadow-float),
+    inset 0 0 0 1px oklch(1 0 0 / 0.7);
+}
+/* Floating icon button (locate, close, etc.) */
+@utility fab {
+  @apply glass inline-flex items-center justify-center rounded-full text-ink-soft
+         cursor-pointer select-none transition-[transform,color,background-color] duration-200
+         hover:text-ink active:scale-90;
+  transition-timing-function: var(--ease-out-soft);
+}
+/* Staggered list entrance: set style={{ '--i': index }} on each child */
+@utility stagger {
+  animation-delay: calc(min(var(--i, 0), 10) * 45ms);
+}
+/* Bottom inset reserved for the mobile floating dock */
+@utility pb-dock {
+  padding-bottom: var(--dock-h);
 }
 
 /* -------------------------------------------------------
@@ -206,55 +389,26 @@
 @layer base {
   :root {
     /* Brand palette */
-    --color-accent-cerulean: oklch(0.68 0.16 228);
+    --color-accent-cerulean: oklch(0.6 0.15 232);
     --color-accent-cerulean-light: oklch(0.78 0.12 228);
-    --color-accent-warm: #e0a32e;
+    --color-accent-warm: oklch(0.74 0.16 72);
     --color-accent-warm-light: #ecc56e;
     --color-error: #e05050;
-    --color-success: #4caf80;
-
-    /* Surfaces — dark / volcanic */
-    --color-bg-primary: var(--color-surface-bg);
-    --color-bg-surface: var(--color-surface-bg);
-    --color-bg-elevated: var(--color-surface-elevated);
 
     /* Text */
-    --color-text-primary: rgba(255, 255, 255, 0.92);
-    --color-text-secondary: rgba(255, 255, 255, 0.55);
-    --color-text-inverse: oklch(0.14 0.05 244);
+    --color-text-primary: var(--color-ink);
+    --color-text-secondary: var(--color-ink-soft);
 
-    /* Borders */
-    --color-border: rgba(255, 255, 255, 0.08);
-
-    /* Spacing scale (4 px base) */
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 20px;
-    --space-6: 24px;
-    --space-8: 32px;
-
-    /* Type scale */
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
-    --font-size-base: 1rem;
-    --font-size-lg: 1.125rem;
-    --font-size-xl: 1.25rem;
-    --font-size-2xl: 1.5rem;
-
-    /* Radii */
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --radius-xl: 24px;
-
-    /* Shadows */
-    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
-    --shadow-glow: 0 0 20px oklch(0.68 0.16 228 / 0.3);
+    /* Height of the floating bottom dock on mobile (nav pill + gaps) */
+    --dock-h: calc(84px + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Reset & base typography */
+  @media (min-width: 768px) {
+    :root {
+      --dock-h: 0px;
+    }
+  }
+
   *,
   *::before,
   *::after {
@@ -272,35 +426,47 @@
   }
 
   body {
-    font-family:
-      'Inter',
-      system-ui,
-      -apple-system,
-      sans-serif;
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: oklch(0.6 0.15 232 / 0.2);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-pacific-500);
+    outline-offset: 2px;
   }
 
   /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 4px;
+    background: oklch(0.6 0.02 248 / 0.25);
+    border-radius: 999px;
   }
 }
 
-@layer utilities {
-  /* -------------------------------------------------------
-   Legacy utility classes — kept for gradual migration
- ------------------------------------------------------- */
+/* Respect users who ask for less motion: keep fades, drop movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* -------------------------------------------------------
@@ -310,7 +476,7 @@
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background-color: var(--color-bg-primary);
+  background-color: oklch(0.965 0.006 95);
   font-family: inherit;
 }
 
@@ -321,13 +487,44 @@
 }
 
 .leaflet-control-attribution {
-  background: oklch(0.14 0.05 244 / 0.7) !important;
-  color: var(--color-text-secondary) !important;
-  font-size: 10px !important;
+  background: oklch(1 0 0 / 0.7) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--color-ink-faint) !important;
+  font-size: 9px !important;
+  border-radius: 999px 0 0 0;
+  padding: 1px 8px !important;
 }
 
 .leaflet-control-attribution a {
-  color: var(--color-accent-cerulean) !important;
+  color: var(--color-ink-soft) !important;
+}
+
+/* Leaflet tooltips (drag hint on routing pins) */
+.leaflet-tooltip.soft-tooltip {
+  background: var(--color-ink);
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+}
+.leaflet-tooltip.soft-tooltip::before {
+  border-top-color: var(--color-ink);
+}
+
+/* Markers: entrance pop. Icons are cached per style, so this only plays
+   when a marker is added to the map or changes appearance. */
+.stop-marker {
+  transform-origin: 50% 100%;
+  animation: var(--animate-pop);
+  transition: scale 260ms var(--ease-spring);
+  cursor: pointer;
+}
+.leaflet-marker-icon:hover .stop-marker {
+  scale: 1.14;
 }
 
 /* -------------------------------------------------------
@@ -335,12 +532,12 @@
   Used by the div icon in BusMap.tsx — can't be Tailwind.
 ------------------------------------------------------- */
 .user-location-pulse {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background-color: #2d8fdb;
+  background-color: var(--color-accent-cerulean);
   border: 3px solid white;
-  box-shadow: 0 0 0 0 rgba(45, 143, 219, 0.7);
+  box-shadow: 0 2px 8px oklch(0.6 0.15 232 / 0.45);
   position: relative;
 }
 
@@ -349,8 +546,8 @@
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(45, 143, 219, 0.5);
-  animation: pulse-ring 1.4s ease-out infinite;
+  background: oklch(0.6 0.15 232 / 0.25);
+  animation: pulse-ring 1.8s var(--ease-out-soft) infinite;
 }
 
 @keyframes pulse-ring {
@@ -365,287 +562,59 @@
 }
 
 /* -------------------------------------------------------
-   Leaflet custom context menu popup skin overrides
-------------------------------------------------------- */
-.custom-context-menu-popup .leaflet-popup-content-wrapper {
-  background: oklch(0.21 0.06 244) !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-radius: 8px !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
-}
-
-.custom-context-menu-popup .leaflet-popup-content {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: inherit !important;
-}
-
-.custom-context-menu-popup .leaflet-popup-tip {
-  background: oklch(0.21 0.06 244) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-/* -------------------------------------------------------
-   RouteToggleLegend — floating overlay (Technique 4)
-------------------------------------------------------- */
-.route-toggle-legend {
-  position: absolute;
-  bottom: 48px; /* above attribution */
-  right: 12px;
-  z-index: 1000; /* above Leaflet controls */
-  width: 300px;
-  max-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-bg-surface);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  animation: fade-up 0.2s ease-out;
-}
-
-.route-toggle-legend__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  flex-shrink: 0;
-}
-
-.route-toggle-legend__title {
-  font-size: var(--font-size-xs);
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-}
-
-.route-toggle-legend__all-btn {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--color-accent-cerulean);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: background 0.15s;
-}
-.route-toggle-legend__all-btn:hover {
-  background: oklch(0.68 0.13 225 / 0.12);
-}
-
-.route-toggle-legend__list {
-  list-style: none;
-  margin: 0;
-  padding: 4px 0;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.route-toggle-legend__item {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  transition: background 0.12s;
-}
-.route-toggle-legend__item:hover {
-  background: rgba(255, 255, 255, 0.04);
-}
-.route-toggle-legend__item--selected {
-  background: oklch(0.68 0.13 225 / 0.08);
-}
-.route-toggle-legend__item--hidden .route-toggle-legend__name {
-  opacity: 0.4;
-  text-decoration: line-through;
-}
-
-.route-toggle-legend__label-btn {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex: 1;
-  padding: 8px 10px 8px 16px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: left;
-  min-width: 0;
-}
-
-.route-toggle-legend__swatch {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  transition: background-color 0.2s;
-  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.15);
-}
-
-.route-toggle-legend__name {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: opacity 0.2s;
-}
-
-/* Right — eye toggle button */
-.route-toggle-legend__eye-btn {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-secondary);
-  border-radius: 4px;
-  margin-right: 8px;
-  transition:
-    color 0.15s,
-    background 0.15s;
-}
-.route-toggle-legend__eye-btn:hover {
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.06);
-}
-.route-toggle-legend__item--hidden .route-toggle-legend__eye-btn {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-/* -------------------------------------------------------
-   RouteToggleLegend — mobile expanded & collapsed states
-------------------------------------------------------- */
-
-/* Header actions wrapper — houses "Ocultar/Mostrar" + collapse chevron */
-.route-toggle-legend__header-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-/* Collapse button (mobile only) */
-.route-toggle-legend__collapse-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-secondary);
-  border-radius: 4px;
-  transition:
-    transform 0.15s,
-    color 0.15s,
-    background 0.15s;
-}
-.route-toggle-legend__collapse-btn:hover {
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.06);
-}
-.route-toggle-legend__collapse-btn:active {
-  transform: scale(0.85);
-}
-
-.route-toggle-legend--collapsing {
-  animation: fade-down-out 0.2s ease-out forwards !important;
-}
-
-/* Mobile expanded — fills vertical space above the attribution bar */
-@media (max-width: 767px) {
-  .route-toggle-legend--mobile-expanded {
-    width: calc(100vw - 40px); /* full-width minus left+right margins */
-    max-width: 480px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    max-height: 40vh; /* Changed to limit height and keep map visible */
-    animation: slide-up 0.3s cubic-bezier(0.32, 0.72, 0, 1) !important;
-    transition:
-      bottom 0.25s cubic-bezier(0.32, 0.72, 0, 1),
-      max-height 0.25s cubic-bezier(0.32, 0.72, 0, 1);
-  }
-  .route-toggle-legend--mobile-expanded.route-toggle-legend--pushed-up {
-    bottom: 60px;
-    max-height: calc(100dvh - 220px);
-  }
-  .route-toggle-legend--collapsing {
-    animation: slide-down-fade 0.25s cubic-bezier(0.32, 0.72, 0, 1) forwards !important;
-  }
-}
-
-/* Collapsed pill — tiny horizontal chip */
-.route-toggle-legend--collapsed {
-  bottom: 48px;
-  right: 12px;
-  width: auto;
-  max-height: none;
-  padding: 0;
-  cursor: pointer;
-  overflow: visible;
-}
-.route-toggle-legend--collapsed:hover {
-  background: var(--color-bg-elevated);
-}
-
-.route-toggle-legend__pill {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 10px;
-}
-
-.route-toggle-legend__pill-swatches {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  flex-shrink: 0;
-}
-
-.route-toggle-legend__pill-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-}
-
-.route-toggle-legend__pill-hidden {
-  font-weight: 400;
-  color: var(--color-accent-cerulean);
-}
-
-.route-toggle-legend__pill-chevron {
-  color: var(--color-text-secondary);
-  flex-shrink: 0;
-}
-
-/* -------------------------------------------------------
-   Routing Pin Drag States
+   Routing Pin Drop + Drag States
 ------------------------------------------------------- */
 .routing-pin-inner {
   transition:
-    transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1),
-    filter 0.15s ease,
-    opacity 0.15s ease;
+    transform 0.25s var(--ease-spring),
+    filter 0.2s ease;
   cursor: grab;
   transform-origin: bottom center;
+  animation: pin-drop 620ms var(--ease-bounce) backwards;
+}
+
+@keyframes pin-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-28px) scale(0.7);
+  }
+  25% {
+    opacity: 1;
+  }
 }
 
 .is-dragging .routing-pin-inner {
-  transform: scale(1.15) translateY(-5px);
-  filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.6)) !important;
-  opacity: 0.9;
+  transform: scale(1.15) translateY(-8px);
+  filter: drop-shadow(0 14px 14px oklch(0.3 0.04 248 / 0.35)) !important;
   cursor: grabbing !important;
+}
+
+/* Route polylines ease between idle / selected / ghosted styles */
+.route-line {
+  transition:
+    stroke-opacity 320ms var(--ease-out-soft),
+    stroke-width 320ms var(--ease-out-soft);
+}
+
+/* Keep Leaflet's bottom controls (attribution) clear of the mobile dock */
+.map-page .leaflet-bottom {
+  bottom: max(0px, calc(var(--dock-h) - 10px));
+}
+
+/* Route thumbnails trace themselves in (pathLength=1 on the <path>) */
+.thumb-draw {
+  stroke-dasharray: 1;
+  animation: thumb-draw 1.3s var(--ease-out-soft) 150ms both;
+}
+@keyframes thumb-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* Route detail (mobile): the details sheet overlaps the map by 28px */
+@media (max-width: 767px) {
+  .route-detail .leaflet-bottom {
+    bottom: 28px;
+  }
 }

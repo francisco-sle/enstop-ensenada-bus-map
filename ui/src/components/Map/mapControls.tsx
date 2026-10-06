@@ -13,7 +13,13 @@ export interface MapControllerProps {
 export function MapController({ center, zoom }: MapControllerProps) {
   const map = useMap()
   useEffect(() => {
-    map.setView(center, zoom, { animate: true, duration: 0.5 })
+    // Short hops glide; longer jumps arc out and back in (flyTo).
+    const distance = map.getCenter().distanceTo(center)
+    if (distance > 1500 || Math.abs(map.getZoom() - zoom) > 2) {
+      map.flyTo(center, zoom, { duration: 0.9, easeLinearity: 0.2 })
+    } else {
+      map.setView(center, zoom, { animate: true, duration: 0.5, easeLinearity: 0.2 })
+    }
   }, [center, zoom, map])
   return null
 }

@@ -1,28 +1,48 @@
-import { useState, useEffect } from 'react'
-import { ArrowLeftRight, ChevronDown, ArrowLeft, MapPin, Navigation, Map, X } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import {
+  ArrowUpDown,
+  ChevronDown,
+  ChevronUp,
+  Search,
+  X,
+  MousePointerClick,
+  AlertCircle,
+} from 'lucide-react'
 import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
+import { useIsMobile } from '../../hooks/useIsMobile'
 import { useRouteComputation } from './useRouteComputation'
 import { LocationAutocomplete } from './LocationAutocomplete'
 import { LegalLinks } from '../Legal/LegalModals'
 import type { DBStop, RouteDetail } from '../../types'
 import { Logo } from '../Logo'
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  return isMobile
-}
-
 interface RoutePlannerProps {
   stops: DBStop[]
   routes: RouteDetail[]
+}
+
+type Location = { lat: number; lng: number; label: string } | null
+
+/** Dark pill notification used for map-pick hints and validation errors. */
+function MapToast({
+  icon,
+  children,
+  className = '',
+}: {
+  icon: ReactNode
+  children: ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      role="status"
+      className={`bg-ink/92 backdrop-blur-md text-white shadow-float px-4 py-2.5 rounded-full flex items-center gap-2.5 text-[13px] font-medium pointer-events-none animate-toast-in ${className}`}
+    >
+      <span className="shrink-0 text-sol-300">{icon}</span>
+      <span>{children}</span>
+    </div>
+  )
 }
 
 export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
@@ -44,6 +64,8 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
   // Route computation side effect + validation message derivation
   const [isCollapsing, setIsCollapsing] = useState(false)
+  // Each swap adds half a turn so the icon always spins the same direction
+  const [swapTurns, setSwapTurns] = useState(0)
   const { errorMsg } = useRouteComputation(stops, routes)
 
   const toggleMinimize = (val: boolean) => {
@@ -62,312 +84,259 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
     const tempOrigin = origin
     setOrigin(destination)
     setDestination(tempOrigin)
+    setSwapTurns((t) => t + 1)
   }
+
+  const mapPickHint = mapClickMode && (
+    <>
+      Mantén presionado el mapa para fijar el{' '}
+      <strong className="font-bold">{mapClickMode === 'origin' ? 'origen' : 'destino'}</strong>
+    </>
+  )
+
+  /** Origin + destination inputs with the swap control. */
+  const tripFields = ({ collapseOnSelect }: { collapseOnSelect: boolean }) => {
+    const handleSelect = (setter: (loc: Location) => void) => (val: Location) => {
+      setter(val)
+      if (val && collapseOnSelect) toggleMinimize(true)
+    }
+    const handleMapPick = (mode: 'origin' | 'destination') => () => {
+      setMapClickMode(mapClickMode === mode ? null : mode)
+      if (collapseOnSelect) toggleMinimize(true)
+      setZoom(14)
+    }
+
+    return (
+      <div className="flex items-center gap-2">
+        <div className="flex-1 min-w-0 flex flex-col gap-2">
+          <LocationAutocomplete
+            role="origin"
+            value={origin}
+            stops={stops}
+            autoFocus={collapseOnSelect && !origin}
+            onSelect={handleSelect(setOrigin)}
+            onMapPickToggle={handleMapPick('origin')}
+            isMapPickActive={mapClickMode === 'origin'}
+          />
+          <LocationAutocomplete
+            role="destination"
+            value={destination}
+            stops={stops}
+            autoFocus={collapseOnSelect && !!origin && !destination}
+            onSelect={handleSelect(setDestination)}
+            onMapPickToggle={handleMapPick('destination')}
+            isMapPickActive={mapClickMode === 'destination'}
+          />
+        </div>
+
+        <button
+          type="button"
+          onClick={handleSwap}
+          aria-label="Intercambiar origen y destino"
+          className="shrink-0 w-9 h-9 rounded-full text-ink-soft hover:text-ink hover:bg-mist flex items-center justify-center cursor-pointer active:scale-90 transition-[color,background-color,scale] duration-200"
+        >
+          <ArrowUpDown
+            size={16}
+            strokeWidth={2.2}
+            className="transition-transform duration-500"
+            style={{
+              transform: `rotate(${swapTurns * 180}deg)`,
+              transitionTimingFunction: 'var(--ease-spring)',
+            }}
+          />
+        </button>
+      </div>
+    )
+  }
+
+  const clearAction = (
+    <div
+      className={`grid transition-all duration-500 ${
+        origin || destination
+          ? 'grid-rows-[1fr] opacity-100 mt-3'
+          : 'grid-rows-[0fr] opacity-0 mt-0'
+      }`}
+      style={{ transitionTimingFunction: 'var(--ease-out-soft)' }}
+    >
+      <div className="overflow-hidden">
+        <div className="flex items-center justify-between gap-3 px-1">
+          <span className="text-[11px] text-ink-faint font-medium flex items-center gap-1.5">
+            <MousePointerClick size={13} className="shrink-0" />
+            Arrastra los pines para ajustar
+          </span>
+          <button
+            type="button"
+            onClick={clearRouting}
+            className="text-xs font-semibold text-ink-soft hover:text-ink px-3 py-1.5 rounded-full hover:bg-mist transition-colors cursor-pointer"
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 
   if (isMobile && isMinimized) {
     const originLabel = origin?.label.replace(/Punto en Mapa.*/, 'Mi ubicación') || ''
     const destLabel = destination?.label.replace(/Punto en Mapa.*/, 'Destino') || ''
+    const hasTrip = origin || destination
 
     return (
-      <div className="pointer-events-auto p-4 flex flex-col gap-3 w-full">
+      <div
+        className="pointer-events-auto px-3 flex flex-col gap-2 w-full"
+        style={{ paddingTop: 'calc(12px + env(safe-area-inset-top, 0px))' }}
+      >
         <div
           onClick={() => toggleMinimize(false)}
-          className="bg-surface rounded-lg border border-white/8 p-3.5 shadow-card flex justify-between items-center cursor-pointer hover:bg-surface-elevated active:scale-98 transition-transform duration-150 select-none animate-slide-down"
+          className="glass rounded-3xl flex items-center gap-3 cursor-pointer active:scale-[0.98] transition-transform duration-200 select-none animate-unfold origin-top pl-4 pr-2"
         >
-          <div className="flex min-w-0 flex-1 flex-col">
-            {/* Origin field */}
-            <div className="flex items-center gap-2">
-              <MapPin size={14} className="text-pacific-400 shrink-0" />
-              <span
-                className={`text-sm truncate flex-1 block h-5 leading-5 ${origin ? 'text-pacific-300 font-semibold' : 'text-white/25 font-normal'}`}
-              >
-                {origin ? originLabel : 'Elige origen...'}
-              </span>
-            </div>
-
-            {/* Divider — icon column gets dot connector, text column gets a hairline */}
-            <div className="flex items-center gap-2 py-1.5">
-              {/* Dot connector aligned with icon center (14px icon → 14px wide) */}
-              <div className="w-[14px] shrink-0 flex flex-col items-center gap-[3px]">
-                <span className="w-[3px] h-[3px] rounded-full bg-white/20" />
-                <span className="w-[3px] h-[3px] rounded-full bg-white/12" />
-              </div>
-              {/* Hairline separator */}
-              <div className="divider flex-1" />
-            </div>
-
-            {/* Destination field */}
-            <div className="flex items-center gap-2">
-              <Navigation size={14} className="text-sol-400 shrink-0" />
-              <span
-                className={`text-sm truncate flex-1 block h-5 leading-5 ${destination ? 'text-sol-300 font-semibold' : 'text-white/25 font-normal'}`}
-              >
-                {destination ? destLabel : 'Elige destino...'}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1 shrink-0 ml-2">
-            {(origin || destination) && (
-              <>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    clearRouting()
-                  }}
-                  className="btn btn-secondary p-1 min-h-0 w-8 h-8 flex items-center justify-center rounded-md text-white/50 hover:text-white"
-                  title="Limpiar ruta"
+          {hasTrip ? (
+            <div className="flex min-w-0 flex-1 flex-col py-3">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full border-[2.5px] border-pacific-500 shrink-0" />
+                <span
+                  className={`text-sm truncate ${origin ? 'text-ink font-semibold' : 'text-ink-faint'}`}
                 >
-                  <X size={16} />
-                </button>
+                  {origin ? originLabel : 'Elige origen'}
+                </span>
+              </div>
+              <span className="ml-[4px] my-0.5 h-2.5 border-l-2 border-dotted border-ink-faint/50" />
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-sol-500 shrink-0" />
+                <span
+                  className={`text-sm truncate ${destination ? 'text-ink font-semibold' : 'text-ink-faint'}`}
+                >
+                  {destination ? destLabel : 'Elige destino'}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 flex-1 h-13">
+              <Search size={18} className="text-ink-soft shrink-0" />
+              <span className="text-[15px] text-ink-faint font-medium">¿A dónde vas?</span>
+            </div>
+          )}
+
+          <div className="flex items-center gap-1 shrink-0">
+            {hasTrip && (
+              <>
                 <button
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleSwap()
                   }}
-                  className="btn btn-secondary p-1 min-h-0 w-8 h-8 flex items-center justify-center rounded-md text-white/50 hover:text-white"
-                  title="Intercambiar origen y destino"
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-ink-soft hover:bg-mist active:scale-90 transition-all cursor-pointer"
+                  aria-label="Intercambiar origen y destino"
                 >
-                  <ArrowLeftRight size={14} className="rotate-90" />
+                  <ArrowUpDown size={15} />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    clearRouting()
+                  }}
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-ink-soft hover:bg-mist active:scale-90 transition-all cursor-pointer"
+                  aria-label="Limpiar ruta"
+                >
+                  <X size={16} />
                 </button>
               </>
             )}
-            <div className="p-1 rounded-md text-white/45 hover:text-white transition-colors">
+            <span className="w-9 h-9 rounded-full flex items-center justify-center text-ink-faint">
               <ChevronDown size={18} />
-            </div>
+            </span>
           </div>
         </div>
 
-        {/* Map-pick hint (Toast for mobile) */}
         {mapClickMode && (
-          <div className="bg-bay-900 border border-pacific-500/30 text-white shadow-xl px-4 py-2.5 rounded-full flex items-center justify-center gap-2.5 text-sm animate-fade-up pointer-events-none self-center mx-auto mt-2">
-            <span className="animate-pulse">📍</span>
-            <span>
-              Haz clic derecho (o mantén) para definir{' '}
-              <strong className="text-white">
-                {mapClickMode === 'origin' ? 'Origen' : 'Destino'}
-              </strong>
-            </span>
-          </div>
+          <MapToast icon={<MousePointerClick size={15} />} className="self-center mt-1">
+            {mapPickHint}
+          </MapToast>
         )}
-
-        {/* Validation error (Toast for mobile) */}
         {errorMsg && !mapClickMode && (
-          <div className="bg-bay-900 border border-[#E05050]/30 text-white shadow-xl px-4 py-2.5 rounded-full flex items-center justify-center gap-2.5 text-sm animate-fade-up pointer-events-none self-center mx-auto mt-2">
-            <span>⚠️</span>
-            <span>{errorMsg}</span>
-          </div>
+          <MapToast icon={<AlertCircle size={15} />} className="self-center mt-1">
+            {errorMsg}
+          </MapToast>
         )}
       </div>
     )
   }
 
   if (isMobile) {
-    // Full-screen expanded planner for mobile
+    // Expanded planner — unfolds from the search bar
     return (
-      <div className="pointer-events-auto p-4 flex flex-col flex-1 min-h-0 w-full">
+      <div
+        className="pointer-events-auto px-3 flex flex-col flex-1 min-h-0 w-full pb-dock"
+        style={{ paddingTop: 'calc(12px + env(safe-area-inset-top, 0px))' }}
+      >
         <div
-          className={`bg-surface rounded-lg border border-white/8 p-4 shadow-card flex flex-col gap-0 overflow-y-auto w-full flex-1 will-change-transform ${isCollapsing ? 'animate-slide-down-fade' : 'animate-slide-up'}`}
+          className={`glass rounded-4xl p-4 flex flex-col overflow-y-auto w-full flex-1 origin-top will-change-transform ${
+            isCollapsing ? 'animate-fold' : 'animate-unfold'
+          }`}
         >
-          <div className="flex flex-col flex-1">
-            {/* Mini-header: ENSTOP logo on left, borderless back button on right */}
-            <div className="flex items-center justify-between mb-4">
-              <Logo className="text-2xl text-white" />
-              <button
-                type="button"
-                onClick={() => toggleMinimize(true)}
-                aria-label="Cerrar planificador"
-                className="p-1.5 rounded-lg cursor-pointer hover:bg-white/8 active:scale-95 transition-all text-white/50 hover:text-white"
-              >
-                <ArrowLeft size={18} />
-              </button>
-            </div>
-
-            <span className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 block">
-              ¿A dónde vas?
-            </span>
-
-            {/* Full-width stacked inputs with swap button on the right */}
-            <div className="flex items-center gap-3">
-              <div className="flex-1 flex flex-col gap-2">
-                <LocationAutocomplete
-                  role="origin"
-                  value={origin}
-                  stops={stops}
-                  autoFocus={!origin}
-                  onSelect={(val) => {
-                    setOrigin(val)
-                    if (val) toggleMinimize(true)
-                  }}
-                  onMapPickToggle={() => {
-                    setMapClickMode(mapClickMode === 'origin' ? null : 'origin')
-                    toggleMinimize(true)
-                    setZoom(14)
-                  }}
-                  isMapPickActive={mapClickMode === 'origin'}
-                />
-
-                <LocationAutocomplete
-                  role="destination"
-                  value={destination}
-                  stops={stops}
-                  autoFocus={!!origin && !destination}
-                  onSelect={(val) => {
-                    setDestination(val)
-                    if (val) toggleMinimize(true)
-                  }}
-                  onMapPickToggle={() => {
-                    setMapClickMode(mapClickMode === 'destination' ? null : 'destination')
-                    toggleMinimize(true)
-                    setZoom(14)
-                  }}
-                  isMapPickActive={mapClickMode === 'destination'}
-                />
-              </div>
-
-              {/* Swap button */}
-              <div className="shrink-0 flex items-center justify-center">
-                <button
-                  type="button"
-                  onClick={handleSwap}
-                  aria-label="Intercambiar origen y destino"
-                  className="btn bg-transparent text-white/50 hover:text-white hover:bg-white/5 rounded-full w-10 h-10 min-h-0 p-0"
-                >
-                  <ArrowLeftRight size={16} className="rotate-90" />
-                </button>
-              </div>
-            </div>
-
-            {/* Clear action */}
-            <div
-              className={`grid transition-all duration-300 ease-in-out ${
-                origin || destination
-                  ? 'grid-rows-[1fr] opacity-100 mt-3'
-                  : 'grid-rows-[0fr] opacity-0 mt-0'
-              }`}
+          <div className="flex items-center justify-between mb-5">
+            <Logo className="text-2xl text-ink" />
+            <button
+              type="button"
+              onClick={() => toggleMinimize(true)}
+              aria-label="Cerrar planificador"
+              className="w-9 h-9 rounded-full bg-mist text-ink-soft hover:text-ink flex items-center justify-center cursor-pointer active:scale-90 transition-all"
             >
-              <div className="overflow-hidden">
-                <div className="flex flex-col gap-3">
-                  <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
-                    Limpiar todo
-                  </button>
-                  <span className="text-[11px] text-white/40 text-center font-medium">
-                    💡 Tip: Puedes arrastrar los pines en el mapa
-                  </span>
-                </div>
-              </div>
-            </div>
+              <ChevronUp size={18} />
+            </button>
+          </div>
 
-            {/* Empty State / Hint Message */}
-            <div className="flex-1 flex flex-col items-center justify-center text-center px-6 select-none animate-fade-up pb-4 mt-6 min-h-[150px]">
-              <Map size={48} className="text-white opacity-[0.15] mb-4" strokeWidth={1.5} />
-              <p className="text-sm text-white/30 font-medium leading-relaxed">
-                {routingResults.length > 0
-                  ? 'Cierra este panel para ver tus rutas en el mapa.'
-                  : origin && destination
-                    ? 'No se encontraron rutas para estos puntos.'
-                    : 'Ingresa origen y destino para ver opciones de ruta.'}
-              </p>
-            </div>
+          <h2 className="text-xl font-bold tracking-tight mb-3 px-1">¿A dónde vas?</h2>
 
-            {/* Legal Links (Mobile) */}
-            <div className="shrink-0 flex justify-center pt-4 pb-2 border-t border-white/5 mt-auto">
-              <LegalLinks />
+          {tripFields({ collapseOnSelect: true })}
+          {clearAction}
+
+          {/* Empty State / Hint Message */}
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-8 select-none pb-4 mt-6 min-h-[140px] animate-enter">
+            <div className="w-14 h-14 rounded-full bg-pacific-50 text-pacific-500 flex items-center justify-center mb-3">
+              <Search size={22} />
             </div>
+            <p className="text-sm text-ink-soft leading-relaxed max-w-[240px]">
+              {routingResults.length > 0
+                ? 'Cierra este panel para ver tus rutas en el mapa.'
+                : origin && destination
+                  ? 'No se encontraron rutas para estos puntos.'
+                  : 'Busca una parada o dirección, o elige un punto en el mapa.'}
+            </p>
+          </div>
+
+          <div className="shrink-0 flex justify-center pt-4 border-t border-line mt-auto">
+            <LegalLinks />
           </div>
         </div>
       </div>
     )
   }
 
-  // Desktop view
+  // Desktop view — rendered inside MapPage's floating panel
   return (
-    <div className="bg-surface rounded-lg border border-white/8 p-3 md:p-4 flex flex-col shadow-card select-none animate-fade-up">
-      <div className="flex flex-col">
-        {/* Origin and Destination with Swap on Right */}
-        <div className="flex items-center gap-3">
-          <div className="flex-1 flex flex-col gap-2 md:gap-3">
-            <LocationAutocomplete
-              role="origin"
-              value={origin}
-              stops={stops}
-              onSelect={setOrigin}
-              onMapPickToggle={() => {
-                setMapClickMode(mapClickMode === 'origin' ? null : 'origin')
-                setZoom(14)
-              }}
-              isMapPickActive={mapClickMode === 'origin'}
-            />
+    <div className="flex flex-col select-none">
+      {tripFields({ collapseOnSelect: false })}
+      {clearAction}
 
-            <LocationAutocomplete
-              role="destination"
-              value={destination}
-              stops={stops}
-              onSelect={setDestination}
-              onMapPickToggle={() => {
-                setMapClickMode(mapClickMode === 'destination' ? null : 'destination')
-                setZoom(14)
-              }}
-              isMapPickActive={mapClickMode === 'destination'}
-            />
-          </div>
-
-          {/* Swap Button */}
-          <div className="shrink-0 flex items-center justify-center">
-            <button
-              type="button"
-              onClick={handleSwap}
-              aria-label="Intercambiar origen y destino"
-              className="btn bg-transparent text-white/50 hover:text-white hover:bg-white/5 rounded-full w-10 h-10 min-h-0 p-0"
-            >
-              <ArrowLeftRight size={16} className="rotate-90" />
-            </button>
-          </div>
-        </div>
-
-        {/* Map-pick hint (Toast) */}
-        {mapClickMode && (
-          <div className="fixed top-20 left-1/2 md:left-[calc(50%+190px)] lg:left-[calc(50%+210px)] -translate-x-1/2 z-[1003] bg-bay-900 border border-pacific-500/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-up pointer-events-none">
-            <span className="animate-pulse">📍</span>
-            <span>
-              Haz clic derecho (o mantén presionado) para definir el{' '}
-              <strong className="text-white">
-                {mapClickMode === 'origin' ? 'Origen' : 'Destino'}
-              </strong>
-            </span>
-          </div>
-        )}
-
-        {/* Validation error (Toast) */}
-        {errorMsg && (
-          <div className="fixed top-20 left-1/2 md:left-[calc(50%+190px)] lg:left-[calc(50%+210px)] -translate-x-1/2 z-[1003] bg-bay-900 border border-[#E05050]/30 text-white shadow-xl px-4 py-2 rounded-full flex items-center gap-3 text-sm animate-fade-up pointer-events-none">
-            <span>⚠️</span>
-            <span>{errorMsg}</span>
-          </div>
-        )}
-
-        {/* Clear action */}
-        <div
-          className={`grid transition-all duration-300 ease-in-out ${
-            origin || destination
-              ? 'grid-rows-[1fr] opacity-100 mt-2 md:mt-3'
-              : 'grid-rows-[0fr] opacity-0 mt-0'
-          }`}
+      {mapClickMode && (
+        <MapToast
+          icon={<MousePointerClick size={15} />}
+          className="fixed top-19 left-[calc(50%+194px)] -translate-x-1/2 z-1003"
         >
-          <div className="overflow-hidden">
-            <div className="flex flex-col gap-2">
-              <button type="button" onClick={clearRouting} className="btn btn-secondary w-full">
-                Limpiar
-              </button>
-              <span className="text-xs text-white/40 text-center font-medium mt-1">
-                💡 Tip: Puedes arrastrar los pines en el mapa
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+          {mapPickHint}
+        </MapToast>
+      )}
+      {errorMsg && (
+        <MapToast
+          icon={<AlertCircle size={15} />}
+          className="fixed top-19 left-[calc(50%+194px)] -translate-x-1/2 z-1003"
+        >
+          {errorMsg}
+        </MapToast>
+      )}
     </div>
   )
 }

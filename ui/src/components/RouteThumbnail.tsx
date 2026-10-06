@@ -1,7 +1,5 @@
 import { useMemo } from 'react'
-import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
 import type { RouteDetail } from '../types'
-import { mapStyles } from './Map/mapConfig'
 
 interface RouteThumbnailProps {
   geom: RouteDetail['geom']
@@ -9,69 +7,91 @@ interface RouteThumbnailProps {
   className?: string
 }
 
+const VIEW = 100
+const PAD = 12
+
+/**
+ * Lightweight SVG silhouette of a route — no map tiles, no Leaflet instance.
+ * Projects lon/lat with a cos(lat) correction and fits the line into a square.
+ */
 export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailProps) {
-  const positions = useMemo(() => {
-    if (!geom || geom.type !== 'LineString' || !geom.coordinates) return null
-    return (geom.coordinates as [number, number][]).map((c) => [c[1], c[0]] as [number, number])
+  const path = useMemo(() => {
+    if (!geom || geom.type !== 'LineString' || !geom.coordinates?.length) return null
+    const coords = geom.coordinates as [number, number][]
+
+    const midLat = coords.reduce((sum, [, lat]) => sum + lat, 0) / coords.length
+    const kx = Math.cos((midLat * Math.PI) / 180)
+    const pts = coords.map(([lng, lat]) => [lng * kx, -lat] as const)
+
+    const xs = pts.map((p) => p[0])
+    const ys = pts.map((p) => p[1])
+    const minX = Math.min(...xs)
+    const minY = Math.min(...ys)
+    const span = Math.max(Math.max(...xs) - minX, Math.max(...ys) - minY) || 1
+    const scale = (VIEW - PAD * 2) / span
+    const offX = (VIEW - (Math.max(...xs) - minX) * scale) / 2
+    const offY = (VIEW - (Math.max(...ys) - minY) * scale) / 2
+
+    const projected = pts.map(
+      ([x, y]) => [(x - minX) * scale + offX, (y - minY) * scale + offY] as const,
+    )
+    return {
+      d: projected.map(([x, y], i) => `${i ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join(''),
+      start: projected[0],
+      end: projected[projected.length - 1],
+    }
   }, [geom])
 
-  const bounds = useMemo(() => {
-    if (!positions || positions.length === 0) return null
-    let minLat = Infinity,
-      minLng = Infinity,
-      maxLat = -Infinity,
-      maxLng = -Infinity
-    for (const [lat, lng] of positions) {
-      if (lat < minLat) minLat = lat
-      if (lat > maxLat) maxLat = lat
-      if (lng < minLng) minLng = lng
-      if (lng > maxLng) maxLng = lng
-    }
-
-    // Zoom in on the route by focusing on the center 65% of the bounding box
-    const latCenter = (minLat + maxLat) / 2
-    const lngCenter = (minLng + maxLng) / 2
-    const latHalfSpan = ((maxLat - minLat) / 2) * 0.65 || 0.002
-    const lngHalfSpan = ((maxLng - minLng) / 2) * 0.65 || 0.002
-
-    return [
-      [latCenter - latHalfSpan, lngCenter - lngHalfSpan],
-      [latCenter + latHalfSpan, lngCenter + lngHalfSpan],
-    ] as [[number, number], [number, number]]
-  }, [positions])
-
-  if (!positions || !bounds) {
-    return (
-      <div className={`bg-white/5 flex items-center justify-center ${className}`}>
-        <span className="text-white/25 text-[10px]">No map</span>
-      </div>
-    )
-  }
-
   return (
-    <div className={`relative overflow-hidden ${className}`}>
-      <MapContainer
-        bounds={bounds}
-        zoomControl={false}
-        dragging={false}
-        scrollWheelZoom={false}
-        doubleClickZoom={false}
-        touchZoom={false}
-        boxZoom={false}
-        keyboard={false}
-        attributionControl={false}
-        className="w-full h-full pointer-events-none"
-        style={{ width: '100%', height: '100%', background: '#0F1E2E' }}
-      >
-        <TileLayer
-          url={mapStyles.lightMode.url}
-          attribution={mapStyles.lightMode.attribution}
-          maxZoom={mapStyles.lightMode.maxZoom}
-        />
-        {/* Glow/Halo Effect for high visibility */}
-        <Polyline positions={positions} color="#ffffff" weight={4} opacity={0.85} />
-        <Polyline positions={positions} color={color} weight={2} opacity={1.0} />
-      </MapContainer>
+    <div
+      className={`relative overflow-hidden bg-[radial-gradient(circle_at_30%_20%,var(--color-paper),var(--color-mist))] ${className}`}
+    >
+      {path && (
+        <svg viewBox={`0 0 ${VIEW} ${VIEW}`} className="absolute inset-0 w-full h-full" aria-hidden>
+          <defs>
+            <pattern id="thumb-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M10 0H0V10" fill="none" stroke="var(--color-line)" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width={VIEW} height={VIEW} fill="url(#thumb-grid)" opacity="0.7" />
+          <path
+            d={path.d}
+            pathLength={1}
+            fill="none"
+            stroke="white"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="thumb-draw"
+          />
+          <path
+            d={path.d}
+            pathLength={1}
+            fill="none"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="thumb-draw"
+          />
+          <circle
+            cx={path.start[0]}
+            cy={path.start[1]}
+            r="3.2"
+            fill="white"
+            stroke={color}
+            strokeWidth="2"
+          />
+          <circle
+            cx={path.end[0]}
+            cy={path.end[1]}
+            r="3.2"
+            fill={color}
+            stroke="white"
+            strokeWidth="1.5"
+          />
+        </svg>
+      )}
     </div>
   )
 }

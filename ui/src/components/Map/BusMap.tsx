@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
+import { MapContainer, Marker, Tooltip } from 'react-leaflet'
 import { useState, useMemo } from 'react'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
@@ -10,7 +10,7 @@ import { MapController, MapEventsHandler } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIconA, routingPinIconB } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
 import type { DBStop, RouteDetail } from '../../types'
-import { mapStyles } from './mapConfig'
+import { Basemap } from './Basemap'
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -103,11 +103,7 @@ export function BusMap({
         <MapController center={center} zoom={zoom} />
         <MapEventsHandler onRightClick={setContextMenu} onZoomEnd={setCurrentZoom} />
 
-        <TileLayer
-          url={mapStyles.lightMode.url}
-          attribution={mapStyles.lightMode.attribution}
-          maxZoom={mapStyles.lightMode.maxZoom}
-        />
+        <Basemap />
 
         {/* User GPS Location */}
         {showRouting && userLocation && (
@@ -139,11 +135,7 @@ export function BusMap({
               },
             }}
           >
-            <Tooltip
-              direction="top"
-              offset={[0, -20]}
-              className="!bg-bay-900 !border-pacific-500/30 !text-white !shadow-xl !px-3 !py-1.5 !rounded-full !text-xs !font-medium"
-            >
+            <Tooltip direction="top" offset={[0, -44]} className="soft-tooltip">
               Arrastrar para mover
             </Tooltip>
           </Marker>
@@ -172,11 +164,7 @@ export function BusMap({
               },
             }}
           >
-            <Tooltip
-              direction="top"
-              offset={[0, -20]}
-              className="!bg-bay-900 !border-pacific-500/30 !text-white !shadow-xl !px-3 !py-1.5 !rounded-full !text-xs !font-medium"
-            >
+            <Tooltip direction="top" offset={[0, -44]} className="soft-tooltip">
               Arrastrar para mover
             </Tooltip>
           </Marker>
