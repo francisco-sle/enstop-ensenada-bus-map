@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw'
 import stopsData from '../data/stops.json'
 import routesData from '../data/routes.json'
+import routeStopsData from '../data/route_stops.json'
 import faresData from '../data/fares.json'
 
 // Haversine distance formula
@@ -57,19 +58,10 @@ export const rpcHandlers = [
       return HttpResponse.json({ error: 'Invalid parameters' }, { status: 400 })
     }
 
-    const matchingRoutes = []
-
-    // Route 1 (id: 1) serves stops 1 to 28
-    if (p_stop_id >= 1 && p_stop_id <= 28) {
-      const r1 = routesData.find((r) => r.id === 1)
-      if (r1) matchingRoutes.push(r1)
-    }
-
-    // Route 2 (id: 2) serves stop 1 and stops 29 to 40
-    if (p_stop_id === 1 || (p_stop_id >= 29 && p_stop_id <= 40)) {
-      const r2 = routesData.find((r) => r.id === 2)
-      if (r2) matchingRoutes.push(r2)
-    }
+    const servingRouteIds = new Set(
+      routeStopsData.filter((rs) => rs.stop_id === p_stop_id).map((rs) => rs.route_id),
+    )
+    const matchingRoutes = routesData.filter((r) => servingRouteIds.has(r.id))
 
     return HttpResponse.json(matchingRoutes)
   }),

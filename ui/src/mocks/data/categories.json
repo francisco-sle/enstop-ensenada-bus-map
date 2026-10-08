@@ -1,0 +1,7 @@
+[
+  { "id": 1, "name": "Centro–Chapultepec", "color_hex": "#3DBFA8" },
+  { "id": 2, "name": "Centro–Maneadero", "color_hex": "#F59E0B" },
+  { "id": 3, "name": "Centro–El Sauzal", "color_hex": "#3B82F6" },
+  { "id": 4, "name": "Centro–Lomitas", "color_hex": "#F97316" },
+  { "id": 5, "name": "Centro–Valle Dorado", "color_hex": "#22C55E" }
+]

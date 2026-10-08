@@ -1,5 +1,5 @@
 import { length, distance, point, lineString, lineSlice } from '@turf/turf'
-import type { DBStop, RouteDetail, RoutingResult } from '../../types'
+import type { DBStop, RouteDetail, RouteStopWithStop, RoutingResult } from '../../types'
 
 // Constants
 const BUS_SPEED_KMH = 20
@@ -200,4 +200,49 @@ export function getNearbyStops(
     .filter((item) => item.dist <= maxDistanceKm)
     .sort((a, b) => a.dist - b.dist)
     .map((item) => item.stop)
+}
+
+// Max distance between a stop and its nearest route vertex. Relaxed to 150m to
+// accommodate hand-placed stops a block away from the OSRM-snapped geometry.
+const MAX_STOP_DISTANCE_M = 150
+
+/**
+ * Assigns each stop the index of its nearest route vertex (`coord_index`) and drops
+ * stops that are too far from the geometry to be served by it.
+ */
+export function alignStopsToGeometry(
+  stops: RouteStopWithStop[],
+  coords: [number, number][],
+  routeName: string,
+): RouteStopWithStop[] {
+  const aligned: RouteStopWithStop[] = []
+  for (const rs of stops) {
+    const stopLng = rs.stop.geom.coordinates[0]
+    const stopLat = rs.stop.geom.coordinates[1]
+
+    let minSq = Infinity
+    let bestIdx = 0
+
+    // Robust global nearest-neighbor search
+    for (let i = 0; i < coords.length; i++) {
+      const dxMeters = (coords[i][0] - stopLng) * 94000
+      const dyMeters = (coords[i][1] - stopLat) * 111000
+      const sq = dxMeters * dxMeters + dyMeters * dyMeters
+
+      if (sq < minSq) {
+        minSq = sq
+        bestIdx = i
+      }
+    }
+
+    const distanceMeters = Math.sqrt(minSq)
+    if (distanceMeters <= MAX_STOP_DISTANCE_M) {
+      aligned.push({ ...rs, coord_index: bestIdx })
+    } else {
+      console.warn(
+        `Stop ${rs.stop.name} is too far from route ${routeName} (${Math.round(distanceMeters)}m). Ignoring.`,
+      )
+    }
+  }
+  return aligned
 }
