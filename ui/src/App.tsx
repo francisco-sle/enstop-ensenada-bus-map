@@ -14,7 +14,7 @@ import { EditorPage } from './pages/EditorPage'
 import type { RouteDetail } from './types'
 import { Logo } from './components/Logo'
 import { AppNav } from './components/Nav/AppNav'
-import { ThemeToggle } from './components/Theme/ThemeToggle'
+import { ThemeCycleButton, ThemeToggle } from './components/Theme/ThemeToggle'
 
 // Initialize React Query Client
 const queryClient = new QueryClient({
@@ -161,10 +161,11 @@ function MainAppShell() {
 
       {/* Mobile floating dock */}
       <div
-        className="md:hidden absolute inset-x-0 bottom-0 z-1002 flex justify-center px-4 pointer-events-none"
+        className="md:hidden absolute inset-x-0 bottom-0 z-1002 flex justify-center gap-2 px-4 pointer-events-none"
         style={{ paddingBottom: 'calc(12px + env(safe-area-inset-bottom, 0px))' }}
       >
         <AppNav variant="dock" />
+        <ThemeCycleButton />
       </div>
     </div>
   )

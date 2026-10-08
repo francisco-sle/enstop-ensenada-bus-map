@@ -55,3 +55,27 @@ export function ThemeToggle({ variant }: { variant: 'bar' | 'inline' }) {
     </div>
   )
 }
+
+/**
+ * Single round button that cycles system → light → dark. Used beside the
+ * mobile dock, where a three-way pill doesn't fit next to the nav.
+ */
+export function ThemeCycleButton() {
+  const preference = useThemeStore((s) => s.preference)
+  const setPreference = useThemeStore((s) => s.setPreference)
+  const index = OPTIONS.findIndex((o) => o.value === preference)
+  const { label, Icon } = OPTIONS[index]
+  const next = OPTIONS[(index + 1) % OPTIONS.length]
+
+  return (
+    <button
+      type="button"
+      onClick={() => setPreference(next.value)}
+      aria-label={`Tema: ${label}. Cambiar a ${next.label}`}
+      title={`Tema: ${label}`}
+      className="glass pointer-events-auto shrink-0 w-15 h-15 rounded-full flex items-center justify-center text-ink-soft hover:text-ink cursor-pointer select-none transition-[color,transform] duration-300 active:scale-90"
+    >
+      <Icon key={preference} size={20} strokeWidth={2.2} className="animate-scale-in" />
+    </button>
+  )
+}
