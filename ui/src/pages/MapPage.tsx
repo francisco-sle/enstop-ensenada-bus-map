@@ -156,7 +156,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             <button
               onClick={handleLocateUser}
               aria-label="Encontrar mi ubicación actual"
-              className="fab w-12 h-12 text-pacific-500 hover:text-pacific-600"
+              className="fab w-12 h-12 text-accent hover:text-accent-strong"
             >
               <Locate size={19} />
             </button>
@@ -179,7 +179,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             <button
               onClick={handleLocateUser}
               aria-label="Encontrar mi ubicación actual"
-              className="fab w-12 h-12 text-pacific-500"
+              className="fab w-12 h-12 text-accent"
             >
               <Locate size={19} />
             </button>
@@ -236,7 +236,7 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                     <BusFront size={17} />
                   </span>
                   Opciones de ruta
-                  <span className="bg-pacific-50 text-pacific-600 rounded-full px-2 py-0.5 text-[11px] font-bold">
+                  <span className="bg-accent-tint text-accent-strong rounded-full px-2 py-0.5 text-[11px] font-bold">
                     {routingResults.length}
                   </span>
                 </span>

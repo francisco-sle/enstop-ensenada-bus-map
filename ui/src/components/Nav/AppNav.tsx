@@ -52,7 +52,7 @@ export function AppNav({ variant }: { variant: 'bar' | 'dock' }) {
             [
               'relative z-10 flex items-center justify-center rounded-full font-semibold select-none transition-[color,transform] duration-300 active:scale-95',
               isDock ? 'flex-col gap-0.5 text-[11px]' : 'gap-1.5 py-2 text-sm',
-              isActive ? 'text-white' : 'text-ink-soft hover:text-ink',
+              isActive ? 'text-paper' : 'text-ink-soft hover:text-ink',
             ].join(' ')
           }
         >

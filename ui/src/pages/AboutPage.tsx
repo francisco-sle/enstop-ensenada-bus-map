@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { BusFront, HelpCircle, AlertCircle, Ticket, MapPin, BellRing } from 'lucide-react'
+import { BusFront, HelpCircle, AlertCircle, Ticket, MapPin, BellRing, Palette } from 'lucide-react'
 import { LegalLinks } from '../components/Legal/LegalModals'
+import { ThemeToggle } from '../components/Theme/ThemeToggle'
 
 function Card({ children, index }: { children: ReactNode; index: number }) {
   return (
@@ -44,7 +45,7 @@ export function AboutPage() {
 
         <Card index={0}>
           <h3 className="text-sm font-bold flex items-center gap-2.5 text-ink">
-            <span className="w-9 h-9 rounded-2xl bg-pacific-50 text-pacific-500 flex items-center justify-center">
+            <span className="w-9 h-9 rounded-2xl bg-accent-tint text-accent flex items-center justify-center">
               <BusFront size={18} />
             </span>
             El proyecto
@@ -59,7 +60,7 @@ export function AboutPage() {
 
         <Card index={1}>
           <h3 className="text-sm font-bold flex items-center gap-2.5 text-ink">
-            <span className="w-9 h-9 rounded-2xl bg-sol-50 text-sol-600 flex items-center justify-center">
+            <span className="w-9 h-9 rounded-2xl bg-warm-tint text-warm flex items-center justify-center">
               <HelpCircle size={18} />
             </span>
             ¿Cómo viajar en microbús?
@@ -77,19 +78,31 @@ export function AboutPage() {
         </Card>
 
         <div
-          className="bg-sol-50 rounded-4xl p-5 flex gap-3 items-start animate-enter stagger"
+          className="bg-warm-tint rounded-4xl p-5 flex gap-3 items-start animate-enter stagger"
           style={{ '--i': 2 } as CSSProperties}
         >
-          <AlertCircle size={18} className="text-sol-700 shrink-0 mt-0.5" />
+          <AlertCircle size={18} className="text-warm-strong shrink-0 mt-0.5" />
           <div>
-            <h3 className="text-xs font-bold text-sol-800">Aviso importante</h3>
-            <p className="text-xs leading-relaxed mt-1 text-sol-800/80">
+            <h3 className="text-xs font-bold text-warm-ink">Aviso importante</h3>
+            <p className="text-xs leading-relaxed mt-1 text-warm-ink/80">
               Esta es una aplicación independiente y no oficial. Las rutas y tiempos de paso son
               aproximaciones y no representan de forma vinculante los horarios o recorridos
               oficiales de las empresas transportistas de Ensenada o el Ayuntamiento.
             </p>
           </div>
         </div>
+
+        <Card index={3}>
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <h3 className="text-sm font-bold flex items-center gap-2.5 text-ink">
+              <span className="w-9 h-9 rounded-2xl bg-mist text-ink-soft flex items-center justify-center">
+                <Palette size={18} />
+              </span>
+              Apariencia
+            </h3>
+            <ThemeToggle variant="inline" />
+          </div>
+        </Card>
       </div>
 
       {/* Footer */}

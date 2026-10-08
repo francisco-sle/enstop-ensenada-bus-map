@@ -58,7 +58,7 @@ export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailPr
             d={path.d}
             pathLength={1}
             fill="none"
-            stroke="white"
+            stroke="var(--color-paper)"
             strokeWidth="6"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -78,7 +78,7 @@ export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailPr
             cx={path.start[0]}
             cy={path.start[1]}
             r="3.2"
-            fill="white"
+            fill="var(--color-paper)"
             stroke={color}
             strokeWidth="2"
           />
@@ -87,7 +87,7 @@ export function RouteThumbnail({ geom, color, className = '' }: RouteThumbnailPr
             cy={path.end[1]}
             r="3.2"
             fill={color}
-            stroke="white"
+            stroke="var(--color-paper)"
             strokeWidth="1.5"
           />
         </svg>

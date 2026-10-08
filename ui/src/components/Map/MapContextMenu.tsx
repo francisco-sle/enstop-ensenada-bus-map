@@ -82,7 +82,7 @@ export function MapContextMenu({ position, onClose }: MapContextMenuProps) {
         <span>Origen</span>
       </button>
       <button onClick={handleSetDestination} className={itemClass}>
-        <MapPin size={14} strokeWidth={2.5} className="text-sol-600" />
+        <MapPin size={14} strokeWidth={2.5} className="text-warm" />
         <span>Destino</span>
       </button>
     </div>

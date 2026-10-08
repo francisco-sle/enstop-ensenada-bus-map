@@ -82,7 +82,7 @@ export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: 
       {/* Header */}
       <div className="flex justify-between items-start gap-3">
         <div className="flex gap-3 items-center min-w-0">
-          <span className="w-11 h-11 rounded-2xl bg-pacific-50 text-pacific-500 flex items-center justify-center shrink-0">
+          <span className="w-11 h-11 rounded-2xl bg-accent-tint text-accent flex items-center justify-center shrink-0">
             <BusFront size={20} />
           </span>
           <div className="min-w-0">
@@ -107,13 +107,13 @@ export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: 
       {(stop.accessible || stop.is_terminal) && (
         <div className="flex gap-2 flex-wrap -mt-1">
           {stop.accessible && (
-            <span className="flex items-center gap-1 text-[11px] font-semibold bg-pacific-50 text-pacific-600 px-2.5 py-1 rounded-full">
+            <span className="flex items-center gap-1 text-[11px] font-semibold bg-accent-tint text-accent-strong px-2.5 py-1 rounded-full">
               <Accessibility size={13} />
               Accesible
             </span>
           )}
           {stop.is_terminal && (
-            <span className="text-[11px] font-semibold bg-sol-50 text-sol-700 px-2.5 py-1 rounded-full">
+            <span className="text-[11px] font-semibold bg-warm-tint text-warm-strong px-2.5 py-1 rounded-full">
               Terminal
             </span>
           )}
@@ -137,11 +137,11 @@ export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: 
                   onClick={() => setSelectedRouteId(isActive ? null : route.id)}
                   style={{ '--i': i } as CSSProperties}
                   className={`rounded-full pl-2 pr-3 py-1.5 flex items-center gap-1.5 text-xs font-bold transition-[background-color,color,scale] duration-200 active:scale-95 cursor-pointer animate-scale-in stagger ${
-                    isActive ? 'bg-ink text-white' : 'bg-mist text-ink hover:bg-mist-strong'
+                    isActive ? 'bg-ink text-paper' : 'bg-mist text-ink hover:bg-mist-strong'
                   }`}
                 >
                   <span
-                    className="w-2.5 h-2.5 rounded-full ring-2 ring-white/80"
+                    className="w-2.5 h-2.5 rounded-full ring-2 ring-paper/80"
                     style={{
                       backgroundColor:
                         route.brand?.color_hex || route.category?.color_hex || '#3DBFA8',
@@ -170,7 +170,7 @@ export function StopDrawer({ stop, activeRoutes, onClose, variant = 'drawer' }: 
           onClick={handleSetDestination}
           className="btn btn-soft flex-1 rounded-2xl h-12 px-3"
         >
-          <MapPin size={15} strokeWidth={2.5} className="text-sol-600" />
+          <MapPin size={15} strokeWidth={2.5} className="text-warm" />
           <span className="text-[13px] font-semibold">Ir aquí</span>
         </button>
 

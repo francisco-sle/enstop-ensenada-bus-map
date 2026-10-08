@@ -176,11 +176,11 @@ export function RouteDetailPage({ route, onBack }: RouteDetailPageProps) {
                       )}
                     </span>
                     {rs.stop.accessible && (
-                      <Accessibility size={14} className="text-pacific-500 shrink-0" />
+                      <Accessibility size={14} className="text-accent shrink-0" />
                     )}
                     <MapPin
                       size={15}
-                      className="text-ink-faint/60 group-hover:text-pacific-500 transition-colors shrink-0"
+                      className="text-ink-faint/60 group-hover:text-accent transition-colors shrink-0"
                     />
                   </button>
                 </li>
