@@ -6,11 +6,13 @@ import { useBusMapMarkers } from './useBusMapMarkers'
 import { MapContextMenu } from './MapContextMenu'
 import { ActiveRouteDisplay } from './ActiveRouteDisplay'
 import { RouteLine } from './RouteLine'
-import { MapController, MapEventsHandler } from './mapControls'
+import { MapController, MapEventsHandler, ViewportReporter } from './mapControls'
+import type { MapInsets } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIconA, routingPinIconB } from './mapIcons'
 import type { ContextMenuPosition } from './MapContextMenu'
 import type { DBStop, RouteDetail } from '../../types'
 import { Basemap } from './Basemap'
+import { useRouteColors } from '../../hooks/useRouteColors'
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -21,6 +23,8 @@ interface BusMapProps {
   showRouting?: boolean
   focusedRouteId?: number | null
   ignoreVisibility?: boolean
+  /** Floating UI covering the map; enables panel-aware centering and viewport reporting */
+  insets?: MapInsets
 }
 
 export function BusMap({
@@ -30,6 +34,7 @@ export function BusMap({
   showRouting = true,
   focusedRouteId,
   ignoreVisibility = false,
+  insets,
 }: BusMapProps) {
   const {
     center,
@@ -38,18 +43,29 @@ export function BusMap({
     selectedRouteId: globalSelectedRouteId,
     userLocation,
     setSelectedStopId,
-    visibleRouteIds: globalVisibleRouteIds,
+    shownRouteIds,
   } = useMapStore()
 
-  const visibleRouteIds = useMemo(() => {
-    if (ignoreVisibility) {
-      return new Set(activeRoutes.map((r) => r.id))
-    }
-    return globalVisibleRouteIds
-  }, [ignoreVisibility, globalVisibleRouteIds, activeRoutes])
   const { origin, destination, routingResults, selectedResultIndex, setOrigin, setDestination } =
     useRoutingStore()
   const resolvedRouteId = focusedRouteId !== undefined ? focusedRouteId : globalSelectedRouteId
+
+  // Routes drawn in color: the user's picks plus a route focused from a stop.
+  // With nothing picked, every route counts as visible (the gray network) for stop markers.
+  const colorRouteIds = useMemo(() => {
+    if (ignoreVisibility) return activeRoutes.map((r) => r.id)
+    if (resolvedRouteId !== null && !shownRouteIds.includes(resolvedRouteId)) {
+      return [...shownRouteIds, resolvedRouteId]
+    }
+    return shownRouteIds
+  }, [ignoreVisibility, activeRoutes, shownRouteIds, resolvedRouteId])
+
+  const visibleRouteIds = useMemo(
+    () => new Set(colorRouteIds.length > 0 ? colorRouteIds : activeRoutes.map((r) => r.id)),
+    [colorRouteIds, activeRoutes],
+  )
+
+  const routeColors = useRouteColors(activeRoutes, colorRouteIds)
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
   const [currentZoom, setCurrentZoom] = useState(zoom)
   const [prevZoom, setPrevZoom] = useState(zoom)
@@ -69,6 +85,7 @@ export function BusMap({
     activeRoutes,
     selectedStopId,
     selectedRouteId: resolvedRouteId,
+    selectedRouteColor: resolvedRouteId !== null ? routeColors.get(resolvedRouteId) : undefined,
     activeResult,
     currentZoom,
     visibleRouteIds,
@@ -100,8 +117,9 @@ export function BusMap({
         minZoom={11}
         style={{ width: '100%', height: '100%' }}
       >
-        <MapController center={center} zoom={zoom} />
+        <MapController center={center} zoom={zoom} insets={insets} />
         <MapEventsHandler onRightClick={setContextMenu} onZoomEnd={setCurrentZoom} />
+        {insets && <ViewportReporter insets={insets} />}
 
         <Basemap />
 
@@ -180,18 +198,27 @@ export function BusMap({
           />
         )}
 
-        {/* General Route Lines */}
+        {/* Background network — every route not drawn in color, as a faint gray line */}
         {!activeResult &&
-          activeRoutes.map((route) => {
-            const isSelected = resolvedRouteId === route.id
-            const isHidden = !visibleRouteIds.has(route.id)
+          showFullRoutes &&
+          activeRoutes.map((route) =>
+            route.geom && !routeColors.has(route.id) ? (
+              <RouteLine key={`net-${route.id}`} route={route} variant="network" />
+            ) : null,
+          )}
+
+        {/* Shown routes in color, in pick order so later picks draw on top */}
+        {!activeResult &&
+          colorRouteIds.map((routeId) => {
+            const route = activeRoutes.find((r) => r.id === routeId)
+            const isSelected = resolvedRouteId === routeId
+            if (!route?.geom) return null
             if (!showFullRoutes && !isSelected) return null
-            if (isHidden) return null
-            if (!route.geom) return null
             return (
               <RouteLine
                 key={route.id}
                 route={route}
+                color={routeColors.get(route.id)}
                 isSelected={isSelected}
                 isGhosted={resolvedRouteId !== null && !isSelected}
               />

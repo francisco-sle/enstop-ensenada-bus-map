@@ -31,14 +31,14 @@ export const useRoutingStore = create<RoutingState>((set, get) => ({
   setOrigin: (origin) => {
     set({ origin })
     if (!origin && !get().destination && get().routingResults.length === 0) {
-      useMapStore.getState().setVisibleRouteIds(new Set())
+      useMapStore.getState().setShownRouteIds([])
     }
   },
 
   setDestination: (destination) => {
     set({ destination })
     if (!get().origin && !destination && get().routingResults.length === 0) {
-      useMapStore.getState().setVisibleRouteIds(new Set())
+      useMapStore.getState().setShownRouteIds([])
     }
   },
 
@@ -47,9 +47,7 @@ export const useRoutingStore = create<RoutingState>((set, get) => ({
     set({ routingResults, selectedResultIndex })
 
     if (selectedResultIndex !== null && routingResults[selectedResultIndex]) {
-      useMapStore
-        .getState()
-        .setVisibleRouteIds(new Set([routingResults[selectedResultIndex].routeId]))
+      useMapStore.getState().setShownRouteIds([routingResults[selectedResultIndex].routeId])
     }
   },
 
@@ -57,9 +55,7 @@ export const useRoutingStore = create<RoutingState>((set, get) => ({
     set({ selectedResultIndex })
     const { routingResults } = get()
     if (selectedResultIndex !== null && routingResults[selectedResultIndex]) {
-      useMapStore
-        .getState()
-        .setVisibleRouteIds(new Set([routingResults[selectedResultIndex].routeId]))
+      useMapStore.getState().setShownRouteIds([routingResults[selectedResultIndex].routeId])
     }
   },
 
@@ -75,6 +71,6 @@ export const useRoutingStore = create<RoutingState>((set, get) => ({
       mapClickMode: null,
       isMinimized: true,
     })
-    useMapStore.getState().setVisibleRouteIds(new Set())
+    useMapStore.getState().setShownRouteIds([])
   },
 }))

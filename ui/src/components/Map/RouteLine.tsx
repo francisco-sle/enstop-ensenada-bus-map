@@ -4,23 +4,42 @@ import type { RouteDetail } from '../../types'
 
 interface RouteLineProps {
   route: RouteDetail
-  isSelected: boolean
+  /** Resolved line color (see routeColors.ts); ignored for the network variant */
+  color?: string
+  isSelected?: boolean
   /** True when *any* route is selected and this one is not */
-  isGhosted: boolean
+  isGhosted?: boolean
+  /** Thin, uncolored, non-interactive line for the background network */
+  variant?: 'route' | 'network'
 }
 
-export function RouteLine({ route, isSelected, isGhosted }: RouteLineProps) {
+export function RouteLine({
+  route,
+  color,
+  isSelected = false,
+  isGhosted = false,
+  variant = 'route',
+}: RouteLineProps) {
   const positions = useMemo(() => {
     return (route.geom.coordinates as [number, number][]).map(
       (c) => [c[1], c[0]] as [number, number],
     )
   }, [route.geom.coordinates])
 
-  const color = route.brand?.color_hex || route.category?.color_hex || '#3DBFA8'
+  // Network lines take their stroke from `.route-network` so they follow the theme
+  if (variant === 'network') {
+    return (
+      <Polyline
+        positions={positions}
+        pathOptions={{ weight: 2.5, opacity: 1, className: 'route-line route-network' }}
+        interactive={false}
+      />
+    )
+  }
 
   // Visual weight/opacity per focus state — `route-line` transitions between them
   const weight = isSelected ? 6 : isGhosted ? 3 : 4
-  const opacity = isSelected ? 1 : isGhosted ? 0.22 : 0.8
+  const opacity = isSelected ? 1 : isGhosted ? 0.22 : 0.9
   const casingWeight = isSelected ? 12 : 8
   const casingOpacity = isGhosted ? 0 : isSelected ? 1 : 0.85
 
