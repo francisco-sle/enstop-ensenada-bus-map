@@ -73,7 +73,8 @@ export function ActiveRouteDisplay({ origin, destination, activeResult }: Active
       <Polyline
         ref={casingRef}
         positions={busCoords}
-        pathOptions={{ color: '#ffffff', weight: 13, opacity: 1, className: 'route-casing' }}
+        className="route-casing"
+        pathOptions={{ color: '#ffffff', weight: 13, opacity: 1 }}
         interactive={false}
       />
       <Polyline
