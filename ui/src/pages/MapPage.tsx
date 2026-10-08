@@ -1,9 +1,14 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
 import { Locate, Info, BusFront, ChevronUp, ChevronDown } from 'lucide-react'
+import type { MapInsets } from '../components/Map/mapControls'
 import { BusMap } from '../components/Map/BusMap'
 import { RoutePlanner } from '../components/Routing/RoutePlanner'
 import { RouteResult } from '../components/Routing/RouteResult'
-import { RouteToggleLegend } from '../components/Map/RouteToggleLegend'
+import { RouteExplorer } from '../components/RouteExplorer/RouteExplorer'
+import {
+  RouteExplorerPill,
+  RouteExplorerSheet,
+} from '../components/RouteExplorer/RouteExplorerSheet'
 import { StopDrawer } from '../components/StopDetail/StopDrawer'
 import { LegalLinks } from '../components/Legal/LegalModals'
 import { useMapStore } from '../store/mapStore'
@@ -12,6 +17,13 @@ import { useUrlStoreSync } from '../hooks/useUrlStoreSync'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { Logo } from '../components/Logo'
 import type { DBStop, RouteDetail } from '../types'
+
+// Map area hidden behind floating UI. Desktop: the 372px panel plus its 16px gutters.
+// Mobile: the search bar on top and the nav dock below.
+const DESKTOP_INSETS: MapInsets = { left: 404 }
+const MOBILE_INSETS: MapInsets = { top: 76, bottom: 96 }
+
+type PanelTab = 'plan' | 'routes'
 
 interface MapPageProps {
   activeRoutes: RouteDetail[]
@@ -24,6 +36,16 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
     useRoutingStore()
   const isMobile = useIsMobile()
   const [isLegendMinimized, setIsLegendMinimized] = useState(true)
+  const [panelTab, setPanelTab] = useState<PanelTab>('plan')
+  const shownCount = useMapStore((s) => s.shownRouteIds.length)
+
+  // Planning a trip (e.g. from the context menu or a stop) brings the planner tab back
+  const isTripActive = origin !== null || destination !== null
+  const [prevTripActive, setPrevTripActive] = useState(isTripActive)
+  if (isTripActive !== prevTripActive) {
+    setPrevTripActive(isTripActive)
+    if (isTripActive) setPanelTab('plan')
+  }
   // `minimizedForResults` is the specific results array reference the user hid.
   // When routingResults changes (new route computed), the reference differs → auto-expand.
   const [minimizedForResults, setMinimizedForResults] = useState<typeof routingResults | null>(null)
@@ -98,7 +120,12 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
     <div className="map-page relative w-full h-full overflow-hidden">
       {/* Map Background — full bleed */}
       <div className="absolute inset-0 z-0">
-        <BusMap activeRoutes={activeRoutes} allStops={allStops} showFullRoutes={true} />
+        <BusMap
+          activeRoutes={activeRoutes}
+          allStops={allStops}
+          showFullRoutes={true}
+          insets={isMobile ? MOBILE_INSETS : DESKTOP_INSETS}
+        />
       </div>
 
       {/* ── Desktop ─────────────────────────────────────────────────────── */}
@@ -114,22 +141,63 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                 </p>
               </div>
 
-              <div className="px-4 pb-4 shrink-0">
-                <RoutePlanner stops={allStops} routes={activeRoutes} />
+              <div
+                role="tablist"
+                aria-label="Panel"
+                className="mx-4 mb-4 p-1 rounded-full bg-mist flex shrink-0"
+              >
+                {(
+                  [
+                    ['plan', 'Planear viaje'],
+                    ['routes', 'Rutas'],
+                  ] as const
+                ).map(([tab, label]) => (
+                  <button
+                    key={tab}
+                    role="tab"
+                    aria-selected={panelTab === tab}
+                    onClick={() => setPanelTab(tab)}
+                    className={`flex-1 h-9 rounded-full text-[13px] font-semibold flex items-center justify-center gap-1.5 cursor-pointer transition-[background-color,color,box-shadow] duration-300 ${
+                      panelTab === tab
+                        ? 'bg-paper text-ink shadow-soft'
+                        : 'text-ink-soft hover:text-ink'
+                    }`}
+                  >
+                    {label}
+                    {tab === 'routes' && shownCount > 0 && (
+                      <span className="bg-accent-tint text-accent-strong rounded-full px-1.5 min-w-5 text-[10px] font-bold">
+                        {shownCount}
+                      </span>
+                    )}
+                  </button>
+                ))}
               </div>
 
-              {routingResults.length > 0 ? (
-                <div className="border-t border-line flex-1 min-h-0 overflow-y-auto px-4 py-4">
-                  <RouteResult />
-                  {disclaimer}
+              {/* Planner stays mounted on the routes tab — it owns the route computation */}
+              <div className={panelTab === 'plan' ? 'contents' : 'hidden'}>
+                <div className="px-4 pb-4 shrink-0">
+                  <RoutePlanner stops={allStops} routes={activeRoutes} />
                 </div>
-              ) : (
-                origin &&
-                destination && (
-                  <p className="px-6 pb-5 text-xs text-ink-faint text-center animate-enter">
-                    No se encontraron rutas para estos puntos.
-                  </p>
-                )
+
+                {routingResults.length > 0 ? (
+                  <div className="border-t border-line flex-1 min-h-0 overflow-y-auto px-4 py-4">
+                    <RouteResult />
+                    {disclaimer}
+                  </div>
+                ) : (
+                  origin &&
+                  destination && (
+                    <p className="px-6 pb-5 text-xs text-ink-faint text-center animate-enter">
+                      No se encontraron rutas para estos puntos.
+                    </p>
+                  )
+                )}
+              </div>
+
+              {panelTab === 'routes' && (
+                <div className="flex flex-col min-h-0 flex-1 px-3 animate-enter">
+                  <RouteExplorer routes={activeRoutes} />
+                </div>
               )}
 
               <div className="border-t border-line py-3 flex justify-center shrink-0">
@@ -160,7 +228,6 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
             >
               <Locate size={19} />
             </button>
-            <RouteToggleLegend routes={activeRoutes} />
           </div>
         </>
       )}
@@ -184,10 +251,9 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
               <Locate size={19} />
             </button>
             {activeRoutes.length > 0 && isLegendMinimized && (
-              <RouteToggleLegend
+              <RouteExplorerPill
                 routes={activeRoutes}
-                isMinimizedProp={true}
-                onMinimizeChange={setIsLegendMinimized}
+                onExpand={() => setIsLegendMinimized(false)}
               />
             )}
           </div>
@@ -201,10 +267,9 @@ export function MapPage({ activeRoutes, allStops }: MapPageProps) {
                 transitionTimingFunction: 'var(--ease-spring)',
               }}
             >
-              <RouteToggleLegend
+              <RouteExplorerSheet
                 routes={activeRoutes}
-                isMinimizedProp={false}
-                onMinimizeChange={setIsLegendMinimized}
+                onCollapse={() => setIsLegendMinimized(true)}
               />
             </div>
           )}

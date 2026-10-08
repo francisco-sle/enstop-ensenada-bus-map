@@ -6,6 +6,8 @@ interface BusMapMarkersOptions {
   activeRoutes: RouteDetail[]
   selectedStopId: number | null
   selectedRouteId: number | null
+  /** Line color of the highlighted route, so its stops match it */
+  selectedRouteColor?: string
   activeResult: RoutingResult | null
   currentZoom: number
   visibleRouteIds: Set<number>
@@ -68,6 +70,7 @@ export function useBusMapMarkers({
   activeRoutes,
   selectedStopId,
   selectedRouteId,
+  selectedRouteColor,
   activeResult,
   currentZoom,
   visibleRouteIds,
@@ -127,7 +130,9 @@ export function useBusMapMarkers({
         const servesStop = (routeStopsMap.get(currentRoute.id) ?? []).some(
           (rs) => rs.stop_id === stop.id,
         )
-        if (servesStop) color = currentRoute.category?.color_hex || 'var(--color-accent-cerulean)'
+        if (servesStop)
+          color =
+            selectedRouteColor || currentRoute.category?.color_hex || 'var(--color-accent-cerulean)'
       }
 
       return { stop, color, isSelected }
