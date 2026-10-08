@@ -20,8 +20,8 @@
 
 - **Frontend Core**: React 19 + TypeScript 6 + Vite 8.
 - **Progressive Web App (PWA)**: Uses `vite-plugin-pwa` with Workbox for runtime caching of map basemap tiles and static assets.
-- **Styling**: Tailwind CSS v4.x (CSS-first architecture; all design system tokens live inside `@theme` in `ui/src/styles/index.css`).
-- **Map Rendering**: Leaflet 1.9 + react-leaflet 5, supplemented by `@turf/turf` for spatial utilities.
+- **Styling**: Tailwind CSS v4.x (CSS-first architecture; all design system tokens live inside `@theme` in `ui/src/styles/index.css`). Public screens use the light palette (`canvas`, `paper`, `mist`, `line`, `ink*`), the `glass` floating-panel utility and the motion tokens (`--ease-spring`, `animate-enter`/`exit`, `animate-sheet-in`/`out`, …). The legacy dark tokens (`bay-*`, `surface*`, `btn-secondary`) remain for the Studio editor only.
+- **Map Rendering**: Leaflet 1.9 + react-leaflet 5, supplemented by `@turf/turf` for spatial utilities. The basemap is OpenFreeMap vector tiles (free, keyless) rendered by MapLibre GL inside Leaflet via `@maplibre/maplibre-gl-leaflet`; it is code-split (`components/Map/basemapLayer.ts`) and brand-tinted in `mapConfig.ts`. Leaflet still owns all interaction, markers and polylines.
 - **Database & Auth**: Supabase JS v2 client connecting to a Postgres 15 + PostGIS backend.
 - **Remote Data**: TanStack React Query v5 manages all server state.
 - **Bot Protection**: Cloudflare Turnstile (`@marsidev/react-turnstile`). Enforces human verification before allowing geometry data fetches in production.
@@ -41,5 +41,5 @@
 4. **Spatial Computations**: Proximity queries (e.g., finding nearby stops or routes for a given stop) are offloaded to Postgres RPCs, executing PostGIS geographic calculations securely on the server.
 5. **Client-Side Routing**: The application reacts to changes in the Routing Store's origin and destination by running a pure client-side algorithm. It cross-joins candidate stops, validates sequence direction, slices geometries, computes Turf-based heuristics (distance/time), and writes the optimal paths back to the store.
 6. **URL State Synchronization**: A dedicated hook ensures the Routing Store's coordinates remain bidirectionally synced with the URL query parameters, enabling deep-linking and browser history navigation.
-7. **Map Rendering Loop & Caching**: The map components consume state from both the Map Store and TanStack Query cache. Leaflet layers composite map tiles (cached locally via PWA Service Workers) with dynamic route polylines and stop markers, automatically updating based on visibility filters and selection states.
+7. **Map Rendering Loop & Caching**: The map components consume state from both the Map Store and TanStack Query cache. Leaflet layers composite the vector basemap (tiles cached locally via PWA Service Workers) with dynamic route polylines and stop markers, automatically updating based on visibility filters and selection states.
 8. **Administrative Mutability**: Dedicated editor views (`Studio`/`EditorPage`) bypass Turnstile gating to provide a freehand drawing canvas with autosave functionality. New route coordinates are processed through an RDP simplification pipeline and snapped to road networks via the OSRM Match API before being persisted to the database.

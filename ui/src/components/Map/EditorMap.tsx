@@ -1,11 +1,11 @@
-import { MapContainer, TileLayer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, Polyline, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { useState, useRef, useEffect, Fragment } from 'react'
 import { createStopIcon } from './mapIcons'
 import { useMapStore } from '../../store/mapStore'
 import type { DrawStroke } from '../../pages/EditorPage'
 import type { SnappedRoute } from '../../hooks/useOsrmRoute'
-import { mapStyles } from './mapConfig'
+import { Basemap } from './Basemap'
 
 const nodeIcon = L.divIcon({
   className: 'bg-white border-2 border-pacific rounded-full cursor-pointer shadow-sm !w-3 !h-3',
@@ -272,11 +272,7 @@ export function EditorMap({
           onMapBackgroundClick={() => onSelectNode?.(null)}
         />
 
-        <TileLayer
-          url={mapStyles.lightMode.url}
-          attribution={mapStyles.lightMode.attribution}
-          maxZoom={mapStyles.lightMode.maxZoom}
-        />
+        <Basemap />
 
         {/* Existing Snapped Route Lines */}
         {strokes.map((stroke) => (

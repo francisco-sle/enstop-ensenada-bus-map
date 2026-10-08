@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { Navigation, MapPin, Map, X, Loader2 } from 'lucide-react'
+import { useState, useEffect, useRef, type CSSProperties } from 'react'
+import { MapPin, Map as MapIcon, X, Loader2, BusFront } from 'lucide-react'
 import { usePhotonGeocoder } from '../../api/usePhotonGeocoder'
 import { useMapStore } from '../../store/mapStore'
 import type { DBStop } from '../../types'
@@ -82,10 +82,8 @@ export function LocationAutocomplete({
   const displayValue = isFocused ? input : (value?.label ?? input)
 
   const isOrigin = role === 'origin'
-  const accentClass = isOrigin ? 'text-pacific-400' : 'text-sol-400'
-  const mapActiveClass = isOrigin
-    ? 'bg-pacific-400 text-bay-950 border-pacific-400'
-    : 'bg-sol-400 text-bay-950 border-sol-400'
+  const accentClass = isOrigin ? 'text-pacific-500' : 'text-sol-600'
+  const mapActiveClass = isOrigin ? 'bg-pacific-500 text-white' : 'bg-sol-500 text-white'
 
   // Close on outside click
   useEffect(() => {
@@ -140,25 +138,31 @@ export function LocationAutocomplete({
     setIsFocused(false)
   }
 
+  const sectionLabel =
+    'px-3 pt-2.5 pb-1 text-[10px] font-bold uppercase tracking-wider text-ink-faint'
+  const itemClass =
+    'w-full text-left px-3 py-2.5 rounded-xl text-[13px] text-ink hover:bg-mist active:bg-mist-strong flex items-center gap-3 transition-colors cursor-pointer animate-enter stagger'
+
   const resultItems = (
     <>
       {hasStops && (
         <>
-          <div className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white/25 border-b border-white/5">
-            Paradas de Bus
-          </div>
-          {filteredStops.map((stop) => (
+          <div className={sectionLabel}>Paradas</div>
+          {filteredStops.map((stop, i) => (
             <button
               key={stop.id}
               type="button"
               onClick={() => handleStopSelect(stop)}
-              className="w-full text-left px-3 py-2.5 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
+              className={itemClass}
+              style={{ '--i': i } as CSSProperties}
             >
-              <MapPin size={10} className={`${accentClass} shrink-0`} />
-              <span className="flex flex-col gap-0.5">
-                <span className="font-semibold">{stop.name}</span>
+              <span className="w-8 h-8 rounded-full bg-mist flex items-center justify-center shrink-0">
+                <BusFront size={15} className={accentClass} />
+              </span>
+              <span className="flex flex-col min-w-0">
+                <span className="font-semibold truncate">{stop.name}</span>
                 {stop.common_name && (
-                  <span className="text-[10px] text-white/40">{stop.common_name}</span>
+                  <span className="text-[11px] text-ink-faint truncate">{stop.common_name}</span>
                 )}
               </span>
             </button>
@@ -167,25 +171,28 @@ export function LocationAutocomplete({
       )}
       {(hasAddresses || photonLoading) && (
         <>
-          <div className="px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest text-white/25 flex items-center gap-1.5 border-t border-white/5">
+          <div className={`${sectionLabel} flex items-center gap-1.5`}>
             Direcciones
-            {photonLoading && <Loader2 size={9} className="animate-spin text-white/30" />}
+            {photonLoading && <Loader2 size={10} className="animate-spin" />}
           </div>
           {photonResults.map((result, i) => (
             <button
               key={i}
               type="button"
               onClick={() => handleAddressSelect(result)}
-              className="w-full text-left px-3 py-2.5 text-xs hover:bg-white/5 text-white/90 border-b border-white/4 last:border-b-0 flex items-center gap-2"
+              className={itemClass}
+              style={{ '--i': i } as CSSProperties}
             >
-              <Navigation size={10} className="text-white/40 shrink-0" />
-              <span className="text-white/90 text-left">{result.label}</span>
+              <span className="w-8 h-8 rounded-full bg-mist flex items-center justify-center shrink-0">
+                <MapPin size={15} className="text-ink-soft" />
+              </span>
+              <span className="text-left min-w-0 line-clamp-2">{result.label}</span>
             </button>
           ))}
         </>
       )}
       {showEmpty && (
-        <div className="px-3 py-3 text-xs text-white/30 text-center">
+        <div className="px-3 py-4 text-xs text-ink-faint text-center">
           No se encontraron resultados
         </div>
       )}
@@ -193,80 +200,79 @@ export function LocationAutocomplete({
   )
 
   return (
-    <div ref={containerRef} className="relative flex flex-col gap-1">
-      <div className="flex gap-2 items-center">
-        {/* Map-pick toggle */}
-        <button
-          type="button"
-          onClick={onMapPickToggle}
-          title="Seleccionar en el mapa"
-          className={`btn rounded-full w-11 h-11 p-0 shrink-0 ${
-            isMapPickActive ? mapActiveClass : 'btn-secondary'
-          }`}
-        >
-          <Map size={14} />
-        </button>
-
-        {/* Text input + icon + clear button */}
-        <div className="relative flex-1">
-          {/* Leading icon — always shown (desktop uses it too now) */}
-          <div className="absolute left-3 top-0 bottom-0 flex items-center pointer-events-none">
-            {isOrigin ? (
-              <MapPin size={14} className={accentClass} />
-            ) : (
-              <Navigation size={14} className={accentClass} />
-            )}
-          </div>
-          <input
-            ref={inputRef}
-            id={`${role}-input`}
-            type="text"
-            autoComplete="off"
-            autoCorrect="off"
-            spellCheck="false"
-            placeholder={isOrigin ? 'Elige punto de partida, o en el mapa...' : 'Elige destino...'}
-            value={displayValue}
-            onChange={(e) => {
-              setInput(e.target.value)
-              setShowDropdown(true)
-              if (!e.target.value) onSelect(null)
-            }}
-            onFocus={() => {
-              setIsFocused(true)
-              // Preserve typed text if there is no committed value yet
-              setInput(value?.label ?? input)
-              setShowDropdown(true)
-            }}
-            className={`w-full rounded-lg py-2.5 pl-9 pr-8 text-sm text-white placeholder-white/25 focus:outline-hidden transition-all duration-200 border-2 bg-bay-700/50 border-white/5 hover:border-white/10 focus:bg-surface-elevated ${
-              isOrigin ? 'focus:border-pacific-400' : 'focus:border-sol-400'
-            }`}
-          />
+    <div ref={containerRef} className="relative flex flex-col">
+      <div className="relative">
+        {/* Leading marker — mirrors the A/B pins on the map */}
+        <div className="absolute left-3.5 top-0 bottom-0 flex items-center pointer-events-none">
+          {isOrigin ? (
+            <span className="w-3.5 h-3.5 rounded-full border-[3.5px] border-pacific-500 bg-paper" />
+          ) : (
+            <MapPin size={16} strokeWidth={2.5} className={accentClass} />
+          )}
+        </div>
+        <input
+          ref={inputRef}
+          id={`${role}-input`}
+          type="text"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck="false"
+          placeholder={isOrigin ? '¿Desde dónde sales?' : '¿A dónde vas?'}
+          value={displayValue}
+          onChange={(e) => {
+            setInput(e.target.value)
+            setShowDropdown(true)
+            if (!e.target.value) onSelect(null)
+          }}
+          onFocus={() => {
+            setIsFocused(true)
+            // Preserve typed text if there is no committed value yet
+            setInput(value?.label ?? input)
+            setShowDropdown(true)
+          }}
+          className="w-full h-12 rounded-2xl pl-10 pr-20 text-sm font-medium text-ink placeholder:text-ink-faint placeholder:font-normal bg-mist border border-transparent outline-none transition-[background-color,box-shadow,border-color] duration-300 hover:bg-mist-strong focus:bg-paper focus:border-line focus:shadow-soft focus-visible:outline-none"
+        />
+        <div className="absolute right-1.5 top-0 bottom-0 flex items-center gap-0.5">
           {displayValue && (
             <button
               type="button"
+              aria-label="Borrar"
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => {
                 onSelect(null)
                 setInput('')
               }}
-              className="absolute right-2 top-0 bottom-0 flex items-center text-white/35 hover:text-white/60 cursor-pointer"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-ink-faint hover:text-ink hover:bg-mist-strong cursor-pointer transition-colors animate-scale-in"
             >
               <X size={14} />
             </button>
           )}
-
-          {/* Floating dropdown — rendered as absolute overlay in default mode */}
-          {!inlineResults && showResults && (
-            <div className="absolute top-full mt-1 left-0 right-0 bg-surface-elevated border border-white/8 rounded-lg shadow-card z-50 overflow-hidden">
-              {resultItems}
-            </div>
-          )}
+          {/* Map-pick toggle */}
+          <button
+            type="button"
+            onClick={onMapPickToggle}
+            title="Seleccionar en el mapa"
+            aria-label="Seleccionar en el mapa"
+            aria-pressed={isMapPickActive}
+            className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 active:scale-90 ${
+              isMapPickActive ? mapActiveClass : 'text-ink-soft hover:text-ink hover:bg-mist-strong'
+            }`}
+          >
+            <MapIcon size={16} />
+          </button>
         </div>
+
+        {/* Floating dropdown — rendered as absolute overlay in default mode */}
+        {!inlineResults && showResults && (
+          <div className="absolute top-full mt-2 left-0 right-0 bg-paper rounded-3xl shadow-float p-1.5 z-50 max-h-80 overflow-y-auto origin-top animate-scale-in">
+            {resultItems}
+          </div>
+        )}
       </div>
 
       {/* Inline results — rendered as static flow inside overlay */}
       {inlineResults && showResults && (
-        <div className="flex flex-col mt-1 rounded-lg overflow-hidden border border-white/6 bg-surface-elevated/60">
+        <div className="flex flex-col mt-2 rounded-3xl bg-paper shadow-soft p-1.5">
           {resultItems}
         </div>
       )}

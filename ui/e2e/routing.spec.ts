@@ -37,7 +37,7 @@ test.describe('ENStop PWA E2E Flows', () => {
     await firstDestOption.click()
 
     // Verify Route Recommendation lists appear automatically
-    const resultsHeader = page.locator('h3:has-text("Rutas Recomendadas:")')
+    const resultsHeader = page.locator('h3:has-text("Rutas recomendadas")')
     await expect(resultsHeader).toBeVisible()
 
     // Verify at least one result card is present

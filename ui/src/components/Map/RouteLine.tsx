@@ -18,23 +18,29 @@ export function RouteLine({ route, isSelected, isGhosted }: RouteLineProps) {
 
   const color = route.brand?.color_hex || route.category?.color_hex || '#3DBFA8'
 
-  // Visual weight/opacity per focus state
-  const weight = isSelected ? 6 : isGhosted ? 2 : 3
-  const opacity = isSelected ? 1.0 : isGhosted ? 0.2 : 0.55
+  // Visual weight/opacity per focus state — `route-line` transitions between them
+  const weight = isSelected ? 6 : isGhosted ? 3 : 4
+  const opacity = isSelected ? 1 : isGhosted ? 0.22 : 0.8
+  const casingWeight = isSelected ? 12 : 8
+  const casingOpacity = isGhosted ? 0 : isSelected ? 1 : 0.85
 
   return (
     <>
-      {/* Halo — white wider polyline underneath for glow effect on selected route */}
-      {isSelected && (
-        <Polyline
-          positions={positions}
-          color="#ffffff"
-          weight={10}
-          opacity={0.45}
-          interactive={false}
-        />
-      )}
-      <Polyline positions={positions} color={color} weight={weight} opacity={opacity} />
+      {/* White casing lifts the line off the light basemap */}
+      <Polyline
+        positions={positions}
+        pathOptions={{
+          color: '#ffffff',
+          weight: casingWeight,
+          opacity: casingOpacity,
+          className: 'route-line',
+        }}
+        interactive={false}
+      />
+      <Polyline
+        positions={positions}
+        pathOptions={{ color, weight, opacity, className: 'route-line' }}
+      />
     </>
   )
 }

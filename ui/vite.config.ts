@@ -16,7 +16,8 @@ export default defineConfig(() => {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/[a-d]\.basemaps\.cartocdn\.com\/.*/i,
+            // OpenFreeMap vector tiles, style, glyphs and sprites
+            urlPattern: /^https:\/\/tiles\.openfreemap\.org\/.*/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'map-tiles-cache',
