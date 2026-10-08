@@ -2,481 +2,631 @@
   {
     "id": 1,
     "name": "Terminal Centro",
-    "common_name": "Terminal Centro",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.624975, 31.867987]
-    },
+    "common_name": "Calle Novena y Av. Alvarado",
+    "geom": { "type": "Point", "coordinates": [-116.617893, 31.869517] },
     "is_terminal": true,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 2,
-    "name": "Calle Segunda y Gastélum",
-    "common_name": "Parque Revolución",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.62125473102198, 31.86512888538582]
-    },
+    "name": "Calle Novena y Av. Floresta",
+    "common_name": "Zona Centro",
+    "geom": { "type": "Point", "coordinates": [-116.612779, 31.867632] },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 3,
-    "name": "Calle Segunda y Floresta",
-    "common_name": "Calle 2da & Floresta",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.61719925423616, 31.86318416184945]
-    },
+    "name": "Av. Reforma y Av. Juárez",
+    "common_name": "Col. Obrera → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.606732, 31.86051] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 4,
-    "name": "Calle Segunda y Espinoza",
-    "common_name": "Calle 2da & Espinoza",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.612068, 31.857586]
-    },
+    "name": "Av. Reforma y Av. Diamante",
+    "common_name": "→ Sur",
+    "geom": { "type": "Point", "coordinates": [-116.605768, 31.8557] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 5,
-    "name": "Calle Segunda y Rayón",
-    "common_name": "Calle 2da & Rayón",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.60991299996736, 31.85401786869357]
-    },
+    "name": "Av. Reforma y Blvd. Esmeralda",
+    "common_name": "→ Sur",
+    "geom": { "type": "Point", "coordinates": [-116.603875, 31.846431] },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 6,
-    "name": "Calle Segunda y Kiliwas",
-    "common_name": "Calle 2da & Kiliwas",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.603014, 31.847932]
-    },
+    "name": "Av. Reforma y Blvd. Estancia",
+    "common_name": "Col. Acapulco → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.602997, 31.84171] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 7,
-    "name": "Avenida Reforma y Calle Diamante",
-    "common_name": "Reforma & Diamante",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.60193773408174, 31.84801262146991]
-    },
+    "name": "Av. Reforma y Av. Las Palmas",
+    "common_name": "Valle Dorado → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.601686, 31.834971] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 8,
-    "name": "Avenida Reforma y Calle Plita",
-    "common_name": "Reforma & Plita",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.6023491677326, 31.844537386434]
-    },
+    "name": "Av. Reforma y Blvd. Paseo de la Playa",
+    "common_name": "Hospital General / UABC → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.599859, 31.82569] },
     "is_terminal": false,
-    "accessible": false,
+    "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 9,
-    "name": "Avenida Reforma y Calle Delante",
-    "common_name": "Reforma & Delante",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.60042974390899, 31.841716043892646]
-    },
+    "name": "Av. Reforma y Calle Hierro",
+    "common_name": "Macroplaza del Mar → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.598583, 31.819302] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 10,
+    "name": "Av. Reforma y Av. Ávila Camacho",
+    "common_name": "Centro de Gobierno → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.596737, 31.81003] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
-    "id": 10,
-    "name": "Avenida Reforma UABC Valle Dorado",
-    "common_name": "UABC Valle Dorado",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59981426644238, 31.838643929015966]
-    },
-    "is_terminal": false,
-    "accessible": true,
-    "created_at": "2026-06-01T00:00:00Z"
-  },
-  {
     "id": 11,
-    "name": "Avenida Reforma Plaza Sendero",
-    "common_name": "Plaza Sendero / Macroplaza",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59902563087745, 31.834602817475012]
-    },
+    "name": "Av. Reforma y Blvd. Tecnológico",
+    "common_name": "CBTIS 41 → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.595541, 31.80408] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 12,
-    "name": "Avenida Reforma y Calle Esmeralda",
-    "common_name": "Reforma & Esmeralda",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59824085517053, 31.8305660268528]
-    },
+    "name": "Av. Reforma y Blvd. Antonio Meléndrez",
+    "common_name": "Chapultepec → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.592984, 31.791102] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 13,
-    "name": "Avenida Reforma y Calle Alisos",
-    "common_name": "Reforma & Alisos",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59652740461384, 31.824858737001986]
-    },
+    "name": "Av. Reforma y Calzada Morelos",
+    "common_name": "Chapultepec → Sur",
+    "geom": { "type": "Point", "coordinates": [-116.59164, 31.78431] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 14,
-    "name": "Avenida Reforma y Calle Coral",
-    "common_name": "Reforma & Calle Coral",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59609727573505, 31.819609318050624]
-    },
+    "name": "Terminal Chapultepec",
+    "common_name": "Calzada Morelos y Calle California Tercera",
+    "geom": { "type": "Point", "coordinates": [-116.60435, 31.782453] },
+    "is_terminal": true,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 15,
+    "name": "Av. Reforma y Prol. Lázaro Cárdenas",
+    "common_name": "Chapultepec → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.591082, 31.7824] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
-    "id": 15,
-    "name": "Avenida Reforma Clinica 8 IMSS",
-    "common_name": "IMSS Clinica 8",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59274460054239, 31.812630526915726]
-    },
-    "is_terminal": false,
-    "accessible": true,
-    "created_at": "2026-06-01T00:00:00Z"
-  },
-  {
     "id": 16,
-    "name": "Avenida Reforma y Lázaro Cárdenas",
-    "common_name": "Reforma & Lázaro Cárdenas",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59007870289463, 31.807983465778435]
-    },
+    "name": "Av. Reforma y Blvd. Antonio Meléndrez",
+    "common_name": "Chapultepec → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.592799, 31.79106] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 17,
-    "name": "Avenida Reforma y Calle Estancia",
-    "common_name": "Reforma & Estancia",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.58824966486858, 31.799541113136243]
-    },
+    "name": "Av. Reforma y Blvd. Tecnológico",
+    "common_name": "CBTIS 41 → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.595357, 31.80397] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 18,
-    "name": "Avenida Reforma Pórticos del Mar",
-    "common_name": "Pórticos del Mar",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.58621738438711, 31.7893882438137]
-    },
+    "name": "Av. Reforma y Av. Ávila Camacho",
+    "common_name": "Centro de Gobierno → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.596561, 31.81005] },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 19,
-    "name": "Terminal Chapultepec",
-    "common_name": "Terminal Chapultepec",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.58003405919442, 31.780244800459904]
-    },
-    "is_terminal": true,
+    "name": "Av. Reforma y Calle Granada",
+    "common_name": "Hospital General / UABC → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.599184, 31.823279] },
+    "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 20,
-    "name": "Pedro Loyola y Entrada Chapultepec",
-    "common_name": "Pedro Loyola & Entrada Chapultepec",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59000252859022, 31.785016229252236]
-    },
+    "name": "Av. Reforma y Blvd. Plinta",
+    "common_name": "Valle Dorado → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.601919, 31.8372] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 21,
-    "name": "Pedro Loyola y Pórticos del Mar",
-    "common_name": "Pedro Loyola & Pórticos del Mar",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59359159751772, 31.79508055174588]
-    },
-    "is_terminal": false,
-    "accessible": true,
-    "created_at": "2026-06-01T00:00:00Z"
-  },
-  {
-    "id": 22,
-    "name": "Pedro Loyola y Calle Lago Powell",
-    "common_name": "Pedro Loyola & Lago Powell",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59565412650417, 31.805466572303832]
-    },
+    "name": "Av. Reforma y Blvd. Estancia",
+    "common_name": "Col. Acapulco → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.602842, 31.84173] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
-    "id": 23,
-    "name": "Pedro Loyola y Calle Estancia",
-    "common_name": "Pedro Loyola & Estancia",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59771677187103, 31.81585500139241]
-    },
+    "id": 22,
+    "name": "Av. Reforma y Av. Delante",
+    "common_name": "→ Centro",
+    "geom": { "type": "Point", "coordinates": [-116.604661, 31.85097] },
     "is_terminal": false,
     "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 23,
+    "name": "Av. Reforma y Av. Juárez",
+    "common_name": "Col. Obrera → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.606494, 31.860209] },
+    "is_terminal": false,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 24,
-    "name": "Pedro Loyola y Lázaro Cárdenas",
-    "common_name": "Pedro Loyola & Lázaro Cárdenas",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59976511553747, 31.826183760370128]
-    },
+    "name": "Calle Octava y Av. Espinoza",
+    "common_name": "Zona Centro → Terminal",
+    "geom": { "type": "Point", "coordinates": [-116.614491, 31.867098] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 25,
-    "name": "Pedro Loyola y Clinica 8 IMSS",
-    "common_name": "Pedro Loyola & IMSS",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.60980794506398, 31.835035719112092]
-    },
+    "name": "Av. Riveroll y Av. Juárez",
+    "common_name": "Zona Centro",
+    "geom": { "type": "Point", "coordinates": [-116.622143, 31.866221] },
     "is_terminal": false,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 26,
-    "name": "Pedro Loyola y Calle Esmeralda",
-    "common_name": "Pedro Loyola & Esmeralda",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.6125940426944, 31.845574944740083]
-    },
+    "name": "Blvd. Costero y Av. Blancarte",
+    "common_name": "Malecón / Plaza Cívica",
+    "geom": { "type": "Point", "coordinates": [-116.622709, 31.859861] },
     "is_terminal": false,
-    "accessible": false,
+    "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 27,
-    "name": "Blvd. Costero y Sanginés",
-    "common_name": "Blvd. Costero & Sanginés",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.61827126454637, 31.854817704414618]
-    },
+    "name": "Blvd. Costero y Calle Sanginés",
+    "common_name": "Bahía Ensenada",
+    "geom": { "type": "Point", "coordinates": [-116.614639, 31.84953] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 28,
-    "name": "Plaza Cívica de la Patria",
-    "common_name": "Plaza Cívica",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.6228541225206, 31.86193005874275]
-    },
+    "name": "Blvd. Costero y Blvd. Estancia",
+    "common_name": "Col. Acapulco / Plaza Contenedores",
+    "geom": { "type": "Point", "coordinates": [-116.611127, 31.840591] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 29,
-    "name": "Calle Segunda y Blvd. Esmeralda",
-    "common_name": "Calle 2da & Esmeralda",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.624975, 31.867987]
-    },
+    "name": "Calle Floresta y Av. Pedro Loyola",
+    "common_name": "Punta Banda",
+    "geom": { "type": "Point", "coordinates": [-116.605561, 31.832082] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 30,
-    "name": "Blvd. Esmeralda y Pedro Loyola",
-    "common_name": "Esmeralda & Loyola",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.600449, 31.841813]
-    },
+    "name": "Av. Reforma y Calle Paseo de las Ballenas",
+    "common_name": "Chapultepec Sur → Maneadero",
+    "geom": { "type": "Point", "coordinates": [-116.590225, 31.777212] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 31,
-    "name": "Blvd. Esmeralda y Av. Reforma",
-    "common_name": "Esmeralda & Reforma",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59158493204033, 31.811768152676482]
-    },
+    "name": "Carretera Transpeninsular y Calle Miguel Hidalgo",
+    "common_name": "→ Maneadero",
+    "geom": { "type": "Point", "coordinates": [-116.583908, 31.74493] },
     "is_terminal": false,
-    "accessible": true,
+    "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 32,
-    "name": "Blvd. Esmeralda y Av. Reforma Zona Sur",
-    "common_name": "Esmeralda Sur",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.590608, 31.810597]
-    },
+    "name": "Carretera Transpeninsular y Calle Esteban Cantú",
+    "common_name": "Maneadero",
+    "geom": { "type": "Point", "coordinates": [-116.581448, 31.733121] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 33,
-    "name": "Blvd. Esmeralda y Lázaro Cárdenas",
-    "common_name": "Esmeralda & Lázaro Cárdenas",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.590637, 31.810671]
-    },
-    "is_terminal": false,
-    "accessible": false,
-    "created_at": "2026-06-01T00:00:00Z"
-  },
-  {
-    "id": 34,
-    "name": "Blvd. Esmeralda y Clínica IMSS",
-    "common_name": "Esmeralda & IMSS",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.596401, 31.824645]
-    },
-    "is_terminal": false,
-    "accessible": true,
-    "created_at": "2026-06-01T00:00:00Z"
-  },
-  {
-    "id": 35,
-    "name": "Terminal Col. Popular",
-    "common_name": "Terminal Col. Popular",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.59981485458367, 31.838646925735866]
-    },
+    "name": "Terminal Maneadero",
+    "common_name": "Calle Francisco I. Madero, Maneadero",
+    "geom": { "type": "Point", "coordinates": [-116.573663, 31.729654] },
     "is_terminal": true,
     "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
+    "id": 34,
+    "name": "Carretera Transpeninsular y Calle Miguel Hidalgo",
+    "common_name": "Maneadero → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.583634, 31.744959] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 35,
+    "name": "Carretera Transpeninsular y Calle Francisco I. Madero",
+    "common_name": "→ Centro",
+    "geom": { "type": "Point", "coordinates": [-116.585435, 31.754009] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
     "id": 36,
-    "name": "Col. Popular y Calle Kiliwas",
-    "common_name": "Col. Popular & Kiliwas",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.601693, 31.846809]
-    },
+    "name": "Av. Reforma y Calle Paseo de las Ballenas",
+    "common_name": "Chapultepec Sur → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.590112, 31.77727] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 37,
-    "name": "Blvd. Costero y Calle Esmeralda (Regreso)",
-    "common_name": "Costero & Esmeralda",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.601952, 31.848083]
-    },
+    "name": "Blvd. Costero y Av. Miramar",
+    "common_name": "Malecón / Mercado Negro",
+    "geom": { "type": "Point", "coordinates": [-116.628069, 31.862383] },
     "is_terminal": false,
-    "accessible": false,
+    "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 38,
-    "name": "Blvd. Costero y Pedro Loyola (Regreso)",
-    "common_name": "Costero & Loyola",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.601952, 31.848083]
-    },
+    "name": "Blvd. Fernando Consag y Calle del Barco",
+    "common_name": "Fracc. Playitas → El Sauzal",
+    "geom": { "type": "Point", "coordinates": [-116.656257, 31.864185] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
     "id": 39,
-    "name": "Blvd. Costero y Calle Kiliwas (Regreso)",
-    "common_name": "Costero & Kiliwas",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.60980193974343, 31.853476378523087]
-    },
+    "name": "Carretera Tijuana–Ensenada y Calle Teniente Azueta",
+    "common_name": "CICESE / UABC → El Sauzal",
+    "geom": { "type": "Point", "coordinates": [-116.66789, 31.866633] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 40,
+    "name": "Carretera Tijuana–Ensenada y Calle de las Rosas",
+    "common_name": "El Sauzal",
+    "geom": { "type": "Point", "coordinates": [-116.676789, 31.870421] },
     "is_terminal": false,
     "accessible": false,
     "created_at": "2026-06-01T00:00:00Z"
   },
   {
-    "id": 40,
-    "name": "Blvd. Costero y Sanginés (Regreso)",
-    "common_name": "Costero & Sanginés",
-    "geom": {
-      "type": "Point",
-      "coordinates": [-116.624975, 31.867987]
-    },
+    "id": 41,
+    "name": "Carretera Tijuana–Ensenada, Terminal PEMEX",
+    "common_name": "El Sauzal",
+    "geom": { "type": "Point", "coordinates": [-116.682987, 31.880106] },
     "is_terminal": false,
     "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 42,
+    "name": "Calle Primera y Avenida L",
+    "common_name": "El Sauzal",
+    "geom": { "type": "Point", "coordinates": [-116.692447, 31.890412] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 43,
+    "name": "Terminal El Sauzal",
+    "common_name": "Av. Benito Juárez y Calle Segunda",
+    "geom": { "type": "Point", "coordinates": [-116.694285, 31.895233] },
+    "is_terminal": true,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 44,
+    "name": "Carretera Tijuana–Ensenada, Terminal PEMEX",
+    "common_name": "El Sauzal → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.683093, 31.880055] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 45,
+    "name": "Carretera Tijuana–Ensenada y Calle de las Rosas",
+    "common_name": "El Sauzal → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.676869, 31.870339] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 46,
+    "name": "Carretera Tijuana–Ensenada y Calle Teniente Azueta",
+    "common_name": "CICESE / UABC → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.66787, 31.866515] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 47,
+    "name": "Av. Clark Flores y Av. Miguel Alemán",
+    "common_name": "→ Centro",
+    "geom": { "type": "Point", "coordinates": [-116.645569, 31.869427] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 48,
+    "name": "Av. Clark Flores y Calle Belgrado",
+    "common_name": "Cruz Roja → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.635872, 31.873332] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 49,
+    "name": "Calle Novena y Av. Ruiz",
+    "common_name": "Zona Centro",
+    "geom": { "type": "Point", "coordinates": [-116.623721, 31.871648] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 50,
+    "name": "Av. Reforma y Calle Once",
+    "common_name": "Col. Ulbrich → Lomitas",
+    "geom": { "type": "Point", "coordinates": [-116.608304, 31.869239] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 51,
+    "name": "Av. Constituyentes y Calle Alisos",
+    "common_name": "Valle Verde → Lomitas",
+    "geom": { "type": "Point", "coordinates": [-116.601538, 31.87959] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 52,
+    "name": "Calle de las Higueras y De las Moras",
+    "common_name": "Lomitas → Popular 89",
+    "geom": { "type": "Point", "coordinates": [-116.596612, 31.88957] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 53,
+    "name": "Blvd. Geranios y Calle Pino",
+    "common_name": "Lomitas → Popular 89",
+    "geom": { "type": "Point", "coordinates": [-116.583051, 31.893061] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 54,
+    "name": "Terminal Popular 89",
+    "common_name": "Libramiento Circuito Oriente y Blvd. Geranios",
+    "geom": { "type": "Point", "coordinates": [-116.575117, 31.896233] },
+    "is_terminal": true,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 55,
+    "name": "Blvd. Geranios y Av. Cochimí",
+    "common_name": "Soriana Geranios → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.578262, 31.894884] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 56,
+    "name": "Blvd. Geranios y Calle Pino",
+    "common_name": "Lomitas → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.583197, 31.893115] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 57,
+    "name": "Calle de las Higueras y De las Moras",
+    "common_name": "Lomitas → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.59656, 31.889661] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 58,
+    "name": "Calle de las Higueras y Ámbar",
+    "common_name": "Valle Verde → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.60489, 31.88378] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 59,
+    "name": "Av. Constituyentes y Calle Alisos",
+    "common_name": "Valle Verde → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.601613, 31.87958] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 60,
+    "name": "Av. Reforma y Calle Once",
+    "common_name": "Col. Ulbrich → Centro",
+    "geom": { "type": "Point", "coordinates": [-116.608397, 31.86923] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 61,
+    "name": "Calzada de las Águilas y Av. Francisco Mina",
+    "common_name": "Col. Aviación",
+    "geom": { "type": "Point", "coordinates": [-116.601781, 31.863473] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 62,
+    "name": "Calzada de las Águilas y Av. México",
+    "common_name": "Col. Independencia",
+    "geom": { "type": "Point", "coordinates": [-116.59434, 31.864541] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 63,
+    "name": "Periférico y Calzada Cortez",
+    "common_name": "Col. Hidalgo",
+    "geom": { "type": "Point", "coordinates": [-116.582117, 31.863691] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 64,
+    "name": "Periférico y Av. Delante",
+    "common_name": "Ampliación Hidalgo",
+    "geom": { "type": "Point", "coordinates": [-116.579379, 31.85468] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 65,
+    "name": "Blvd. Esmeralda y Calle Paseo Costa Bella",
+    "common_name": "Unidad Costa Bella",
+    "geom": { "type": "Point", "coordinates": [-116.584859, 31.849176] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 66,
+    "name": "Blvd. Esmeralda y Av. México",
+    "common_name": "Col. Cuauhtémoc",
+    "geom": { "type": "Point", "coordinates": [-116.591115, 31.848289] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 67,
+    "name": "Blvd. Paseo de las Flores y Blvd. Estancia",
+    "common_name": "Valle Dorado",
+    "geom": { "type": "Point", "coordinates": [-116.598518, 31.842429] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 68,
+    "name": "Blvd. Zertuche y Blvd. del Lago Victoria",
+    "common_name": "Valle Dorado",
+    "geom": { "type": "Point", "coordinates": [-116.598893, 31.83392] },
+    "is_terminal": false,
+    "accessible": false,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 69,
+    "name": "Blvd. Zertuche y Blvd. de los Lagos",
+    "common_name": "UABC Valle Dorado",
+    "geom": { "type": "Point", "coordinates": [-116.597594, 31.827239] },
+    "is_terminal": false,
+    "accessible": true,
+    "created_at": "2026-06-01T00:00:00Z"
+  },
+  {
+    "id": 70,
+    "name": "Calle Hierro y Blvd. Zertuche",
+    "common_name": "Macroplaza del Mar",
+    "geom": { "type": "Point", "coordinates": [-116.596073, 31.81948] },
+    "is_terminal": false,
+    "accessible": true,
     "created_at": "2026-06-01T00:00:00Z"
   }
 ]

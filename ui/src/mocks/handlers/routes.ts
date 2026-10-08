@@ -1,48 +1,29 @@
 import { http, HttpResponse } from 'msw'
 import routesData from '../data/routes.json'
 import stopsData from '../data/stops.json'
+import routeStopsData from '../data/route_stops.json'
+import categoriesData from '../data/categories.json'
+import brandsData from '../data/brands.json'
 
-// Category mock
-const mockCategories: Record<number, { id: number; name: string; color_hex: string }> = {
-  1: {
-    id: 1,
-    name: 'Centro–Chapultepec',
-    color_hex: '#3DBFA8',
-  },
-  2: {
-    id: 2,
-    name: 'Esmeralda–Calafia',
-    color_hex: '#F59E0B',
-  },
-}
+const categoriesById = new Map(categoriesData.map((c) => [c.id, c]))
+const brandsById = new Map(brandsData.map((b) => [b.id, b]))
+const stopsById = new Map(stopsData.map((s) => [s.id, s]))
 
-// Brand mock
-const mockBrands: Record<number, { id: number; name: string; color_hex: string }> = {
-  1: { id: 1, name: 'Rojo y Blanco', color_hex: '#ef4444' },
-  2: { id: 2, name: 'Amarillo y Blanco', color_hex: '#eab308' },
-  3: { id: 3, name: 'Transportes El Vigía', color_hex: '#3b82f6' },
-  4: { id: 4, name: 'Transportes Brisa', color_hex: '#f97316' },
-  5: { id: 5, name: 'Transportes Flecha Verde', color_hex: '#22c55e' },
-  6: { id: 6, name: 'Transportes Nativos', color_hex: '#6b7280' },
-}
-
-// Map stops for each route
+// Ordered stops for a route, joined with their stop rows (PostgREST embed shape)
 function getRouteStops(routeId: number) {
-  const stopIds =
-    routeId === 1
-      ? Array.from({ length: 28 }, (_, i) => i + 1)
-      : [1, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+  return routeStopsData
+    .filter((rs) => rs.route_id === routeId)
+    .sort((a, b) => a.sequence - b.sequence)
+    .map((rs) => ({ ...rs, stop: stopsById.get(rs.stop_id)! }))
+}
 
-  return stopIds.map((stopId, index) => {
-    const stop = stopsData.find((s) => s.id === stopId)
-    return {
-      id: (routeId === 1 ? 0 : 100) + index + 1,
-      route_id: routeId,
-      stop_id: stopId,
-      sequence: index + 1,
-      stop: stop!,
-    }
-  })
+function withRelations(route: (typeof routesData)[number]) {
+  return {
+    ...route,
+    category: categoriesById.get(route.category_id) ?? null,
+    brand: brandsById.get(route.brand_id) ?? null,
+    route_stops: getRouteStops(route.id),
+  }
 }
 
 export const routesHandlers = [
@@ -67,13 +48,7 @@ export const routesHandlers = [
 
       const route = routesData.find((r) => r.id === routeId)
       if (route) {
-        const routeDetail = {
-          ...route,
-          category: mockCategories[route.category_id || 1] || null,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          brand: mockBrands[(route as any).brand_id || 1] || null,
-          route_stops: getRouteStops(route.id),
-        }
+        const routeDetail = withRelations(route)
 
         // If it's querying for a single row specifically (e.g. .single() which sets header Accept: application/vnd.pgrst.object+json)
         const acceptHeader = request.headers.get('Accept')
@@ -89,13 +64,7 @@ export const routesHandlers = [
     }
 
     // Default: list all active routes — include route_stops so consumers get RouteDetail shape
-    const routesList = routesData.map((route) => ({
-      ...route,
-      category: mockCategories[route.category_id || 1] || null,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      brand: mockBrands[(route as any).brand_id || 1] || null,
-      route_stops: getRouteStops(route.id),
-    }))
+    const routesList = routesData.map(withRelations)
 
     return HttpResponse.json(routesList)
   }),

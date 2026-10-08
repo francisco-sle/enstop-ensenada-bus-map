@@ -85,7 +85,7 @@ Four ordered SQL migrations define the full database surface:
 
 | File | Status | Purpose |
 |---|---|---|
-| `supabase/seed.sql` | **Committed** | Minimal 2-stop mock route for CI/CD |
+| `supabase/seed.sql` | **Committed** | Generated demo network (5 routes, 70 stops) for local dev and CI/CD |
 | `supabase/seed.private.sql` | **Git-ignored** | High-fidelity production coordinates |
 
 ### Edge Functions
@@ -171,7 +171,9 @@ npm run db:start
 
 This spins up a local Postgres + PostGIS instance via Docker, runs all migrations, and seeds mock route/stop data from `supabase/seed.sql`.
 
-> **Note:** The committed `seed.sql` contains a minimal 2-stop mock route (safe for CI/CD). Real Ensenada coordinates are stored in the git-ignored `supabase/seed.private.sql`. Copy your high-fidelity data there after cloning.
+> **Note:** The committed `seed.sql` is a demo network: 5 circular routes and 70 stops along real Ensenada corridors (Av. Reforma, Blvd. Costero, Transpeninsular, Carretera Tijuana–Ensenada, Blvd. Geranios), but **not** official operator itineraries. Real coordinates are stored in the git-ignored `supabase/seed.private.sql`. Copy your high-fidelity data there after cloning.
+>
+> The demo network is defined in `ui/src/mocks/scripts/network.config.mjs`. Run `node ui/src/mocks/scripts/build_network.mjs` (needs internet for the public OSRM server) to regenerate both `seed.sql` and the MSW fixtures in `ui/src/mocks/data/`.
 
 ### 5. Generate TypeScript types from the database schema
 

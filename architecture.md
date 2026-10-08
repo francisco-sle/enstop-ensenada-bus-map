@@ -10,7 +10,7 @@
   - **`ui/src/components/`**: Organized by feature slice (e.g., Map, Routing, RouteDetail, StopDetail, Studio, Legal). Encapsulates UI components and domain-specific logic.
   - **`ui/src/constants/`**: Holds shared static values and configuration constants.
   - **`ui/src/hooks/`**: Provides cross-cutting custom React hooks for business logic and side effects.
-  - **`ui/src/mocks/`**: Contains the MSW (Mock Service Worker) layer, including handlers and static JSON fixtures for offline development and testing.
+  - **`ui/src/mocks/`**: Contains the MSW (Mock Service Worker) layer, including handlers and static JSON fixtures for offline development and testing. The fixtures (and `supabase/seed.sql`) are generated from `mocks/scripts/network.config.mjs` by `mocks/scripts/build_network.mjs`; `mocks/network.test.ts` checks that every route stays routable.
   - **`ui/src/pages/`**: Contains the top-level route screens of the application (e.g., MapPage, RoutesPage, EditorPage, AboutPage).
   - **`ui/src/store/`**: Manages global client state using Zustand (e.g., `mapStore.ts`, `routingStore.ts`).
   - **`ui/src/styles/`**: Defines the global styling setup. Uses a single CSS entry point (`index.css`) for Tailwind `@theme` configurations. **No `tailwind.config.js` exists or should ever be created.**
