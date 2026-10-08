@@ -1,0 +1,8 @@
+[
+  { "id": 1, "name": "Rojo y Blanco", "color_hex": "#ef4444", "units_operating": 343 },
+  { "id": 2, "name": "Amarillo y Blanco", "color_hex": "#eab308", "units_operating": 260 },
+  { "id": 3, "name": "Transportes El Vigía", "color_hex": "#3b82f6", "units_operating": 139 },
+  { "id": 4, "name": "Transportes Brisa", "color_hex": "#f97316", "units_operating": 87 },
+  { "id": 5, "name": "Transportes Flecha Verde", "color_hex": "#22c55e", "units_operating": 45 },
+  { "id": 6, "name": "Transportes Nativos", "color_hex": "#6b7280", "units_operating": 25 }
+]

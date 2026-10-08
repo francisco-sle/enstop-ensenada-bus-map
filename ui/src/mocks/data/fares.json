@@ -39,7 +39,7 @@
     "id": 5,
     "route_id": 1,
     "passenger_type": "disability_free",
-    "fare_mxn": 0.0,
+    "fare_mxn": 0,
     "effective_from": "2025-01-01",
     "notes": "Tarifa gratuita para personas con discapacidad",
     "updated_at": "2026-06-22T00:00:00Z"
@@ -84,7 +84,142 @@
     "id": 10,
     "route_id": 2,
     "passenger_type": "disability_free",
-    "fare_mxn": 0.0,
+    "fare_mxn": 0,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa gratuita para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 11,
+    "route_id": 3,
+    "passenger_type": "normal",
+    "fare_mxn": 15.5,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa general de microbús 2025",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 12,
+    "route_id": 3,
+    "passenger_type": "student",
+    "fare_mxn": 5.85,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa de estudiante",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 13,
+    "route_id": 3,
+    "passenger_type": "senior",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para tercera edad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 14,
+    "route_id": 3,
+    "passenger_type": "disability",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 15,
+    "route_id": 3,
+    "passenger_type": "disability_free",
+    "fare_mxn": 0,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa gratuita para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 16,
+    "route_id": 4,
+    "passenger_type": "normal",
+    "fare_mxn": 15.5,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa general de microbús 2025",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 17,
+    "route_id": 4,
+    "passenger_type": "student",
+    "fare_mxn": 5.85,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa de estudiante",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 18,
+    "route_id": 4,
+    "passenger_type": "senior",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para tercera edad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 19,
+    "route_id": 4,
+    "passenger_type": "disability",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 20,
+    "route_id": 4,
+    "passenger_type": "disability_free",
+    "fare_mxn": 0,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa gratuita para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 21,
+    "route_id": 5,
+    "passenger_type": "normal",
+    "fare_mxn": 15.5,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa general de microbús 2025",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 22,
+    "route_id": 5,
+    "passenger_type": "student",
+    "fare_mxn": 5.85,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa de estudiante",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 23,
+    "route_id": 5,
+    "passenger_type": "senior",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para tercera edad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 24,
+    "route_id": 5,
+    "passenger_type": "disability",
+    "fare_mxn": 7.75,
+    "effective_from": "2025-01-01",
+    "notes": "Tarifa preferencial para personas con discapacidad",
+    "updated_at": "2026-06-22T00:00:00Z"
+  },
+  {
+    "id": 25,
+    "route_id": 5,
+    "passenger_type": "disability_free",
+    "fare_mxn": 0,
     "effective_from": "2025-01-01",
     "notes": "Tarifa gratuita para personas con discapacidad",
     "updated_at": "2026-06-22T00:00:00Z"

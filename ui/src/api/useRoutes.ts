@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase, supabaseUrl, supabaseAnonKey } from './supabase'
+import { alignStopsToGeometry } from '../components/Routing/routing'
 import type { RouteDetail } from '../types'
 
 // Shape returned by the route-proxy Edge Function (geom is GeoJSON via ST_AsGeoJSON)
@@ -61,48 +62,14 @@ export function useRoutes(turnstileToken: string | null) {
           ? [...route.route_stops].sort((a, b) => a.sequence - b.sequence)
           : []
 
-        // Compute topological alignment: assign coord_index to each stop
         if (coords && stops.length > 0) {
-          const validStops = []
-          for (const rs of stops) {
-            const stopLng = rs.stop.geom.coordinates[0]
-            const stopLat = rs.stop.geom.coordinates[1]
-
-            let minSq = Infinity
-            let bestIdx = 0
-
-            // Robust global nearest-neighbor search
-            for (let i = 0; i < coords.length; i++) {
-              const dxMeters = (coords[i][0] - stopLng) * 94000
-              const dyMeters = (coords[i][1] - stopLat) * 111000
-              const sq = dxMeters * dxMeters + dyMeters * dyMeters
-
-              if (sq < minSq) {
-                minSq = sq
-                bestIdx = i
-              }
-            }
-
-            const distanceMeters = Math.sqrt(minSq)
-
-            // Relaxed threshold to 150m to accommodate hand-placed stops
-            // that might be a block away from the OSRM-snapped route geometry.
-            if (distanceMeters <= 150) {
-              rs.coord_index = bestIdx
-              validStops.push(rs)
-            } else {
-              console.warn(
-                `Stop ${rs.stop.name} is too far from route ${route.name} (${Math.round(distanceMeters)}m). Ignoring.`,
-              )
-            }
-          }
-          stops = validStops
+          stops = alignStopsToGeometry(stops, coords, route.name)
         }
 
         return {
           ...route,
           geom,
-          route_stops: stops, // attach the mutated and sorted array
+          route_stops: stops, // sorted and aligned to the geometry
         }
       })
     },
