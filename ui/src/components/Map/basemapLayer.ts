@@ -6,11 +6,12 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 // into a same-origin file (keeps CSP at `worker-src 'self'`).
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { basemap, tintBasemapStyle } from './mapConfig'
+import type { ResolvedTheme } from '../../store/themeStore'
 
 setWorkerUrl(workerUrl)
 
 /** Builds the MapLibre-backed Leaflet layer. Loaded lazily by `<Basemap />`. */
-export function createBasemapLayer(): L.Layer {
+export function createBasemapLayer(theme: ResolvedTheme): L.MaplibreGL {
   const layer = L.maplibreGL({
     // Start empty, then load the remote style through `transformStyle`
     // so the brand tint is applied before the first frame is drawn.
@@ -19,11 +20,17 @@ export function createBasemapLayer(): L.Layer {
     maxZoom: basemap.maxZoom,
   })
 
-  layer.once('add', () => {
-    layer.getMaplibreMap().setStyle(basemap.styleUrl, {
-      transformStyle: (_previous, next) => tintBasemapStyle(next),
-    })
-  })
+  layer.once('add', () => applyBasemapTheme(layer, theme))
 
   return layer
+}
+
+/**
+ * Re-tints a live basemap for the given theme. MapLibre diffs the new style
+ * against the current one, so only paint properties change — tiles stay loaded.
+ */
+export function applyBasemapTheme(layer: L.MaplibreGL, theme: ResolvedTheme) {
+  layer.getMaplibreMap().setStyle(basemap.styleUrl, {
+    transformStyle: (_previous, next) => tintBasemapStyle(next, theme),
+  })
 }

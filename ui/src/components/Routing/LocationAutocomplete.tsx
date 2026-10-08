@@ -82,7 +82,7 @@ export function LocationAutocomplete({
   const displayValue = isFocused ? input : (value?.label ?? input)
 
   const isOrigin = role === 'origin'
-  const accentClass = isOrigin ? 'text-pacific-500' : 'text-sol-600'
+  const accentClass = isOrigin ? 'text-accent' : 'text-warm'
   const mapActiveClass = isOrigin ? 'bg-pacific-500 text-white' : 'bg-sol-500 text-white'
 
   // Close on outside click

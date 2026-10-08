@@ -14,6 +14,7 @@ import { EditorPage } from './pages/EditorPage'
 import type { RouteDetail } from './types'
 import { Logo } from './components/Logo'
 import { AppNav } from './components/Nav/AppNav'
+import { ThemeToggle } from './components/Theme/ThemeToggle'
 
 // Initialize React Query Client
 const queryClient = new QueryClient({
@@ -99,8 +100,9 @@ function MainAppShell() {
             <Logo className="text-[26px] text-ink" />
           </div>
         )}
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
           <AppNav variant="bar" />
+          <ThemeToggle variant="bar" />
         </div>
       </header>
 

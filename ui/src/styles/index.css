@@ -3,7 +3,7 @@
    =========================== */
 @import 'tailwindcss';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   /* System Brand Tokens */
@@ -48,6 +48,14 @@
   --color-ink-faint: oklch(0.64 0.02 248);
   --color-danger: oklch(0.6 0.19 25);
   --color-success: oklch(0.64 0.14 158);
+  /* Brand accents for text/icons and their quiet tinted fills */
+  --color-accent: oklch(0.6 0.15 232);
+  --color-accent-strong: oklch(0.5 0.14 236);
+  --color-accent-tint: oklch(0.97 0.02 228);
+  --color-warm: oklch(0.58 0.16 82);
+  --color-warm-strong: oklch(0.48 0.14 82);
+  --color-warm-ink: oklch(0.35 0.12 82);
+  --color-warm-tint: oklch(0.97 0.03 82);
 
   /* ── Legacy dark palette (Studio editor) ──────────────────────────── */
   --color-bay-500: oklch(0.48 0.07 244);
@@ -302,6 +310,44 @@
   }
 }
 
+/* ── Dark theme ──────────────────────────────────────────────────────
+   `.dark` on <html> is set by the bootstrap script in index.html and kept
+   in sync by store/themeStore.ts. Overriding the @theme variables here
+   re-skins every utility that uses them (bg-paper, text-ink, …), so
+   components don't need `dark:` variants for the core palette. */
+.dark {
+  --color-canvas: oklch(0.19 0.02 250);
+  --color-paper: oklch(0.235 0.022 250);
+  --color-mist: oklch(0.28 0.022 250);
+  --color-mist-strong: oklch(0.33 0.024 250);
+  --color-line: oklch(0.32 0.02 250);
+  --color-ink: oklch(0.94 0.008 240);
+  --color-ink-soft: oklch(0.76 0.015 245);
+  --color-ink-faint: oklch(0.6 0.018 248);
+  --color-danger: oklch(0.7 0.18 25);
+  --color-success: oklch(0.74 0.14 158);
+
+  --color-accent: oklch(0.74 0.13 228);
+  --color-accent-strong: oklch(0.8 0.11 228);
+  --color-accent-tint: oklch(0.6 0.15 232 / 0.18);
+  --color-warm: oklch(0.82 0.15 82);
+  --color-warm-strong: oklch(0.85 0.13 82);
+  --color-warm-ink: oklch(0.9 0.08 82);
+  --color-warm-tint: oklch(0.78 0.16 82 / 0.12);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 6px 16px -4px oklch(0 0 0 / 0.35);
+  --shadow-float:
+    0 1px 3px oklch(0 0 0 / 0.3), 0 12px 32px -8px oklch(0 0 0 / 0.45),
+    0 32px 64px -24px oklch(0 0 0 / 0.4);
+  --shadow-lift: 0 2px 4px oklch(0 0 0 / 0.3), 0 18px 40px -10px oklch(0 0 0 / 0.5);
+
+  --glass-fill: oklch(0.235 0.022 250 / 0.82);
+  --glass-edge: oklch(1 0 0 / 0.08);
+  --map-bg: oklch(0.2 0.018 255);
+  --attribution-bg: oklch(0.19 0.02 250 / 0.7);
+  --route-casing: oklch(0.16 0.02 255);
+}
+
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -358,12 +404,12 @@
 }
 /* Frosted floating panel — the base material of every map overlay */
 @utility glass {
-  background-color: oklch(1 0 0 / 0.86);
+  background-color: var(--glass-fill);
   -webkit-backdrop-filter: blur(18px) saturate(1.6);
   backdrop-filter: blur(18px) saturate(1.6);
   box-shadow:
     var(--shadow-float),
-    inset 0 0 0 1px oklch(1 0 0 / 0.7);
+    inset 0 0 0 1px var(--glass-edge);
 }
 /* Floating icon button (locate, close, etc.) */
 @utility fab {
@@ -398,6 +444,13 @@
     /* Text */
     --color-text-primary: var(--color-ink);
     --color-text-secondary: var(--color-ink-soft);
+
+    /* Materials that need a different recipe in dark mode (see `.dark`) */
+    --glass-fill: oklch(1 0 0 / 0.86);
+    --glass-edge: oklch(1 0 0 / 0.7);
+    --map-bg: oklch(0.965 0.006 95);
+    --attribution-bg: oklch(1 0 0 / 0.7);
+    --route-casing: #ffffff;
 
     /* Height of the floating bottom dock on mobile (nav pill + gaps) */
     --dock-h: calc(84px + env(safe-area-inset-bottom, 0px));
@@ -476,7 +529,7 @@
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background-color: oklch(0.965 0.006 95);
+  background-color: var(--map-bg);
   font-family: inherit;
 }
 
@@ -487,7 +540,7 @@
 }
 
 .leaflet-control-attribution {
-  background: oklch(1 0 0 / 0.7) !important;
+  background: var(--attribution-bg) !important;
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: var(--color-ink-faint) !important;
@@ -503,7 +556,7 @@
 /* Leaflet tooltips (drag hint on routing pins) */
 .leaflet-tooltip.soft-tooltip {
   background: var(--color-ink);
-  color: white;
+  color: var(--color-paper);
   border: none;
   border-radius: 999px;
   padding: 5px 12px;
@@ -587,6 +640,12 @@
   transform: scale(1.15) translateY(-8px);
   filter: drop-shadow(0 14px 14px oklch(0.3 0.04 248 / 0.35)) !important;
   cursor: grabbing !important;
+}
+
+/* Light casing under route lines; overrides the SVG stroke attribute so it
+   follows the theme (white on the light basemap, basemap-dark in dark mode) */
+.route-casing {
+  stroke: var(--route-casing);
 }
 
 /* Route polylines ease between idle / selected / ghosted styles */

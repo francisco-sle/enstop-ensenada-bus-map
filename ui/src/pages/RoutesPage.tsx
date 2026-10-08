@@ -21,7 +21,7 @@ export function RoutesPage({ routes }: RoutesPageProps) {
 
   const chipClass = (active: boolean) =>
     `shrink-0 px-4 py-2 rounded-full text-sm font-semibold transition-[background-color,color,box-shadow] duration-300 flex items-center gap-2 cursor-pointer active:scale-95 ${
-      active ? 'bg-ink text-white shadow-soft' : 'bg-paper text-ink-soft hover:text-ink shadow-soft'
+      active ? 'bg-ink text-paper shadow-soft' : 'bg-paper text-ink-soft hover:text-ink shadow-soft'
     }`
 
   return (
@@ -90,7 +90,7 @@ export function RoutesPage({ routes }: RoutesPageProps) {
                     {route.route_stops?.length || 0} paradas
                   </p>
                 </div>
-                <span className="w-9 h-9 rounded-full bg-mist text-ink-soft flex items-center justify-center shrink-0 transition-[background-color,color,translate] duration-300 group-hover:bg-ink group-hover:text-white group-hover:translate-x-0.5">
+                <span className="w-9 h-9 rounded-full bg-mist text-ink-soft flex items-center justify-center shrink-0 transition-[background-color,color,translate] duration-300 group-hover:bg-ink group-hover:text-paper group-hover:translate-x-0.5">
                   <ChevronRight size={18} />
                 </span>
               </Link>

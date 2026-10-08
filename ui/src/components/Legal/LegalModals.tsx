@@ -51,7 +51,7 @@ function LegalModal({
   const content = {
     terms: {
       title: 'Términos de Servicio',
-      icon: <FileText size={20} className="text-sol-600" />,
+      icon: <FileText size={20} className="text-warm" />,
       body: (
         <div className="flex flex-col gap-5 text-[13px] text-ink-soft leading-relaxed">
           <p className="text-ink-faint font-medium">Última actualización: 2026</p>
@@ -169,7 +169,7 @@ function LegalModal({
     },
     license: {
       title: 'Licencia y Derechos de Autor',
-      icon: <Scale size={20} className="text-pacific-500" />,
+      icon: <Scale size={20} className="text-accent" />,
       body: (
         <div className="flex flex-col gap-5 text-[13px] text-ink-soft leading-relaxed">
           <p className="text-ink font-semibold bg-mist p-3.5 rounded-2xl">

@@ -1,6 +1,9 @@
 {
   "name": "enstop-root",
   "private": true,
+  "engines": {
+    "node": ">=22.15"
+  },
   "workspaces": [
     "ui"
   ],

@@ -46,6 +46,25 @@
 
     <!-- PWA / Browser chrome -->
     <meta name="theme-color" content="#F4F6F8" />
+
+    <!-- Theme bootstrap: apply light/dark before first paint (see src/store/themeStore.ts) -->
+    <script>
+      ;(function () {
+        var preference
+        try {
+          preference = localStorage.getItem('enstop-theme')
+        } catch (e) {}
+        var dark =
+          preference === 'dark' ||
+          (preference !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
+        var root = document.documentElement
+        root.classList.toggle('dark', dark)
+        root.style.colorScheme = dark ? 'dark' : 'light'
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute('content', dark ? '#0D151C' : '#F4F6F8')
+      })()
+    </script>
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />

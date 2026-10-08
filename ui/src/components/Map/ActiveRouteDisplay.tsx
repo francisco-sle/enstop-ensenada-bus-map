@@ -69,11 +69,11 @@ export function ActiveRouteDisplay({ origin, destination, activeResult }: Active
       <Polyline positions={walkOriginCoords} pathOptions={WALK_STYLE} interactive={false} />
       <Polyline positions={walkDestCoords} pathOptions={WALK_STYLE} interactive={false} />
 
-      {/* Bus segment: white casing + route color */}
+      {/* Bus segment: casing (themed via `.route-casing`) + route color */}
       <Polyline
         ref={casingRef}
         positions={busCoords}
-        pathOptions={{ color: '#ffffff', weight: 13, opacity: 1 }}
+        pathOptions={{ color: '#ffffff', weight: 13, opacity: 1, className: 'route-casing' }}
         interactive={false}
       />
       <Polyline

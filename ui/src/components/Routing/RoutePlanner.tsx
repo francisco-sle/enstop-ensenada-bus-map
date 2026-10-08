@@ -37,9 +37,9 @@ function MapToast({
   return (
     <div
       role="status"
-      className={`bg-ink/92 backdrop-blur-md text-white shadow-float px-4 py-2.5 rounded-full flex items-center gap-2.5 text-[13px] font-medium pointer-events-none animate-toast-in ${className}`}
+      className={`bg-ink/92 backdrop-blur-md text-paper shadow-float px-4 py-2.5 rounded-full flex items-center gap-2.5 text-[13px] font-medium pointer-events-none animate-toast-in ${className}`}
     >
-      <span className="shrink-0 text-sol-300">{icon}</span>
+      <span className="shrink-0 text-sol-300 dark:text-sol-700">{icon}</span>
       <span>{children}</span>
     </div>
   )
@@ -295,7 +295,7 @@ export function RoutePlanner({ stops, routes }: RoutePlannerProps) {
 
           {/* Empty State / Hint Message */}
           <div className="flex-1 flex flex-col items-center justify-center text-center px-8 select-none pb-4 mt-6 min-h-[140px] animate-enter">
-            <div className="w-14 h-14 rounded-full bg-pacific-50 text-pacific-500 flex items-center justify-center mb-3">
+            <div className="w-14 h-14 rounded-full bg-accent-tint text-accent flex items-center justify-center mb-3">
               <Search size={22} />
             </div>
             <p className="text-sm text-ink-soft leading-relaxed max-w-[240px]">

@@ -26,14 +26,14 @@ export function RouteLine({ route, isSelected, isGhosted }: RouteLineProps) {
 
   return (
     <>
-      {/* White casing lifts the line off the light basemap */}
+      {/* Casing lifts the line off the basemap; `.route-casing` themes its color */}
       <Polyline
         positions={positions}
         pathOptions={{
           color: '#ffffff',
           weight: casingWeight,
           opacity: casingOpacity,
-          className: 'route-line',
+          className: 'route-line route-casing',
         }}
         interactive={false}
       />

@@ -110,7 +110,7 @@ export function RouteToggleLegend({
           {routes.slice(0, 3).map((r) => (
             <span
               key={r.id}
-              className="w-3 h-3 rounded-full ring-2 ring-white transition-colors duration-300"
+              className="w-3 h-3 rounded-full ring-2 ring-paper transition-colors duration-300"
               style={{
                 backgroundColor: !visibleRouteIds.has(r.id)
                   ? 'var(--color-mist-strong)'
@@ -135,7 +135,7 @@ export function RouteToggleLegend({
 
   const chipClass = (active: boolean) =>
     `shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200 flex items-center gap-1.5 cursor-pointer ${
-      active ? 'bg-ink text-white' : 'bg-mist text-ink-soft hover:text-ink hover:bg-mist-strong'
+      active ? 'bg-ink text-paper' : 'bg-mist text-ink-soft hover:text-ink hover:bg-mist-strong'
     }`
 
   // ── Full panel ────────────────────────────────────────────────────────────
@@ -166,7 +166,7 @@ export function RouteToggleLegend({
           <span className="text-sm font-bold text-ink">Rutas</span>
           <div className="flex items-center gap-1">
             <button
-              className="text-xs font-semibold text-pacific-600 hover:bg-pacific-50 px-2.5 py-1 rounded-full transition-colors cursor-pointer"
+              className="text-xs font-semibold text-accent-strong hover:bg-accent-tint px-2.5 py-1 rounded-full transition-colors cursor-pointer"
               onClick={toggleAll}
               title={anyFilteredVisible ? 'Ocultar listadas' : 'Mostrar listadas'}
             >
@@ -229,7 +229,7 @@ export function RouteToggleLegend({
                 role="switch"
                 aria-checked={!isHidden}
                 className={`w-full flex items-center gap-3 px-2.5 py-2 rounded-2xl text-left cursor-pointer transition-colors duration-200 hover:bg-mist ${
-                  isSelected ? 'bg-pacific-50' : ''
+                  isSelected ? 'bg-accent-tint' : ''
                 }`}
                 onClick={() => toggleRouteVisibility(route.id)}
                 title={isHidden ? 'Mostrar ruta' : 'Ocultar ruta'}
