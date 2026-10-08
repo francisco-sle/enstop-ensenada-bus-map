@@ -26,12 +26,17 @@ export function RouteLine({
     )
   }, [route.geom.coordinates])
 
+  // `className` must be a direct prop: react-leaflet applies `pathOptions` via
+  // setStyle() after the path exists, and Leaflet only reads className on creation.
+  // (StrictMode's remount hides this in dev.)
+
   // Network lines take their stroke from `.route-network` so they follow the theme
   if (variant === 'network') {
     return (
       <Polyline
         positions={positions}
-        pathOptions={{ weight: 2.5, opacity: 1, className: 'route-line route-network' }}
+        className="route-line route-network"
+        pathOptions={{ weight: 2.5, opacity: 1 }}
         interactive={false}
       />
     )
@@ -48,17 +53,14 @@ export function RouteLine({
       {/* Casing lifts the line off the basemap; `.route-casing` themes its color */}
       <Polyline
         positions={positions}
-        pathOptions={{
-          color: '#ffffff',
-          weight: casingWeight,
-          opacity: casingOpacity,
-          className: 'route-line route-casing',
-        }}
+        className="route-line route-casing"
+        pathOptions={{ color: '#ffffff', weight: casingWeight, opacity: casingOpacity }}
         interactive={false}
       />
       <Polyline
         positions={positions}
-        pathOptions={{ color, weight, opacity, className: 'route-line' }}
+        className="route-line"
+        pathOptions={{ color, weight, opacity }}
       />
     </>
   )
