@@ -1,11 +1,13 @@
 import { MapContainer, Marker, Tooltip } from 'react-leaflet'
 import { useState, useMemo } from 'react'
+import type { LatLngBounds } from 'leaflet'
 import { useMapStore } from '../../store/mapStore'
 import { useRoutingStore } from '../../store/routingStore'
 import { useBusMapMarkers } from './useBusMapMarkers'
 import { MapContextMenu } from './MapContextMenu'
 import { ActiveRouteDisplay } from './ActiveRouteDisplay'
 import { RouteLine } from './RouteLine'
+import { StopDotsLayer } from './StopDotsLayer'
 import { MapController, MapEventsHandler, ViewportReporter } from './mapControls'
 import type { MapInsets } from './mapControls'
 import { createStopIcon, userLocationIcon, routingPinIconA, routingPinIconB } from './mapIcons'
@@ -69,6 +71,7 @@ export function BusMap({
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null)
   const [currentZoom, setCurrentZoom] = useState(zoom)
   const [prevZoom, setPrevZoom] = useState(zoom)
+  const [viewBounds, setViewBounds] = useState<LatLngBounds | null>(null)
 
   // Sync local currentZoom with store's programmatic zoom during render
   if (zoom !== prevZoom) {
@@ -79,8 +82,8 @@ export function BusMap({
   const activeResult =
     showRouting && selectedResultIndex !== null ? routingResults[selectedResultIndex] : null
 
-  // Derive stop markers outside JSX — LoD filtering + color coding
-  const stopMarkers = useBusMapMarkers({
+  // Derive stop markers outside JSX — decluttering, viewport culling + color coding
+  const { dots: stopDots, icons: stopIcons } = useBusMapMarkers({
     allStops,
     activeRoutes,
     selectedStopId,
@@ -88,19 +91,19 @@ export function BusMap({
     selectedRouteColor: resolvedRouteId !== null ? routeColors.get(resolvedRouteId) : undefined,
     activeResult,
     currentZoom,
+    bounds: viewBounds,
     visibleRouteIds,
   })
 
-  // Pre-build icons once per stopMarkers change — avoids calling renderToString inside JSX.
+  // Pre-build icons once per marker change — avoids calling renderToString inside JSX.
   // L.divIcon creation (+ renderToString) is expensive; memoizing collapses ~6 unique combos.
   const stopMarkerIcons = useMemo(
     () =>
-      stopMarkers.map(({ stop, color, isSelected }) => ({
+      stopIcons.map(({ stop, color, isSelected }) => ({
         stop,
         icon: createStopIcon(color, isSelected),
       })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stopMarkers, currentZoom],
+    [stopIcons],
   )
 
   return (
@@ -118,7 +121,11 @@ export function BusMap({
         style={{ width: '100%', height: '100%' }}
       >
         <MapController center={center} zoom={zoom} insets={insets} />
-        <MapEventsHandler onRightClick={setContextMenu} onZoomEnd={setCurrentZoom} />
+        <MapEventsHandler
+          onRightClick={setContextMenu}
+          onZoomEnd={setCurrentZoom}
+          onBoundsChange={setViewBounds}
+        />
         {insets && <ViewportReporter insets={insets} />}
 
         <Basemap />
@@ -225,7 +232,13 @@ export function BusMap({
             )
           })}
 
-        {/* Stop Markers — derived from useBusMapMarkers */}
+        {/* Stop dots (mid zoom) and icons (street zoom) — derived from useBusMapMarkers */}
+        <StopDotsLayer
+          dots={stopDots}
+          zoom={currentZoom}
+          hasSelectedRoute={resolvedRouteId !== null && !activeResult}
+          onSelect={setSelectedStopId}
+        />
         {stopMarkerIcons.map(({ stop, icon }) => {
           const [lng, lat] = stop.geom.coordinates
           return (

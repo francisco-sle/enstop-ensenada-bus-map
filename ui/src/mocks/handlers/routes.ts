@@ -1,7 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import routesData from '../data/routes.json'
-import stopsData from '../data/stops.json'
-import routeStopsData from '../data/route_stops.json'
+import { stopsData, routesData, routeStopsData } from '../data/network'
 import categoriesData from '../data/categories.json'
 import brandsData from '../data/brands.json'
 
