@@ -2,6 +2,7 @@ import L from 'leaflet'
 import { renderToString } from 'react-dom/server'
 import { BusFront, Flag, Footprints } from 'lucide-react'
 import { sanitizeColor } from './colorUtils'
+import { IS_TOUCH } from './stopLayout'
 
 // ─── Icon Generation Helpers ─────────────────────────────────────────────────
 
@@ -21,32 +22,47 @@ export function createStopIcon(colorHex: string, isSelected: boolean) {
   return icon
 }
 
+// On touch screens the icon is drawn larger and sits in a transparent 44px
+// tap area — the minimum comfortable touch target (Apple HIG / Material).
+const TOUCH_TAP_SIZE = 44
+
 function createIdleStopIcon(color: string) {
-  const size = 26
+  const size = IS_TOUCH ? 32 : 26
+  const box = IS_TOUCH ? TOUCH_TAP_SIZE : size
   const html = renderToString(
     <div
-      className="stop-marker"
       style={{
-        width: size,
-        height: size,
-        borderRadius: '50%',
-        background: 'white',
+        width: box,
+        height: box,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        boxShadow: `0 0 0 2px ${color}, 0 3px 8px rgba(30, 41, 59, 0.22)`,
-        transformOrigin: '50% 50%',
       }}
     >
-      <BusFront size={14} color={color} strokeWidth={2.4} />
+      <div
+        className="stop-marker"
+        style={{
+          width: size,
+          height: size,
+          borderRadius: '50%',
+          background: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: `0 0 0 2px ${color}, 0 3px 8px rgba(30, 41, 59, 0.22)`,
+          transformOrigin: '50% 50%',
+        }}
+      >
+        <BusFront size={IS_TOUCH ? 17 : 14} color={color} strokeWidth={2.4} />
+      </div>
     </div>,
   )
 
   return L.divIcon({
     className: 'custom-stop-marker',
     html,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
+    iconSize: [box, box],
+    iconAnchor: [box / 2, box / 2],
   })
 }
 

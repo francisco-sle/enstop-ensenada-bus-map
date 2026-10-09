@@ -1,5 +1,16 @@
+import { useMemo } from 'react'
+import type { LatLngBounds } from 'leaflet'
 import type { DBStop, RouteDetail } from '../../types'
 import type { RoutingResult } from '../../types'
+import {
+  ICON_ZOOM,
+  layoutStops,
+  routeStopSpacingPx,
+  stopGateZoom,
+  stopPriority,
+  stopSpacingPx,
+  type LayoutPoint,
+} from './stopLayout'
 
 interface BusMapMarkersOptions {
   allStops: DBStop[]
@@ -10,60 +21,36 @@ interface BusMapMarkersOptions {
   selectedRouteColor?: string
   activeResult: RoutingResult | null
   currentZoom: number
+  /** Visible map area; stops well outside it aren't rendered. Null renders everywhere. */
+  bounds: LatLngBounds | null
   visibleRouteIds: Set<number>
 }
 
-interface StopMarkerData {
+export interface StopMarkerData {
   stop: DBStop
   color: string
   isSelected: boolean
+  /** Served by the highlighted route */
+  onSelectedRoute: boolean
+}
+
+interface StopMarkerLayers {
+  /** Drawn as small canvas dots (below ICON_ZOOM) */
+  dots: StopMarkerData[]
+  /** Drawn as full DOM icon markers (selected stop, routing endpoints, street zoom) */
+  icons: StopMarkerData[]
 }
 
 /**
- * Computes a per-stop importance score to drive weighted Level-of-Detail rendering.
- *
- * Score components:
- *   +50  is_terminal
- *   +20  accessible
- *   +10  per route serving the stop
- *   +30  transfer point (served by ≥2 routes)
- *
- * Threshold per zoom:
- *   ≤12 → 70  (terminals only in practice)
- *   ≤13 → 50  (terminals + high-value stops)
- *   ≤14 → 20  (terminals + accessible + transfer points)
- *   ≥15 → 0   (all stops)
- */
-function stopImportance(stop: DBStop, routeCount: number): number {
-  let score = 0
-  if (stop.is_terminal) score += 50
-  if (stop.accessible) score += 20
-  score += routeCount * 10
-  if (routeCount >= 2) score += 30
-  return score
-}
-
-function importanceThreshold(zoom: number): number {
-  if (zoom <= 12) return 70
-  if (zoom <= 13) return 50
-  if (zoom <= 14) return 20
-  return 0
-}
-
-/**
- * Derives the list of stops to render as map markers, applying:
+ * Derives the stops to render, applying:
  *   1. Hidden-route suppression — stops exclusively on hidden routes are removed.
- *   2. Weighted Level-of-Detail filtering based on importance score × zoom threshold.
- *   3. Pin color coding based on selection, routing context, or active route.
+ *   2. Collision-based decluttering (see stopLayout.ts): each stop gets the lowest
+ *      zoom at which it fits without crowding a more important stop. Stops of the
+ *      highlighted route are placed first, packed tighter, and are always shown.
+ *   3. Viewport culling — only stops inside `bounds` become map layers.
+ *   4. Pin color coding based on selection, routing context, or active route.
  *
- * @param options.allStops       - Full stops array from the store.
- * @param options.activeRoutes   - Routes currently drawn on the map.
- * @param options.selectedStopId - ID of the currently selected stop (always shown).
- * @param options.selectedRouteId - ID of the currently highlighted route.
- * @param options.activeResult   - Active routing suggestion (origin/dest stops always shown).
- * @param options.currentZoom    - Current Leaflet zoom level.
- * @param options.visibleRouteIds - Set of route IDs whose stops should be shown.
- * @returns Array of `{ stop, color, isSelected }` ready to pass to `createStopIcon`.
+ * The selected stop and routing endpoints bypass decluttering and always render as icons.
  */
 export function useBusMapMarkers({
   allStops,
@@ -73,68 +60,112 @@ export function useBusMapMarkers({
   selectedRouteColor,
   activeResult,
   currentZoom,
+  bounds,
   visibleRouteIds,
-}: BusMapMarkersOptions): StopMarkerData[] {
-  const currentRoute = selectedRouteId
-    ? (activeRoutes.find((r) => r.id === selectedRouteId) ?? null)
-    : null
+}: BusMapMarkersOptions): StopMarkerLayers {
+  // stop id → ids of the routes serving it. Built once per data load instead of
+  // scanning every route's stop list for every stop on every render.
+  const routesByStop = useMemo(() => {
+    const index = new Map<number, number[]>()
+    for (const route of activeRoutes) {
+      for (const rs of route.route_stops ?? []) {
+        const ids = index.get(rs.stop_id)
+        if (ids) ids.push(route.id)
+        else index.set(rs.stop_id, [route.id])
+      }
+    }
+    return index
+  }, [activeRoutes])
 
-  const threshold = importanceThreshold(currentZoom)
+  // Candidates: stops served by at least one visible route (orphans and stops
+  // only on hidden routes are dropped), split by the highlighted route.
+  const layout = useMemo(() => {
+    const routePoints: LayoutPoint[] = []
+    const otherPoints: LayoutPoint[] = []
+    for (const stop of allStops) {
+      const serving = routesByStop.get(stop.id)
+      if (!serving) continue
+      const visibleCount = serving.filter((id) => visibleRouteIds.has(id)).length
+      if (visibleCount === 0) continue
 
-  // Normalize route_stops once at entry — guards against partial fetches where the
-  // join was omitted. All downstream .some() calls are then unconditionally safe.
-  const routeStopsMap = new Map(activeRoutes.map((r) => [r.id, r.route_stops ?? []]))
+      const [lng, lat] = stop.geom.coordinates
+      const isTerminal = !!stop.is_terminal
+      const point: LayoutPoint = {
+        id: stop.id,
+        lng,
+        lat,
+        priority: stopPriority(isTerminal, visibleCount, !!stop.accessible),
+        gateZoom: stopGateZoom(isTerminal, visibleCount),
+      }
+      if (selectedRouteId !== null && serving.includes(selectedRouteId)) {
+        routePoints.push({ ...point, gateZoom: 0 })
+      } else {
+        otherPoints.push(point)
+      }
+    }
 
-  return allStops
-    .filter((stop) => {
-      // Priority 1: always show the selected stop
-      if (stop.id === selectedStopId) return true
+    const routeLayout = layoutStops(routePoints, { spacing: routeStopSpacingPx })
+    const obstacles = routePoints.map((p) => ({ ...p, minZoom: routeLayout.get(p.id)! }))
+    const otherLayout = layoutStops(otherPoints, { spacing: stopSpacingPx, obstacles })
+    return new Map([...otherLayout, ...routeLayout])
+  }, [allStops, routesByStop, visibleRouteIds, selectedRouteId])
 
-      // Priority 2: always show active routing endpoints
-      if (
-        activeResult &&
-        (stop.id === activeResult.originStop.id || stop.id === activeResult.destStop.id)
-      )
-        return true
+  return useMemo(() => {
+    const zoom = Math.round(currentZoom)
+    const endpointIds = activeResult
+      ? new Set([activeResult.originStop.id, activeResult.destStop.id])
+      : null
+    const routeColor =
+      selectedRouteColor ||
+      activeRoutes.find((r) => r.id === selectedRouteId)?.category?.color_hex ||
+      'var(--color-accent-cerulean)'
+    // Margins absorb short pans until the next moveend. Dots match the canvas
+    // renderer's padding; DOM icons are costlier, so they get a tighter margin.
+    const dotBounds = bounds?.pad(0.5)
+    const iconBounds = bounds?.pad(0.2)
+    const dots: StopMarkerData[] = []
+    const icons: StopMarkerData[] = []
 
-      // Compute which visible routes serve this stop
-      const servingRoutes = activeRoutes.filter(
-        (r) =>
-          visibleRouteIds.has(r.id) &&
-          (routeStopsMap.get(r.id) ?? []).some((rs) => rs.stop_id === stop.id),
-      )
-
-      // Suppress stops that are only on hidden routes (and not selected/routing endpoints)
-      const allServingRoutes = activeRoutes.filter((r) =>
-        (routeStopsMap.get(r.id) ?? []).some((rs) => rs.stop_id === stop.id),
-      )
-      if (allServingRoutes.length > 0 && servingRoutes.length === 0) return false
-
-      // Also suppress orphan stops (stops that aren't assigned to ANY route in the database)
-      if (allServingRoutes.length === 0) return false
-
-      // Weighted LoD — use visible route count for scoring
-      const score = stopImportance(stop, servingRoutes.length)
-      return score >= threshold
-    })
-    .map((stop) => {
+    for (const stop of allStops) {
       const isSelected = stop.id === selectedStopId
-      let color = '#2563EB' // default blue
+      const isEndpoint = endpointIds?.has(stop.id) ?? false
+      const minZoom = layout.get(stop.id)
+      if (!isSelected && !isEndpoint && (minZoom === undefined || minZoom > zoom)) continue
 
+      const asIcon = isSelected || isEndpoint || zoom >= ICON_ZOOM
+      const [lng, lat] = stop.geom.coordinates
+      const cull = asIcon ? iconBounds : dotBounds
+      if (cull && !isSelected && !cull.contains([lat, lng])) continue
+
+      const onSelectedRoute =
+        selectedRouteId !== null && (routesByStop.get(stop.id)?.includes(selectedRouteId) ?? false)
+
+      let color = '#2563EB' // default blue
       if (isSelected) {
         color = 'var(--color-accent-warm)'
       } else if (activeResult) {
         if (stop.id === activeResult.originStop.id) color = 'var(--color-accent-cerulean)'
         else if (stop.id === activeResult.destStop.id) color = 'var(--color-accent-warm)'
-      } else if (currentRoute) {
-        const servesStop = (routeStopsMap.get(currentRoute.id) ?? []).some(
-          (rs) => rs.stop_id === stop.id,
-        )
-        if (servesStop)
-          color =
-            selectedRouteColor || currentRoute.category?.color_hex || 'var(--color-accent-cerulean)'
+      } else if (onSelectedRoute) {
+        color = routeColor
       }
 
-      return { stop, color, isSelected }
-    })
+      const marker = { stop, color, isSelected, onSelectedRoute }
+      if (asIcon) icons.push(marker)
+      else dots.push(marker)
+    }
+
+    return { dots, icons }
+  }, [
+    allStops,
+    layout,
+    routesByStop,
+    currentZoom,
+    bounds,
+    selectedStopId,
+    selectedRouteId,
+    selectedRouteColor,
+    activeRoutes,
+    activeResult,
+  ])
 }

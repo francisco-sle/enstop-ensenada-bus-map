@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import stopsData from '../data/stops.json'
+import { stopsData } from '../data/network'
 
 export const stopsHandlers = [
   // Handle stops request

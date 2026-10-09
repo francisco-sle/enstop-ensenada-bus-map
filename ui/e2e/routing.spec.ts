@@ -1,7 +1,22 @@
+import type L from 'leaflet'
 import { test, expect } from '@playwright/test'
 
 test.describe('ENStop PWA E2E Flows', () => {
   test.beforeEach(async ({ page }) => {
+    // Expose the Leaflet map instance (Leaflet assigns window.L when it loads)
+    await page.addInitScript(() => {
+      let leaflet: typeof L
+      Object.defineProperty(window, 'L', {
+        configurable: true,
+        get: () => leaflet,
+        set: (value: typeof L) => {
+          leaflet = value
+          value.Map.addInitHook(function (this: L.Map) {
+            ;(window as unknown as { __map: L.Map }).__map = this
+          })
+        },
+      })
+    })
     // Open the application locally (VITE dev server runs on 5173 by default)
     await page.goto('http://127.0.0.1:5173/')
   })
@@ -46,12 +61,19 @@ test.describe('ENStop PWA E2E Flows', () => {
   })
 
   test('should open drawer when stop marker is selected', async ({ page }) => {
-    // Wait for stops markers to render. Stop markers have custom class .custom-stop-marker
+    // Below street zoom stops are canvas dots with no DOM node, so click the stop's
+    // position on the map: zoom to Terminal Centro and click the map center.
+    await page.waitForFunction(() => (window as unknown as { __map?: unknown }).__map)
+    await page.evaluate(() => {
+      const map = (window as unknown as { __map: L.Map }).__map
+      map.setView([31.869517, -116.617893], 16, { animate: false })
+    })
     const marker = page.locator('.custom-stop-marker').first()
     await expect(marker).toBeVisible()
 
     // Click stop marker
-    await marker.click()
+    const box = (await page.locator('.leaflet-container').boundingBox())!
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)
 
     // Verify details drawer appears
     const drawerTitle = page.locator('h3:has-text("Terminal Centro")')

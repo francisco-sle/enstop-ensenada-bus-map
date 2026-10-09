@@ -1,7 +1,5 @@
 import { http, HttpResponse } from 'msw'
-import stopsData from '../data/stops.json'
-import routesData from '../data/routes.json'
-import routeStopsData from '../data/route_stops.json'
+import { stopsData, routesData, routeStopsData } from '../data/network'
 import faresData from '../data/fares.json'
 
 // Haversine distance formula

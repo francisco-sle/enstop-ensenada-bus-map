@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useMap, useMapEvents } from 'react-leaflet'
+import type L from 'leaflet'
 import { useRoutingStore } from '../../store/routingStore'
 import { useMapStore } from '../../store/mapStore'
 import type { ContextMenuPosition } from './MapContextMenu'
@@ -85,11 +86,21 @@ export function ViewportReporter({ insets }: { insets: MapInsets }) {
 export interface MapEventsHandlerProps {
   onRightClick: (data: ContextMenuPosition | null) => void
   onZoomEnd: (zoom: number) => void
+  /** Visible map bounds, reported once ready and after every pan or zoom */
+  onBoundsChange?: (bounds: L.LatLngBounds) => void
 }
 
-export function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerProps) {
+export function MapEventsHandler({
+  onRightClick,
+  onZoomEnd,
+  onBoundsChange,
+}: MapEventsHandlerProps) {
   const map = useMap()
   const { mapClickMode, setOrigin, setDestination, setMapClickMode } = useRoutingStore()
+
+  useEffect(() => {
+    if (onBoundsChange) map.whenReady(() => onBoundsChange(map.getBounds()))
+  }, [map, onBoundsChange])
 
   useMapEvents({
     contextmenu(e) {
@@ -121,6 +132,9 @@ export function MapEventsHandler({ onRightClick, onZoomEnd }: MapEventsHandlerPr
     },
     zoomend() {
       onZoomEnd(map.getZoom())
+    },
+    moveend() {
+      onBoundsChange?.(map.getBounds())
     },
   })
   return null
